@@ -1,0 +1,35 @@
+{
+  "title": "GRAIN — Geodynamics Research Analogue Information Network",
+  "description": "<p>GRAIN is a MATLAB toolset that turns analogue (sandbox) tectonic experiments into quantitative, reproducible kinematic data. It wraps <a href=\"https://github.com/Shrediquette/PIVlab\">PIVlab</a> in a batch pipeline running from time-lapse photographs to fault-by-fault measurements: velocity magnitude and shear-strain fields, plot-over-time (POT) curves, hanging-wall/footwall velocities, net slip, fault geometry, and a frame-by-frame description table.</p><p>Design principles: one experiment = one self-contained file; all corrections (frame exclusion, jitter stabilisation, masking) stored as non-destructive recipes; every measurement replayable from JSON sidecars.</p><p>This deposit contains source code and documentation only. Photographic data, PIV result files and exported figures are archived separately. Requires MATLAB R2025b and PIVlab (not bundled).</p>",
+  "upload_type": "software",
+  "license": "GPL-3.0-or-later",
+  "access_right": "open",
+  "version": "1.0.0",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "REPLACE-ME, REPLACE-ME",
+      "affiliation": "Universitas Pendidikan Indonesia",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "keywords": [
+    "particle image velocimetry",
+    "PIV",
+    "analogue modelling",
+    "sandbox experiment",
+    "structural geology",
+    "thrust fault",
+    "kinematics",
+    "MATLAB",
+    "PIVlab"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5334/jors.334",
+      "relation": "requires",
+      "resource_type": "software",
+      "scheme": "doi"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Memilih Effort — Untuk Kerja PAB / PIV Lab</title>
+<style>
+  :root{
+    --bg:#f7f9fc; --card:#ffffff; --ink:#1f2733; --muted:#5b6675;
+    --line:#e3e9f2; --accent:#2f6fed;
+    --low:#3aa757; --med:#c9922b; --high:#d9642a; --xhigh:#c23b5c; --max:#7a3fb0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;padding:32px 16px}
+  .wrap{max-width:920px;margin:0 auto}
+  header h1{font-size:1.9rem;margin:0 0 6px}
+  header p.sub{color:var(--muted);margin:0 0 28px;font-size:1.05rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 24px;margin-bottom:22px;box-shadow:0 1px 3px rgba(20,40,80,.04)}
+  h2{font-size:1.25rem;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+  h2 .dot{width:11px;height:11px;border-radius:50%}
+  .rule{background:linear-gradient(135deg,#eef4ff,#f9fbff);border-left:4px solid var(--accent);
+    padding:16px 20px;border-radius:10px;margin-bottom:26px;font-size:1.08rem}
+  .rule b{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:.96rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em}
+  .tag{display:inline-block;padding:2px 10px;border-radius:999px;color:#fff;font-weight:600;font-size:.82rem}
+  .t-low{background:var(--low)} .t-med{background:var(--med)}
+  .t-high{background:var(--high)} .t-xhigh{background:var(--xhigh)} .t-max{background:var(--max)}
+  ul{margin:8px 0 0;padding-left:20px} li{margin:4px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .mini{border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .mini h3{margin:0 0 6px;font-size:1rem}
+  .mini p{margin:0;color:var(--muted);font-size:.92rem}
+  .yes{color:var(--low);font-weight:600} .no{color:var(--xhigh);font-weight:600}
+  code{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:.88em}
+  footer{color:var(--muted);font-size:.86rem;text-align:center;margin-top:8px}
+  .quote{font-style:italic;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🎚️ Panduan Memilih Effort</h1>
+  <p class="sub">Kapan pakai low / sedang / tinggi / extra-tinggi — konteks kerja PAB &amp; PIV Lab</p>
+</header>
+
+<div class="rule">
+  <b>Satu aturan induk:</b> Effort mengikuti <b>taruhan kesalahan</b>, bukan panjang jawaban atau besar-kecilnya tugas.
+  <br>Kalau salah <b>murah dikoreksi</b> → effort rendah. Kalau salah <b>mahal / lama di-debug</b> → effort tinggi.
+</div>
+
+<div class="card">
+  <h2>Tabel keputusan cepat</h2>
+  <table>
+    <tr><th>Effort</th><th>Pakai untuk</th><th>Contoh di kerja Anda</th></tr>
+    <tr>
+      <td><span class="tag t-low">low</span></td>
+      <td>Ngobrol, tanya-jawab, hal mekanis 1 langkah yang tak butuh mikir konteks</td>
+      <td>
+        <ul>
+          <li>Diskusi strategi (seperti sekarang)</li>
+          <li>Geser 3 tombol save ke bawah</li>
+          <li>Ganti teks tombol / warna</li>
+          <li>Tanya "istilahnya apa?"</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="tag t-med">sedang</span></td>
+      <td>Edit yang butuh paham sedikit konteks tapi logikanya lurus</td>
+      <td>
+        <ul>
+          <li>Tambah tombol spinner ukuran titik POI</li>
+          <li>Auto-maximize window saat buka</li>
+          <li>Ubah ketebalan garis PSG + input pengaturnya</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="tag t-high">tinggi</span></td>
+      <td>Fitur nyambung ke wiring lama, ada edge case, "jangan boyak"</td>
+      <td>
+        <ul>
+          <li>Sync tabel ke baris tengah (edge: awal/akhir daftar)</li>
+          <li>Split tombol jadi "Slip-all" &amp; "Slip-F#"</li>
+          <li>Fill area sesar + label melayang + checkbox on/off</li>
+          <li>Auto-deteksi start/end (selisih terkecil + toleransi)</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="tag t-xhigh">extra-tinggi</span></td>
+      <td>Logika bercabang non-sepele yang gampang salah &amp; mahal di-debug</td>
+      <td>
+        <ul>
+          <li>Logika Sub-Fault (luas SF1=HW1→HW2, SF2=HW2→FW, dst.)</li>
+          <li>Seleksi AXPOT: klik kurva vs klik frame + on/off saling pengaruh</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><span class="tag t-max">max</span></td>
+      <td>Nyaris tak pernah perlu. Hanya masalah yang benar-benar bikin buntu.</td>
+      <td class="quote">Overkill untuk kerja poles GUI. Lewati saja.</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2><span class="dot" style="background:var(--low)"></span>Jawaban tegas: obrolan seperti ini?</h2>
+  <p><span class="yes">Cukup low.</span> Diskusi itu murah dikoreksi — salah tinggal tanya balik, tak ada kerusakan.
+  Boros effort di obrolan = mubazir. Anda sudah benar mematikannya jadi low tadi. 👍</p>
+</div>
+
+<div class="card">
+  <h2>Tes 3 detik sebelum memanggil saya</h2>
+  <div class="grid">
+    <div class="mini">
+      <h3>❓ "Kalau hasilnya salah, ruginya apa?"</h3>
+      <p>Cuma perlu tanya ulang → <span class="yes">low</span>.
+      Baru ketahuan setelah GUI error &amp; debug lama → <span class="no">high/xhigh</span>.</p>
+    </div>
+    <div class="mini">
+      <h3>❓ "Ini nyambung ke kode lama?"</h3>
+      <p>Berdiri sendiri / mekanis → <span class="yes">low–sedang</span>.
+      Harus paham struktur file utuh dulu → <span class="no">high</span>.</p>
+    </div>
+    <div class="mini">
+      <h3>❓ "Ada logika bercabang / edge case?"</h3>
+      <p>Tidak → sedang. Ya, &amp; salah = mahal → <span class="no">xhigh</span>.</p>
+    </div>
+    <div class="mini">
+      <h3>❓ "Ini soal rasa (ukuran/posisi)?"</h3>
+      <p>Effort tak menolong — mata Anda yang menentukan.
+      Pakai <span class="yes">sedang</span>, lalu iterasi lihat GUI.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Jebakan yang harus dihindari</h2>
+  <ul>
+    <li><b>"Tugasnya kecil, ya low."</b> — Keliru. Sub-Fault itu "kecil" tampilannya tapi logikanya berat → butuh xhigh.</li>
+    <li><b>"Biar aman, semua max."</b> — Boros &amp; lambat tanpa hasil lebih baik untuk tugas ringan.</li>
+    <li><b>Model ≠ effort.</b> Tetap pakai <b>Opus</b> (model terkuat) di semua level; yang Anda putar hanya effort-nya.</li>
+    <li><b>Fast mode</b> boleh nyala kapan saja — mempercepat output, <b>tidak</b> menurunkan kualitas.</li>
+  </ul>
+</div>
+
+<footer>Dibuat untuk kerja PAB5 · PIV Lab UPI · pakai <code>high</code> untuk batch berat, <code>low</code> untuk ngobrol</footer>
+</div>
+</body>
+</html>

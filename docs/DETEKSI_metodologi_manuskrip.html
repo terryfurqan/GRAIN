@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metodologi Pengamatan Sesar &amp; Sistem "Deteksi" Jumlah Sesar Aktif</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --muted:#555; --line:#d8d8d8; --soft:#f6f6f4;
+    --nuc:#8a5a2b; --prp:#c0392b; --act:#7d3c98; --xfs:#333;
+    --accent:#35306e; --ok:#1e7d34; --warn:#b5581f; --bad:#a41515;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:"Georgia","Times New Roman",serif; color:var(--ink);
+    max-width:900px; margin:0 auto; padding:32px 28px 80px; line-height:1.62;
+    background:#fff;
+  }
+  h1{font-size:1.7rem; line-height:1.25; margin:0 0 6px}
+  h2{font-size:1.28rem; margin:2.2em 0 .4em; padding-bottom:.2em; border-bottom:2px solid var(--accent); color:var(--accent)}
+  h3{font-size:1.08rem; margin:1.6em 0 .3em; color:#2a2a2a}
+  p{margin:.55em 0}
+  .lede{color:var(--muted); font-style:italic; font-size:1.02rem; margin:.2em 0 1.2em}
+  code,.mono{font-family:"SF Mono","Consolas",monospace; font-size:.9em; background:var(--soft); padding:1px 5px; border-radius:3px}
+  table{border-collapse:collapse; width:100%; margin:1em 0; font-size:.92rem}
+  th,td{border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top}
+  th{background:#efeeea}
+  caption{caption-side:bottom; color:var(--muted); font-size:.85rem; font-style:italic; padding-top:.5em; text-align:left}
+  .poi{display:inline-block; font-weight:bold; font-family:"SF Mono",monospace; font-size:.85em; padding:1px 6px; border-radius:3px; color:#fff}
+  .poi.nuc{background:var(--nuc)} .poi.prp{background:var(--prp)} .poi.act{background:var(--act)} .poi.xfs{background:var(--xfs)}
+  .callout{border-left:4px solid var(--accent); background:#f4f3fb; padding:12px 16px; margin:1.2em 0; border-radius:0 6px 6px 0}
+  .callout.rule{border-left-color:var(--ok); background:#eef7ef}
+  .callout.edge{border-left-color:var(--warn); background:#fbf3ea}
+  .callout h4{margin:0 0 .3em; font-size:1rem}
+  figure{margin:1.4em 0; text-align:center}
+  figcaption{color:var(--muted); font-size:.85rem; font-style:italic; margin-top:.5em}
+  .timeline{width:100%; font-family:sans-serif}
+  .step{color:var(--muted)}
+  ol.wf{padding-left:1.3em}
+  ol.wf li{margin:.4em 0}
+  .quote{border-left:3px solid var(--line); padding:.2em 0 .2em 14px; color:#3a3a3a; font-style:italic; margin:.8em 0}
+  .kbd{font-family:sans-serif; font-size:.82em; border:1px solid #bbb; border-bottom-width:2px; border-radius:4px; padding:1px 6px; background:#fafafa}
+  .small{font-size:.85rem; color:var(--muted)}
+  hr{border:none; border-top:1px solid var(--line); margin:2.4em 0}
+  .eqn{background:var(--soft); border:1px solid var(--line); border-radius:6px; padding:10px 14px; font-family:"SF Mono",monospace; font-size:.9rem; overflow-x:auto}
+  ul.tight li{margin:.2em 0}
+</style>
+</head>
+<body>
+
+<h1>Metodologi Pengamatan Sesar dan Sistem <em>Deteksi</em> Jumlah Sesar Aktif per-Frame</h1>
+<p class="lede">Dokumen metodologis untuk manuskrip — pemetaan siklus hidup sesar (fault life-cycle) dari citra <em>shear strain</em> hasil PIV, dan aturan komputasi konsisten untuk menghitung jumlah sesar yang aktif pada setiap frame observasi.</p>
+
+<hr>
+
+<h2>1. Latar dan tujuan</h2>
+<p>
+Pada eksperimen sandbox kompresi, satu penampang (garis PSG) menampung banyak sesar naik (<em>thrust fault</em>) yang muncul berurutan seiring pemendekan berlangsung. Setiap sesar memiliki riwayat hidup: mulai dari nukleasi, propagasi, mencapai aktivitas maksimum, lalu berhenti. Pengamatan dilakukan <em>frame demi frame</em> pada peta <em>shear strain</em> (du/dy + dv/dx) yang dihitung dari medan kecepatan PIV, dengan penanda titik pengamatan (<em>Point of Interest</em>, POI) yang menandai tahap-tahap siklus hidup tiap sesar.
+</p>
+<p>
+Selama ini, jumlah sesar yang <strong>sedang aktif</strong> pada sebuah frame dihitung secara manual dengan mata (kolom <span class="mono"># ACT F</span>). Cara ini rentan tidak konsisten. <strong>Sistem "Deteksi"</strong> menggantikan penghitungan manual itu dengan satu aturan komputasi yang eksplisit dan reproducible: untuk setiap frame yang diobservasi, hitung berapa sesar yang rentang aktivitasnya mencakup frame tersebut, dengan mempertimbangkan seluruh sesar pada penampang.
+</p>
+<div class="callout">
+  <h4>Konvensi penomoran sesar</h4>
+  <p style="margin:.2em 0">Penomoran &amp; penghitungan sesar aktif dilakukan <strong>per-observasi satu sesar</strong> dan diurutkan <strong>dari sesar termuda ke tertua</strong> (dari sesar yang paling akhir terbentuk mundur ke yang pertama). Sesar nomor&nbsp;1 adalah sesar yang terbentuk ketika dinding pertama kali didorong; sesar bernomor tertinggi adalah yang paling belakangan muncul.</p>
+</div>
+
+<h2>2. Titik pengamatan (POI) dan siklus hidup sesar</h2>
+<p>
+Riwayat hidup satu sesar dilacak melalui rangkaian POI. Setiap POI dicatat pada frame tertentu, sebagian disertai atribut <strong>NUC POS</strong> (posisi nukleasi) dan <strong>PRP DIR</strong> (arah propagasi).
+</p>
+
+<table>
+  <caption>Tabel 1. Titik pengamatan (POI) penyusun siklus hidup satu sesar.</caption>
+  <thead>
+    <tr><th>POI</th><th>Makna</th><th>Diukur bidangnya?</th><th>Peran dalam "Deteksi"</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="poi nuc">NUC-BDF</span></td><td>Nukleasi di basal, membentuk <em>Basal Detachment Fault</em> (segmen sub-horizontal → horizontal, satu segmen kontinu).</td><td>—</td><td>Menandai awal; belum ada sesar (lihat §3).</td></tr>
+    <tr><td><span class="poi nuc">NUC-TF</span></td><td>Nukleasi segmen <em>thrust fault</em> (sesar naik) — berkembang dari ujung sesar sebelumnya.</td><td>—</td><td>Awal; kecuali <strong>NUC POS = FT</strong> (§4).</td></tr>
+    <tr><td><span class="poi nuc">NUC-FSR</span></td><td>Nukleasi segmen FSR (<em>Fault-Surface Rupture</em>). Bersifat <em>retrospektif</em>: FSR dikenali dulu di frame jauh di depan, baru dicari kapan nukleasinya.</td><td>Panjang = 0</td><td>Awal; kecuali <strong>NUC POS = FT</strong> (§4).</td></tr>
+    <tr><td><span class="poi prp">PRP-BDF / PRP-TF / PRP-FSR</span></td><td>Propagasi selesai — frame ketika segmen sesar <strong>sudah tidak memanjang lagi</strong>.</td><td>PRP-FSR: ya</td><td><strong>Titik mulai aktif</strong> (default).</td></tr>
+    <tr><td><span class="poi act">ACT-FSR</span></td><td>FSR aktif / maksimum. Boleh beberapa frame. Diukur panjang &amp; sudut segmen FSR saja.</td><td>Ya (poli-line)</td><td>Sesar dihitung aktif.</td></tr>
+    <tr><td><span class="poi xfs">X-FS</span></td><td>Aktivitas sesar berhenti — momen satu siklus sesar berakhir. Selalu berdasarkan segmen FSR.</td><td>Panjang = 0</td><td><strong>Batas akhir (eksklusif)</strong>.</td></tr>
+  </tbody>
+</table>
+
+<figure>
+<svg viewBox="0 0 820 150" class="timeline" width="100%" role="img" aria-label="Garis waktu POI satu sesar">
+  <line x1="40" y1="95" x2="780" y2="95" stroke="#999" stroke-width="2"/>
+  <!-- ticks -->
+  <g font-family="sans-serif" font-size="12" text-anchor="middle">
+    <!-- NUC -->
+    <circle cx="90" cy="95" r="7" fill="#8a5a2b"/><text x="90" y="120" fill="#8a5a2b">NUC</text><text x="90" y="135" fill="#999" font-size="10">nukleasi</text>
+    <!-- gap belum ada sesar -->
+    <rect x="97" y="88" width="120" height="14" fill="#eee" stroke="#ccc"/>
+    <text x="157" y="80" fill="#999" font-size="10">belum ada sesar</text>
+    <!-- PRP -->
+    <circle cx="225" cy="95" r="7" fill="#c0392b"/><text x="225" y="120" fill="#c0392b">PRP</text><text x="225" y="135" fill="#999" font-size="10">mulai aktif</text>
+    <!-- ACTIVE band -->
+    <rect x="232" y="88" width="360" height="14" fill="#e8dcf1" stroke="#b79fce"/>
+    <text x="412" y="80" fill="#7d3c98" font-size="11" font-weight="bold">SESAR AKTIF (dihitung)</text>
+    <!-- ACT ticks -->
+    <circle cx="320" cy="95" r="6" fill="#7d3c98"/><circle cx="430" cy="95" r="6" fill="#7d3c98"/><circle cx="540" cy="95" r="6" fill="#7d3c98"/>
+    <text x="430" y="120" fill="#7d3c98">ACT-FSR …</text>
+    <!-- X-FS -->
+    <circle cx="600" cy="95" r="7" fill="#333"/><text x="600" y="120" fill="#333">X-FS</text><text x="600" y="135" fill="#999" font-size="10">berhenti</text>
+    <line x1="600" y1="70" x2="600" y2="105" stroke="#333" stroke-dasharray="3 3"/>
+  </g>
+</svg>
+<figcaption>Gambar 1. Rentang "aktif" satu sesar (default): dari <span class="poi prp" style="font-size:.8em">PRP</span> pertama hingga <span class="poi xfs" style="font-size:.8em">X-FS</span> (eksklusif). Frame antara <span class="poi nuc" style="font-size:.8em">NUC</span> dan <span class="poi prp" style="font-size:.8em">PRP</span> dianggap belum ada sesar.</figcaption>
+</figure>
+
+<h2>3. Aturan inti "Deteksi": rentang aktif satu sesar</h2>
+
+<div class="callout rule">
+  <h4>Definisi rentang aktif (default)</h4>
+  <p style="margin:.2em 0">Satu sesar dihitung <strong>aktif</strong> pada frame <code>f</code> bila:</p>
+  <div class="eqn">f<sub>start</sub> &nbsp;≤&nbsp; f &nbsp;&lt;&nbsp; f<sub>X-FS</sub></div>
+  <ul class="tight" style="margin:.4em 0 0">
+    <li><strong>f<sub>start</sub></strong> = frame <span class="poi prp" style="font-size:.8em">PRP</span> <em>pertama</em> (PRP-BDF / PRP-TF / PRP-FSR).</li>
+    <li><strong>f<sub>X-FS</sub></strong> = frame <span class="poi xfs" style="font-size:.8em">X-FS</span>, bersifat <strong>eksklusif</strong> (pada frame X-FS itu sendiri sesar sudah tidak aktif). Bila tak ada X-FS, batas atas = frame terakhir yang tercatat untuk sesar itu (inklusif).</li>
+  </ul>
+</div>
+
+<p>Dua ketentuan yang mendasari batas rentang, dengan kata-kata pengamat:</p>
+
+<p class="quote">
+"Frame antara NUC dan PRP adalah proses pemanjangan ini. Frame di antara NUC ke PRP dianggap belum ada sesar, karena seringkali frame di antara kedua POI ini tidak menunjukkan pergerakan dan proses propagasi seringkali terjadi secara tiba-tiba dalam waktu yang sangat pendek."
+</p>
+
+<p class="quote">
+"X-FS: titik pengamatan ketika tidak lagi teramati aktivitas sesar — momen ketika satu siklus sesar sudah berakhir. Namun frame yang ada di antara ACT-FSR dan X-FS dianggap masih ada sesar, karena proses deaktivasi sedang berjalan."
+</p>
+
+<p>
+Konsekuensinya: fase <strong>ACT-FSR → X-FS</strong> tetap dihitung aktif (deaktivasi masih berjalan), tetapi pada frame X-FS itu sendiri siklus dinyatakan berakhir sehingga sesar tersebut tidak lagi dihitung.
+</p>
+
+<h2>4. Kasus khusus: nukleasi <em>fault-tip</em> (NUC POS = FT) — sesar penerus</h2>
+
+<p>
+Terdapat anomali penting. Ketika sebuah sesar baru <strong>bernukleasi dari ujung (fault-tip, FT)</strong> sesar yang sudah ada sebelumnya, kehadiran FT itu sendiri sudah <strong>mengindikasikan adanya sesar yang sedang aktif</strong> — yaitu segmen bawah (thrust fault / BDF) dari rangkaian yang belum benar-benar mati. Dengan kata lain, yang berhenti pada X-FS hanyalah <em>segmen FSR</em>-nya, sedangkan segmen di bawahnya masih hidup dan justru menjadi tempat nukleasi FSR berikutnya.
+</p>
+
+<p class="quote">
+"Karena FT&gt;UP, ini menunjukkan perkembangan lanjutan dari sesar yang ada sebelumnya, jadi satu bidang sesar sendiri… nukleasi FSR pada FT dari thrust fault yang terbentuk sebelumnya, dan setiap FT pasti arahnya ke atas, maka FT selalu UP. Ini bukan programatik, tapi memang secara faktual seperti itu."
+</p>
+
+<div class="callout rule">
+  <h4>Aturan FT (koreksi rentang mulai)</h4>
+  <p style="margin:.2em 0">Bila sebuah sesar memiliki POI <span class="poi nuc" style="font-size:.8em">NUC-*</span> dengan <strong>NUC POS = FT</strong> (fault-tip = lanjutan sesar yang sudah ada), maka sesar tersebut dihitung <strong>aktif sejak frame NUC itu</strong> — tidak menunggu PRP:</p>
+  <div class="eqn">f<sub>start</sub> = min( frame NUC-* ber-POS=FT ,&nbsp; frame PRP pertama )</div>
+  <p class="small" style="margin:.4em 0 0">Berlaku untuk semua POI NUC-* yang ber-POS=FT. Sebab: FT menandakan sesar induk masih aktif secara struktural, sehingga nukleasi itu bukan "belum ada sesar", melainkan kelanjutan aktivitas yang sudah berlangsung.</p>
+</div>
+
+<h3>Contoh terverifikasi (P-LF-4, F10 → F11)</h3>
+<p>
+Rangkaian di mana F10 berakhir tepat saat F11 lahir dari <em>thrust</em>-nya:
+</p>
+<table>
+  <caption>Tabel 2. Data pengamatan F10 &amp; F11 dan hasil Deteksi pada frame kunci.</caption>
+  <thead><tr><th>Sesar</th><th>Frame &amp; POI</th><th>Rentang aktif</th></tr></thead>
+  <tbody>
+    <tr><td><strong>F10</strong></td><td>NUC-TF@328 · PRP-TF@330 · NUC-FSR@331 · PRP-FSR@332 · ACT-FSR@335/339/342 · <span class="poi xfs">X-FS</span>@347 (POS=T, DIR=UP)</td><td><code>[330, 347)</code></td></tr>
+    <tr><td><strong>F11</strong></td><td><span class="poi nuc">NUC-FSR</span>@344 (<strong>POS=FT</strong>, DIR=UP) · PRP-FSR@348 · ACT-FSR@355…397</td><td><code>[344, …]</code> — <strong>mulai dari NUC-FSR(FT)@344</strong>, bukan PRP@348</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <caption>Tabel 3. Nilai "Deteksi" (jumlah sesar aktif) pada beberapa frame — hasil sistem.</caption>
+  <thead><tr><th>Frame</th><th>F10 aktif?</th><th>F11 aktif?</th><th>Deteksi</th><th>Keterangan</th></tr></thead>
+  <tbody>
+    <tr><td>328</td><td>tidak (belum PRP)</td><td>tidak</td><td style="text-align:center"><strong>0</strong></td><td>NUC-TF F10, belum ada sesar.</td></tr>
+    <tr><td>330</td><td>ya</td><td>tidak</td><td style="text-align:center"><strong>1</strong></td><td>F10 mulai (PRP).</td></tr>
+    <tr><td>344</td><td>ya</td><td>ya (FT)</td><td style="text-align:center"><strong>2</strong></td><td>F10 masih aktif; F11 mulai lewat FT (tumpang tindih).</td></tr>
+    <tr><td><strong>347</strong></td><td>tidak (X-FS eksklusif)</td><td>ya</td><td style="text-align:center"><strong>1</strong></td><td>F10 berhenti; F11 (yang lahir dari <em>thrust</em> F10) masih aktif.</td></tr>
+  </tbody>
+</table>
+
+<div class="callout edge">
+  <h4>Interpretasi</h4>
+  <p style="margin:.2em 0">Tanpa aturan FT, frame 347 akan terhitung <strong>0</strong> (F10 berhenti, F11 belum PRP). Padahal secara fisik rangkaian belum mati — segmen bawah F10 masih aktif dan menjadi induk F11. Aturan FT mengoreksi hitungan menjadi <strong>1</strong>, sesuai kondisi lapangan. F11 diperlakukan sebagai sesar terpisah (boleh tumpang tindih dengan fase deaktivasi F10).</p>
+</div>
+
+<h2>5. Mekanisme deaktivasi dan atribut X-FS</h2>
+<p>
+Atribut NUC POS &amp; PRP DIR pada X-FS mencerminkan <em>bagaimana</em> segmen FSR berhenti aktif:
+</p>
+<table>
+  <caption>Tabel 4. Pola deaktivasi segmen FSR (atribut pada X-FS).</caption>
+  <thead><tr><th>NUC POS · PRP DIR</th><th>Mekanisme</th></tr></thead>
+  <tbody>
+    <tr><td><strong>T · UP</strong></td><td>Deaktivasi <strong>merambat ke permukaan</strong> — seperti propagasi terbalik: bukan memanjang melainkan memendek, segmen yang terakhir hilang adalah yang paling dekat permukaan (T / top). Segmen <em>thrust</em>/BDF biasanya sudah non-aktif lebih dulu.</td></tr>
+    <tr><td><strong>ALL · SIM</strong></td><td>Deaktivasi <strong>simultan</strong> — seluruh segmen FSR meredup bersamaan (bukan merambat). T·UP di sini terjadi pada segmen thrust/BDF, bukan pada FSR.</td></tr>
+    <tr><td><strong>M · BOTH</strong></td><td>Nukleasi di tengah lapisan pasir (middle) selalu berkembang dua arah (naik &amp; turun), maka PRP DIR = BOTH. Teramati faktual, bukan aturan program.</td></tr>
+    <tr><td><strong>FT · UP</strong></td><td>Nukleasi/perkembangan dari ujung sesar (fault-tip); FT selalu ke atas → UP. Menandakan sesar induk masih aktif (lihat §4).</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Alur kerja pengamatan (workflow)</h2>
+<p>Deskripsi setiap sesar bersifat sebagian <strong>retrospektif</strong>: FSR dikenali dulu, baru ditelusuri mundur kapan nukleasinya. Urutan kerja pengukuran evolusi bentuk segmen FSR:</p>
+<ol class="wf">
+  <li>Identifikasi <span class="poi prp">PRP-FSR</span> — segmen pertama yang membentuk FSR. Panjang diukur dengan menggambar <em>poli-line</em> (umumnya 3 vertex) <strong>pada segmen FSR saja</strong>, tidak diperpanjang ke <em>thrust fault</em> maupun BDF.</li>
+  <li>Tentukan <span class="poi xfs">X-FS</span> — frame ketika aktivitas FSR berhenti (satu siklus berakhir).</li>
+  <li>Cari <span class="poi act">ACT-FSR</span> terakhir (persis sebelum X-FS) sebagai keyframe akhir. Gambar bidang sesar di situ sebagai acuan bentuk akhir segmen FSR.</li>
+  <li>Interpolasi evolusi bentuk dari PRP-FSR (bentuk awal) ke ACT-FSR terakhir (bentuk akhir), lalu <strong>koreksi keyframe per-frame diagnostik</strong> di antaranya — analog dengan koreksi keyframe pada perangkat animasi (<em>After Effects</em>). Dari sini diperoleh evolusi <strong>posisi vertex</strong>, <strong>sudut</strong> (regresi linear atas vertex), dan <strong>panjang</strong> poli-line sepanjang aktivitas FSR.</li>
+</ol>
+<p class="small">
+Catatan: segmen FSR yang diamati pada PRP-FSR biasanya adalah segmen yang <em>terakhir</em> aktif, karena segmen <em>thrust fault</em> dan BDF umumnya mengalami deaktivasi lebih dulu sebelum FSR berhenti — seperti "seleting" yang merambat ke permukaan (kombinasi T · UP).
+</p>
+
+<h2>7. Ringkasan algoritma "Deteksi"</h2>
+<div class="eqn">
+Untuk setiap sesar F# pada penampang:<br>
+&nbsp;&nbsp;kumpulkan frame POI-nya<br>
+&nbsp;&nbsp;f_start = min( frame NUC-* ber-POS=FT [bila ada] ,&nbsp; frame PRP-* pertama )<br>
+&nbsp;&nbsp;f_xfs&nbsp;&nbsp; = frame X-FS&nbsp; (bila ada → batas EKSKLUSIF; bila tidak → frame maks, inklusif)<br>
+&nbsp;&nbsp;sesar aktif pada f&nbsp; ⟺&nbsp; f_start ≤ f &lt; f_xfs&nbsp; (atau ≤ f_maks bila tak ada X-FS)<br>
+<br>
+Deteksi(frame) = jumlah sesar yang aktif pada frame tersebut.
+</div>
+<p class="small">
+Sistem dijalankan <strong>on-demand</strong> (satu tombol) setelah deskripsi final; setiap dijalankan, seluruh baris dibaca ulang dari awal ke akhir dan kolom <span class="mono">Deteksi</span> diperbarui. Baris yang nilai penghitungan manualnya (<span class="mono"># ACT F</span>) berbeda dari hasil sistem ditandai untuk peninjauan ulang — menjaga konsistensi antara interpretasi mata dan aturan komputasi.
+</p>
+
+<hr>
+<p class="small">Dokumen ini merangkum aturan komputasi dan narasi metodologis untuk keperluan manuskrip. Definisi POI, batas rentang, dan aturan <em>fault-tip</em> bersumber dari catatan pengamatan per-frame dan telah diverifikasi terhadap data eksperimen (mis. P-LF-4, rangkaian F10→F11).</p>
+
+</body>
+</html>

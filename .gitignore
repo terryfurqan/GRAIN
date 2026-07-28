@@ -1,0 +1,51 @@
+# =====================================================================
+#  GRAIN — this repository tracks CODE and DOCUMENTATION only.
+#  Experimental data (photographs, PIV results, exports) stays local.
+# =====================================================================
+
+# ---- Photographs & raw data ----
+RAW/
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+!docs/img/*.jpg
+!docs/img/*.png
+!docs/shots/*.png
+
+# ---- MATLAB data / results / progress / caches ----
+*.mat
+PIV_*/
+.pabsa2_unpack_*/
+*_QPIV_cache.mat
+*_autopot.mat
+
+# ---- Module outputs (regenerable, never source) ----
+PAB_export/
+PAB4_export/
+PAB5_export/
+PAB4_DESC/
+PAB5_learn/
+CLCC/
+data/
+
+# ---- MATLAB project metadata (machine-specific) ----
+*.prj
+resources/project/
+
+# ---- Backups & scratch ----
+*.bak
+*.bak_*
+*_DEPRECATED*
+*.asv
+*.autosave
+tmp_*
+*.tmp
+slprj/
+*.mex*
+
+# ---- OS / editor ----
+.DS_Store
+.vscode/
+*.swp
+~$*

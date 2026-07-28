@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAB_SA &mdash; Dokumentasi Alur Kerja</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1d2127; --muted:#5b6470; --line:#e2e6eb;
+    --accent:#3a5ccc; --accent-soft:#eef1fb;
+    --raw:#b06a00; --prep:#2f7d4f; --piv:#3a5ccc; --prod:#9046b8; --note:#c0392b;
+    --warn-bg:#fff7e6; --warn-line:#f0c36d; --warn-fg:#8a5a00;
+    --ok-bg:#eef8f0; --ok-line:#9ed3ae; --ok-fg:#1e6b3a;
+    --code-bg:#f4f6f9;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 24px 96px}
+  header.hero{
+    border-bottom:1px solid var(--line); padding:48px 24px 36px; text-align:center;
+    background:linear-gradient(180deg,#f7f9fc 0%,#ffffff 100%);
+  }
+  header.hero h1{margin:0 0 6px; font-size:32px; letter-spacing:-.5px}
+  header.hero .sub{color:var(--muted); font-size:15px; margin:0}
+  header.hero .tag{
+    display:inline-block; margin-top:14px; padding:4px 12px; border-radius:999px;
+    background:var(--accent-soft); color:var(--accent); font-size:13px; font-weight:600;
+  }
+  nav.toc{
+    position:sticky; top:0; z-index:5; background:rgba(255,255,255,.94);
+    backdrop-filter:saturate(1.4) blur(6px);
+    border-bottom:1px solid var(--line); padding:10px 0; margin-bottom:8px;
+  }
+  nav.toc ul{list-style:none; display:flex; flex-wrap:wrap; gap:6px 18px; margin:0 auto; padding:0 24px; max-width:980px; justify-content:center}
+  nav.toc a{color:var(--muted); text-decoration:none; font-size:13.5px; font-weight:500}
+  nav.toc a:hover{color:var(--accent)}
+  h2{font-size:23px; margin:48px 0 6px; padding-top:8px; letter-spacing:-.3px}
+  h2 .num{color:var(--accent); font-variant-numeric:tabular-nums}
+  h3{font-size:17px; margin:26px 0 6px}
+  p{margin:8px 0}
+  .lead{color:var(--muted); font-size:16px; margin-top:2px}
+  code,kbd{background:var(--code-bg); border:1px solid var(--line); border-radius:5px; padding:1px 6px; font:13.5px/1 "SF Mono",ui-monospace,Menlo,Consolas,monospace}
+  .flow{
+    display:flex; align-items:stretch; gap:0; flex-wrap:wrap; justify-content:center;
+    margin:22px 0 8px;
+  }
+  .flow .node{
+    flex:1 1 150px; min-width:140px; border:1px solid var(--line); border-radius:12px;
+    padding:14px 14px; text-align:center; background:#fff; position:relative;
+  }
+  .flow .node .k{font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted)}
+  .flow .node .t{font-weight:600; margin:4px 0 2px}
+  .flow .node .d{font-size:12.5px; color:var(--muted)}
+  .flow .arrow{display:flex; align-items:center; color:var(--muted); font-size:20px; padding:0 8px}
+  .pill{display:inline-block; font-size:11.5px; font-weight:700; padding:2px 9px; border-radius:999px; color:#fff; vertical-align:middle}
+  .pill.raw{background:var(--raw)} .pill.prep{background:var(--prep)} .pill.piv{background:var(--piv)} .pill.prod{background:var(--prod)} .pill.note{background:var(--note)}
+  .step{border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:10px; padding:18px 20px; margin:16px 0; background:#fff}
+  .step h2{margin-top:0}
+  .step .role{color:var(--muted); font-style:italic; margin:2px 0 12px}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:#fcfdff}
+  .card h4{margin:0 0 6px; font-size:14px; letter-spacing:.2px}
+  ul.tight{margin:6px 0; padding-left:20px}
+  ul.tight li{margin:3px 0}
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:14px}
+  th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top}
+  th{background:#f4f6f9; font-weight:600}
+  td.center{text-align:center}
+  .callout{border-radius:10px; padding:13px 16px; margin:16px 0; font-size:14.5px}
+  .callout.warn{background:var(--warn-bg); border:1px solid var(--warn-line); color:var(--warn-fg)}
+  .callout.ok{background:var(--ok-bg); border:1px solid var(--ok-line); color:var(--ok-fg)}
+  .callout .h{font-weight:700; display:block; margin-bottom:3px}
+  .drive{display:flex; gap:14px; flex-wrap:wrap; margin:14px 0}
+  .drive .disk{flex:1 1 260px; border:1px solid var(--line); border-radius:10px; padding:14px 16px}
+  .drive .disk.active{border-color:var(--piv); background:#f6f8ff}
+  .drive .disk.backup{border-color:var(--raw); background:#fffaf2}
+  .drive .disk .title{font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px}
+  .muted{color:var(--muted)}
+  footer{border-top:1px solid var(--line); margin-top:64px; padding:22px 0 0; color:var(--muted); font-size:13px; text-align:center}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin:18px 0 2px; font-size:13px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>PAB&middot;SA &mdash; Alur Kerja PIV</h1>
+  <p class="sub">PIVlab Automasi Batch &middot; Single App &mdash; dokumentasi alur kerja dari foto mentah hingga interpretasi</p>
+  <span class="tag">Status desain &middot; pembaruan 2026-06-25</span>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#prinsip">Prinsip</a></li>
+    <li><a href="#peta">Peta Alur</a></li>
+    <li><a href="#step0">Step 0</a></li>
+    <li><a href="#step1">Step 1</a></li>
+    <li><a href="#step2">Step 2</a></li>
+    <li><a href="#step3">Step 3</a></li>
+    <li><a href="#step4">Step 4</a></li>
+    <li><a href="#artefak">Artefak &amp; Arsip</a></li>
+    <li><a href="#terbuka">Catatan Terbuka</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ PRINSIP ============ -->
+  <h2 id="prinsip">Prinsip Dasar</h2>
+  <p class="lead">Motivasi utama: <strong>merapikan manajemen data</strong>.</p>
+  <p>Selama ini foto eksperimen tersebar di banyak folder dan berkas yang memenuhi hard disk. Tujuan PAB&middot;SA adalah membuat <strong>satu eksperimen menjadi satu berkas</strong> &mdash; ringkas untuk diolah ulang secara batch, dan (nantinya) terbinarisasi sehingga lebih kecil serta tidak mudah dibuka tanpa sistem kita.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Satu eksperimen = satu berkas</h4>
+      <p class="muted">Mengganti tumpukan folder JPEG yang berserakan dengan berkas <code>.mat</code> tunggal yang membawa seluruh riwayat.</p>
+    </div>
+    <div class="card">
+      <h4>Riwayat menyatu</h4>
+      <p class="muted">Setiap berkas membawa jejak lengkap: foto, EXIF, jitter, crop, hingga keputusan analisis &mdash; bukan tersebar di berkas terpisah.</p>
+    </div>
+    <div class="card">
+      <h4>Keputusan non-destruktif</h4>
+      <p class="muted">Frame bermasalah <em>ditandai</em>, bukan dihapus. Keputusan dapat direvisi tanpa kehilangan data asli.</p>
+    </div>
+    <div class="card">
+      <h4>Siap analisis agentik</h4>
+      <p class="muted">Menggabungkan data kuantitatif (terbaca sistem) dan deskriptif (interpretasi peneliti) agar dapat dieksplorasi bersama Claude.</p>
+    </div>
+  </div>
+
+  <!-- ============ PETA ALUR ============ -->
+  <h2 id="peta">Peta Alur</h2>
+  <p class="lead">Jalur produksi sehari-hari: <strong>JPEG &rarr; MAT&nbsp;PREP &rarr; MAT&nbsp;PIV</strong>.</p>
+
+  <div class="flow">
+    <div class="node"><div class="k">Sumber</div><div class="t">Foto JPEG</div><div class="d">hasil fotografi sandbox (mis. 300 frame)</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node"><div class="k">Step 0</div><div class="t">Validasi Frame</div><div class="d">tandai frame bermasalah (QPIV)</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node"><div class="k">Step 1</div><div class="t">Stabilisasi</div><div class="d">crop + anchor &rarr; <span class="pill prep">MAT PREP</span></div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node"><div class="k">Step 2</div><div class="t">Analisis PIV</div><div class="d">preview + batch &rarr; <span class="pill piv">MAT PIV</span></div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node"><div class="k">Step 3</div><div class="t">Produksi</div><div class="d">MP4 &middot; Image Seq &middot; Montase</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node"><div class="k">Step 4</div><div class="t">Komentar</div><div class="d">catatan &amp; interpretasi <span class="muted">(belum dibuat)</span></div></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--raw)"></span> MAT RAW (arsip)</span>
+    <span><span class="dot" style="background:var(--prep)"></span> MAT PREP (arsip utama)</span>
+    <span><span class="dot" style="background:var(--piv)"></span> MAT PIV (disk aktif)</span>
+  </div>
+
+  <div class="callout ok">
+    <span class="h">Reduksi data terjadi non-destruktif.</span>
+    Dari 300 foto, mungkin hanya ~100 yang akan dianalisis PIV (akibat exclusion + skip). Namun frame tidak pernah dibuang secara fisik di tahap mana pun &mdash; ia hanya ditandai (flag), lalu efektif diabaikan saat Step 2 membaca flag tersebut.
+  </div>
+
+  <!-- ============ STEP 0 ============ -->
+  <div class="step" id="step0">
+    <h2><span class="num">Step 0</span> &middot; Validasi Frame</h2>
+    <p class="role">Menyaring frame bermasalah sebelum melangkah &mdash; bukan stabilisasi, bukan pengukuran presisi.</p>
+
+    <p>Tujuan Step 0 sempit dan jelas: <strong>mendeteksi frame yang bermasalah</strong>, terutama frame dengan <strong>pergeseran besar atau yang justru tidak bergerak</strong> (mesin berhenti). Ini dilakukan lewat analisis <strong>QPIV</strong> (Quick PIV) pada strip tipis untuk hemat komputasi.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Sinyal yang dicari</h4>
+        <ul class="tight">
+          <li><strong>Frame mati</strong>: indikator gerak yang seharusnya bernilai penuh (mis. 4) jatuh ke 0/2/3.</li>
+          <li><strong>Interval tak teratur</strong>: selisih waktu EXIF antar-foto menyimpang jauh dari median (shutter counter roll-over).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Konfigurasi yang ditetapkan</h4>
+        <ul class="tight">
+          <li><strong>OVL / NOVL</strong> &mdash; pasangan tumpang-tindih (<code>1-2, 2-3, &hellip;</code>) atau tidak (<code>1-2, 3-4, &hellip;</code>).</li>
+          <li><strong>Skip</strong> &mdash; jumlah frame yang dilewati antar pasangan.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="h">Validasi ini berbantuan manusia.</span>
+      Step 0 adalah penyaring <em>kasar</em>, bukan vonis otomatis. Mata peneliti diperlukan untuk memutuskan frame mana yang benar-benar bermasalah. Karena sinyalnya kasar (pergeseran besar vs diam), <strong>jitter sub-piksel (&lt;1&nbsp;px) dan crop tidak material</strong> di tahap ini &mdash; keduanya baru relevan di Step 1.
+    </div>
+
+    <p><strong>Keluaran:</strong> daftar keputusan exclusion + setelan OVL/NOVL &amp; skip, disimpan sebagai <em>flag</em> (non-destruktif).</p>
+  </div>
+
+  <!-- ============ STEP 1 ============ -->
+  <div class="step" id="step1" style="border-left-color:var(--prep)">
+    <h2><span class="num">Step 1</span> &middot; Stabilisasi &rarr; <span class="pill prep">MAT PREP</span></h2>
+    <p class="role">Menghasilkan arsip utama: satu berkas berisi seluruh riwayat dari foto hingga siap-PIV.</p>
+
+    <h3>1. Cropping (Mode 0 &amp; Mode 1)</h3>
+    <p>Tahap pertama adalah menentukan apakah eksperimen ini perlu di-crop. Konteksnya: kita menangani <strong>data lama</strong> (umumnya sudah ter-crop) dan <strong>data baru</strong>. Karena itu kedua mode wajib tersedia:</p>
+    <ul class="tight">
+      <li><strong>Mode 0</strong> &mdash; tanpa crop (untuk data lama yang sudah ter-crop).</li>
+      <li><strong>Mode 1</strong> &mdash; crop ulang (rectangle / polygon-squaring).</li>
+    </ul>
+
+    <h3>2. Penentuan lokasi stabilisasi (anchor jitter)</h3>
+    <p>Setelah crop selesai, ditentukan lokasi anchor stabilisasi. ROI jitter berukuran kecil dan lokasinya sudah diketahui; pergeserannya sub-piksel.</p>
+
+    <div class="callout ok">
+      <span class="h">Keluaran: MAT PREP.</span>
+      Satu berkas <code>.mat</code> berisi paket lengkap + <strong>seluruh riwayat</strong> (foto, EXIF, jitter, crop) berikut <strong>flag exclude/skip</strong> dari Step 0. Belum mengandung vektor PIV. <strong>Inilah arsip utama</strong> &mdash; informasi inti yang disimpan jangka panjang.
+    </div>
+  </div>
+
+  <!-- ============ STEP 2 ============ -->
+  <div class="step" id="step2" style="border-left-color:var(--piv)">
+    <h2><span class="num">Step 2</span> &middot; Analisis PIV &rarr; <span class="pill piv">MAT PIV</span></h2>
+    <p class="role">Fokus murni analisis PIV: preview hasil akhir + batch processing.</p>
+
+    <p>Step 2 menerima <strong>MAT PREP</strong> sebagai masukan dan menjalankan analisis PIV. Tidak ada lagi exclusion atau skip di sini &mdash; semua keputusan itu sudah final sejak Step 0 dan diterapkan secara non-destruktif lewat flag.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Preview</h4>
+        <p class="muted">Menampilkan seperti apa hasil akhir analisis sebelum produksi penuh.</p>
+      </div>
+      <div class="card">
+        <h4>Batch processing</h4>
+        <p class="muted">Memproses daftar eksperimen sekaligus &mdash; dimudahkan karena masukan sudah berupa berkas <code>.mat</code> yang sederhana.</p>
+      </div>
+    </div>
+
+    <div class="callout ok">
+      <span class="h">Keluaran: MAT PIV.</span>
+      Paket lengkap + <strong>GS</strong> (citra) + <strong>data pergerakan</strong> (vektor). Inilah berkas besar yang menjadi sumber bagi Step 3 &amp; Step 4, dan satu-satunya artefak yang disimpan di hard disk aktif.
+    </div>
+  </div>
+
+  <!-- ============ STEP 3 ============ -->
+  <div class="step" id="step3" style="border-left-color:var(--prod)">
+    <h2><span class="num">Step 3</span> &middot; Produksi</h2>
+    <p class="role">Menghasilkan keluaran visual dari MAT PIV.</p>
+    <div class="flow">
+      <div class="node"><div class="t">MP4</div><div class="d">video animasi medan aliran</div></div>
+      <div class="node"><div class="t">Image Sequence</div><div class="d">rangkaian gambar per-frame</div></div>
+      <div class="node"><div class="t">Montase</div><div class="d">grid / dua-kolom dalam satu PNG</div></div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 4 ============ -->
+  <div class="step" id="step4" style="border-left-color:var(--note)">
+    <h2><span class="num">Step 4</span> &middot; Komentar &amp; Analisis <span class="muted" style="font-size:14px">(belum dibuat)</span></h2>
+    <p class="role">Sistem note-taking deskriptif &mdash; tempat peneliti bercerita tentang eksperimennya.</p>
+
+    <p>Step 4 membaca <strong>MAT PIV</strong> dan menjadi tempat menghimpun interpretasi: eksplorasi data, kurva dan analisis kurva, serta catatan/komentar peneliti beserta riwayat apa saja yang telah dilakukan. Pendekatannya mirip PIVTerr Step 2.</p>
+
+    <p>Sasaran besarnya: menyatukan <strong>data deskriptif</strong> (interpretasi peneliti) dan <strong>data kuantitatif</strong> (terbaca sistem) dalam satu tempat, sehingga analisis data dapat dikerjakan secara <strong>agentik bersama Claude</strong>.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Aturan penyimpanan</h4>
+        <p class="muted">Semua catatan disimpan <strong>di dalam satu berkas</strong> (MAT PIV) &mdash; tidak tersebar ke berkas lain.</p>
+      </div>
+      <div class="card">
+        <h4>Step 4a &mdash; versi ringkas</h4>
+        <p class="muted">Hanya catatan penting tanpa data mentah/GS, agar ringan dan ramah untuk analisis agentik (berkas penuh sulit dicerna).</p>
+      </div>
+    </div>
+    <p class="muted">Keluaran tidak monolitik: satu eksperimen umumnya satu interpretasi, namun tidak ada larangan menduplikasi satu eksperimen menjadi dua berkas untuk komentar yang berbeda (jarang terjadi).</p>
+  </div>
+
+  <!-- ============ ARTEFAK ============ -->
+  <h2 id="artefak">Artefak &amp; Strategi Arsip</h2>
+  <p class="lead">Ada tiga jenis berkas <code>.mat</code>, dengan peran dan lokasi penyimpanan yang berbeda.</p>
+
+  <table>
+    <thead>
+      <tr><th>Berkas</th><th>Dihasilkan</th><th>Isi</th><th>Peran &amp; lokasi</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill prep">MAT PREP</span></td>
+        <td>Step 1</td>
+        <td>Foto + EXIF + jitter + crop + riwayat + flag exclude/skip</td>
+        <td><strong>Arsip utama.</strong> Disimpan di <em>drive backup</em>.</td>
+      </tr>
+      <tr>
+        <td><span class="pill piv">MAT PIV</span></td>
+        <td>Step 2</td>
+        <td>Paket + GS + data pergerakan (besar)</td>
+        <td>Satu-satunya yang tinggal di <em>hard disk aktif</em>; dibaca Step 3 &amp; 4.</td>
+      </tr>
+      <tr>
+        <td><span class="pill raw">MAT RAW</span></td>
+        <td>Di akhir, di luar siklus</td>
+        <td>Foto JPEG asli yang dibekukan, belum disentuh</td>
+        <td>Antisipasi untuk kasus langka; bila ada, disimpan di <em>drive backup</em>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="drive">
+    <div class="disk active">
+      <div class="title"><span class="pill piv">aktif</span> Hard disk aktif</div>
+      <p class="muted" style="margin:0">Hanya <strong>MAT PIV</strong>. Yang sehari-hari dipakai untuk produksi dan interpretasi.</p>
+    </div>
+    <div class="disk backup">
+      <div class="title"><span class="pill raw">backup</span> Drive backup</div>
+      <p class="muted" style="margin:0"><strong>MAT PREP</strong> (arsip utama) dan <strong>MAT RAW</strong> (bila dibuat), bersebelahan. Jarang disentuh.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="h">MAT RAW: hanya jaring pengaman, bukan kebutuhan.</span>
+    Pada dasarnya MAT RAW tidak diinginkan. Ia hanya antisipasi untuk kasus <strong>sangat langka</strong> di mana MAT PREP mereduksi data secara besar-besaran (mis. 300&rarr;100). Secara umum, <strong>MAT PREP-lah arsip utamanya</strong>.
+  </div>
+
+  <h3>Masukan Step 0 &amp; pembongkaran arsip</h3>
+  <p>Masukan Step 0 adalah <strong>JPEG saja</strong>. Untuk memproses ulang dari arsip, disediakan <em>unpacker</em> yang membongkar MAT RAW kembali menjadi folder JPEG &mdash; yang lalu menjadi masukan Step 0. Secara logika, modul unpacker ini dapat disematkan langsung di dalam Step 0 sehingga tidak perlu sistem terpisah.</p>
+
+  <!-- ============ CATATAN TERBUKA ============ -->
+  <h2 id="terbuka">Catatan Terbuka</h2>
+  <p class="lead">Hal yang sudah disepakati untuk diantisipasi, selama tidak menambah kerumitan sistem.</p>
+
+  <ul class="tight">
+    <li><strong>Provenance.</strong> MAT PIV mencatat identitas MAT PREP induknya (nama + tanggal). Sebaliknya, MAT PREP mencatat daftar keluaran &mdash; MAT PIV apa saja yang pernah dihasilkan darinya &mdash; agar rantai dapat ditelusuri bila salah satu berkas rusak. Skenario ini diakui sangat jarang.</li>
+    <li><strong>Binarisasi.</strong> Akan diimplementasikan kemudian: membuat berkas lebih kecil dan tidak mudah dibuka tanpa sistem kita. Untuk saat ini dipakai apa adanya.</li>
+    <li><strong>Pewarisan konfigurasi Step&nbsp;0 &rarr; Step&nbsp;2.</strong> Setelan QPIV (OVL/NOVL, skip, daftar frame diabaikan) yang ditetapkan di Step 0 belum terbawa otomatis ke Step 2; penautan ini menjadi pekerjaan perbaikan berikutnya.</li>
+  </ul>
+
+  <footer>
+    PAB&middot;SA &mdash; PIVlab Automasi Batch &middot; Single App<br>
+    Dokumentasi alur kerja &middot; MATLAB R2025b &middot; pembaruan 2026-06-25
+  </footer>
+
+</div>
+</body>
+</html>
