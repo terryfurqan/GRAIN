@@ -19,9 +19,16 @@ prefHad = ispref('GRAINAXPOT','layout'); prefOld = [];
 if prefHad, prefOld = getpref('GRAINAXPOT','layout'); end
 restorePref = onCleanup(@() i_restorePref(prefHad, prefOld)); %#ok<NASGU>
 if nargin < 1 || isempty(rootDir)
-    rootDir = fullfile(roots.data_root, 'RAW', 'PIV_2026-06-24');
+    rootDir = fullfile(grain_fixture_root(), 'RAW', 'PIV_2026-06-24');
+    if ~isfolder(rootDir)   % fallback: tata letak lama (induk folder project)
+        rootDir = fullfile(roots.data_root, 'RAW', 'PIV_2026-06-24');
+    end
 end
-assert(isfolder(rootDir), 'Folder tak ada: %s', rootDir);
+if ~isfolder(rootDir)
+    fprintf(['[SKIP] test_smoke_grainaxpot: fixture tak ada (%s). '  ...
+             'Set GRAIN_FIXTURES ke folder data Anda.\n'], rootDir);
+    return;
+end
 
 % --- engine murni: round-trip ---
 tmp = fullfile(tempdir, 'axpot_eng_test.mat');

@@ -291,12 +291,12 @@ function h = i_buildUI(h)
         'Position',[0.05 0.534 0.44 0.040],'String','💾 Save Progress', ...
         'BackgroundColor',[0.80 0.90 0.80], ...
         'TooltipString','Overwrite <ROOT>/PAB1_progress.mat (ROI + jitter results of every exp). No dialog.', ...
-        'Callback',@(s,e) i_onSavePab1Progress(fig));
+        'Callback',@(s,e) i_onSaveGrain1Progress(fig));
     h.btnLoadProg = uicontrol('Parent',pnlR,'Style','pushbutton','Units','normalized', ...
         'Position',[0.51 0.534 0.44 0.040],'String','📂 Load Progress', ...
         'BackgroundColor',[0.86 0.93 0.99], ...
         'TooltipString','Load <ROOT>/PAB1_progress.mat (or pick a file) — carry on with the ROI work.', ...
-        'Callback',@(s,e) i_onLoadPab1Progress(fig));
+        'Callback',@(s,e) i_onLoadGrain1Progress(fig));
 
     % -- Keluaran / handoff ke Step 2 (GRAIN) --
     uicontrol('Parent',pnlR,'Style','text','Units','normalized', ...
@@ -441,7 +441,7 @@ function i_rescan(fig)
 
     % AUTO-LOAD progress GRAIN1 per-root bila ada (kembalikan ROI+jitter).
     if ~isempty(exps) && isfile(fullfile(h.root,'PAB1_progress.mat'))
-        try, i_onLoadPab1Progress(fig); h = guidata(fig); exps = h.exps; catch, end
+        try, i_onLoadGrain1Progress(fig); h = guidata(fig); exps = h.exps; catch, end
     end
 
     i_fillTable(fig);
@@ -1435,7 +1435,7 @@ function prepDir = i_pickPrepOutput(fig)
 end
 
 
-function i_onSavePab1Progress(fig)
+function i_onSaveGrain1Progress(fig)
 %I_ONSAVEGRAIN1PROGRESS  Simpan state ROI+jitter GRAIN1 ke <ROOT>/PAB1_progress.mat
 %   (berkas KHUSUS GRAIN1, beda dari QPIV/handoff). Tanpa dialog.
     h = guidata(fig);
@@ -1453,7 +1453,7 @@ function i_onSavePab1Progress(fig)
 end
 
 
-function i_onLoadPab1Progress(fig)
+function i_onLoadGrain1Progress(fig)
 %I_ONLOADGRAIN1PROGRESS  Muat <ROOT>/PAB1_progress.mat (auto bila ada; jika tidak,
 %   dialog). Kembalikan ROI + hasil jitter ke exp dengan path yang cocok.
     h = guidata(fig);

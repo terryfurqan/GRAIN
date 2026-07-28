@@ -33,8 +33,8 @@ function results = run_all_smoke(pattern)
     for i = 1:numel(names)
         n = names{i};
         isSmoke = startsWith(n, 'test_smoke_');
-        isPab   = startsWith(n, 'test_grain');   % test_grain4_*, test_grain5_*, dst.
-        keep(i) = isSmoke || isPab;
+        isGrainTest   = startsWith(n, 'test_grain');   % test_grain4_*, test_grain5_*, dst.
+        keep(i) = isSmoke || isGrainTest;
     end
     names = names(keep);
     if ~isempty(pattern)

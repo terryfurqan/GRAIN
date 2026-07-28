@@ -631,7 +631,7 @@ function h = i_buildEditTab(h, P, fig)
         'FontWeight','bold','BackgroundColor',[0.92 0.90 0.98], ...
         'TooltipString',['Tulis label HW/F/F0/FFW editan ini ke berkas sesi GRAIN4 supaya ' ...
         'terbaca di GRAIN4 (mengubah data GRAIN4 — konfirmasi dulu; garis PSG tak disentuh).'], ...
-        'Callback',@(s,e) i_onSyncToPab4(fig));
+        'Callback',@(s,e) i_onSyncToGrain4(fig));
     y = y - 0.052;
 
     h.txtEdit = uicontrol('Parent',P,'Style','text','Units','normalized', ...
@@ -1113,7 +1113,7 @@ function i_saveProject(fig)
     % menyentuh data GRAIN4) supaya tak menimpa sesi GRAIN4 tanpa sengaja.
 end
 
-function i_onSyncToPab4(fig)
+function i_onSyncToGrain4(fig)
 %I_ONSYNCTOGRAIN4  PIPELINE eksplisit: tulis assignment editan GRAINAXPOT ke
 %   <base>_autopot.mat (step3Assign + potpsg4.records, read-modify-write — TIDAK
 %   menyentuh garis PSG / progres lain) supaya GRAIN4 membaca label HW/F/F0/FFW yg

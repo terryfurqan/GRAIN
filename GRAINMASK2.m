@@ -478,7 +478,7 @@ function i_onTransfer(fig)
     set(h.status,'String','Meluncurkan GRAIN1 (jitter + MAT PREP)…'); drawnow;
     try, delete(fig); catch, end %#ok<CTCH>
     try, GRAIN1(root); catch ME
-        warning('GRAINMASK2:openPab1','GRAIN1 gagal dibuka: %s', ME.message);
+        warning('GRAINMASK2:openGrain1','GRAIN1 gagal dibuka: %s', ME.message);
     end
 end
 
