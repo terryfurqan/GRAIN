@@ -1,8 +1,8 @@
 function test_mask_nref_rescale()
 %TEST_MASK_NREF_RESCALE  Resep masking KEBAL beda jumlah frame antar-modul.
 %
-%   Latar: PABMASK menetapkan indeks acuan kotak/keyframe pada n_ref = jumlah
-%   frame LOLOS QPIV saat resep dibuat. MAT PREP yang diproduksi PAB1 bisa punya
+%   Latar: GRAINMASK menetapkan indeks acuan kotak/keyframe pada n_ref = jumlah
+%   frame LOLOS QPIV saat resep dibuat. MAT PREP yang diproduksi GRAIN1 bisa punya
 %   nFrames (N) BERBEDA (pemetaan skip/nama sedikit lain). Tanpa penskalaan,
 %   frame_last=n_ref di-clamp -> interpolasi rect_first->rect_last tak pernah
 %   tercapai (kotak macet di awal). Fix: field n_ref di resep -> decoder skala
@@ -15,9 +15,9 @@ function test_mask_nref_rescale()
 %     D. maskPoly.interpVerts dgn n_ref != N.
 %     E. Round-trip sidecar mempertahankan n_ref (rect & poly).
 %
-%   Jalankan: pab_setup; test_mask_nref_rescale   (SELALU R2025b)
+%   Jalankan: grain_setup; test_mask_nref_rescale   (SELALU R2025b)
     fprintf('\n=== TEST mask n_ref rescale ===\n');
-    pab_setup();
+    grain_setup();
     MR = 'pivanalyzemat.core.maskRect';
     MP = 'pivanalyzemat.core.maskPoly';
     assert(~isempty(which(MR)) && ~isempty(which(MP)), 'engine mask tak di-path');

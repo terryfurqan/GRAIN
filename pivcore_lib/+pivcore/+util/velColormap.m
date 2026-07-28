@@ -1,5 +1,5 @@
 function cmap = velColormap(n)
-%VELCOLORMAP  Colormap untuk Velocity magnitude = JET (default proyek PAB_SA).
+%VELCOLORMAP  Colormap untuk Velocity magnitude = JET (default proyek GRAIN_SA).
 %   cmap = pivcore.util.velColormap(n)
 %
 %   SATU sumber kebenaran colormap velocity dipakai GUI (PAB_step_3) & montase

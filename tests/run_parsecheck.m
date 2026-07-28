@@ -1,8 +1,8 @@
 function run_parsecheck()
 %RUN_PARSECHECK  checkcode semua file step + paket bersama baru; gagal bila ada ERROR.
-here = fileparts(mfilename('fullpath')); addpath(here); addpath(fileparts(here));  % +root (pab_setup, PAB*) sejak tests/ dipisah
-files = {'PAB0.m','PAB1.m','PAB2.m','PAB3.m','PAB3a.m'};
-proj = fileparts(here);   % .../PAB (root); tests/ kini subfolder
+here = fileparts(mfilename('fullpath')); addpath(here); addpath(fileparts(here));  % +root (grain_setup, GRAIN*) sejak tests/ dipisah
+files = {'GRAIN0.m','GRAIN1.m','GRAIN2.m','GRAIN3.m','GRAIN3a.m'};
+proj = fileparts(here);   % .../GRAIN (root); tests/ kini subfolder
 add = [ dir(fullfile(proj,'pivcore_lib','+pivcore','+util','*.m')); ...
         dir(fullfile(proj,'pivcore_lib','+pivcore','+data','*.m')); ...
         dir(fullfile(proj,'pivcore_lib','+pivui','*.m')) ];

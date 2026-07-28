@@ -1,16 +1,16 @@
 function sample_dx_report_4panel(matPath, faultNums, outPdf)
 %SAMPLE_DX_REPORT_4PANEL  SAMPEL laporan DX 1-halaman-4-panel per (sesar, FSR-max).
 %
-%   TIDAK me-reinvent tampilan: panel kiri-atas = axPOT PAB4 ASLI (snapshot
+%   TIDAK me-reinvent tampilan: panel kiri-atas = axPOT GRAIN4 ASLI (snapshot
 %   copyobj dari h.axPOT hidup) -> spaghetti curve MENTAH semua data + HW/FW
-%   merah/biru + fill warna assign + garis vertikal DX (ground-truth POI PAB4),
-%   dengan HIGHLIGHT hanya sesar aktif (persis PAB4: showAllFaults=true +
+%   merah/biru + fill warna assign + garis vertikal DX (ground-truth POI GRAIN4),
+%   dengan HIGHLIGHT hanya sesar aktif (persis GRAIN4: showAllFaults=true +
 %   setActiveFault). Hanya di-ZOOM ke jendela 150-frame (aturan FSR-max).
 %
 %   Layout 2x2 rapat (tight), langsung ke PDF landscape (TANPA JPG antara):
-%     kiri-atas   = AX POT  (snapshot PAB4 hidup, X=Frame, di-zoom)
-%     kiri-bawah  = AX SLIP (snapshot PAB4 hidup view='slip', di-zoom)
-%     kanan-atas  = AX main velmag  (frame = tengah jendela; setting LIVE PAB4)
+%     kiri-atas   = AX POT  (snapshot GRAIN4 hidup, X=Frame, di-zoom)
+%     kiri-bawah  = AX SLIP (snapshot GRAIN4 hidup view='slip', di-zoom)
+%     kanan-atas  = AX main velmag  (frame = tengah jendela; setting LIVE GRAIN4)
 %     kanan-bawah = AX main shear   (idem)
 %
 %   Jendela X = 150 frame DIPUSATKAN di tengah dua FSR-max sesar itu, di-clamp
@@ -26,11 +26,11 @@ function sample_dx_report_4panel(matPath, faultNums, outPdf)
     if nargin < 3 || isempty(outPdf)
         outPdf = fullfile(dir0, sprintf('%s_SAMPLE_DXreport.pdf', base));
     end
-    pab = fileparts(fileparts(mfilename('fullpath')));   % .../PAB
-    addpath(fullfile(pab,'pivcore_lib'));
+    grain = fileparts(fileparts(mfilename('fullpath')));   % .../GRAIN
+    addpath(fullfile(grain,'pivcore_lib'));
 
-    % ---- FS-max frame per sesar dari _desc.json rows[] (ground truth PAB4) ----
-    descDoc = pivcore.io.pab4Desc.read(matPath);
+    % ---- FS-max frame per sesar dari _desc.json rows[] (ground truth GRAIN4) ----
+    descDoc = pivcore.io.grain4Desc.read(matPath);
     rows = descDoc.rows; if ~iscell(rows), rows = num2cell(rows); end
     fsmax = containers.Map('KeyType','char','ValueType','any');
     for i = 1:numel(rows)
@@ -44,17 +44,17 @@ function sample_dx_report_4panel(matPath, faultNums, outPdf)
         end
     end
 
-    % ---- luncurkan PAB4 headless pada folder exp, muat exp ini ----
+    % ---- luncurkan GRAIN4 headless pada folder exp, muat exp ini ----
     ov = get(0,'DefaultFigureVisible'); set(0,'DefaultFigureVisible','off');
     restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
-    fprintf('Membuka PAB4 di %s …\n', dir0);
-    fig = PAB4(dir0);
+    fprintf('Membuka GRAIN4 di %s …\n', dir0);
+    fig = GRAIN4(dir0);
     cuFig = onCleanup(@() i_closeIf(fig)); %#ok<NASGU>
     h = guidata(fig);
     row = i_expRowByBase(h, base);
     assert(row>=1, 'Eksperimen %s tak ada di daftar folder.', base);
-    pivui.pab4Shell.loadExperiment(fig, row);
-    pivui.pab4Shell.ensureFull(fig);     % muat semua bingkai (velmag/shear)
+    pivui.grain4Shell.loadExperiment(fig, row);
+    pivui.grain4Shell.ensureFull(fig);     % muat semua bingkai (velmag/shear)
     h = guidata(fig);
     nF = h.nF;
     fprintf('  exp dimuat: %s (nF=%d, psg=%s)\n', base, nF, h.activePsgId);
@@ -96,7 +96,7 @@ function i_makePage(fig, base, f, ftag, lo, hi, frameMid, fsPair, outPdf, firstP
 
     % HIGHLIGHT HANYA SESAR AKTIF (showAllFaults=false): spaghetti mentah tetap
     % tampil (warna per-kurva), hanya sesar aktif dapat HW/FW merah-biru + fill +
-    % POI. Persis resep Group C PAB4 (i_reportFaultAxpot).
+    % POI. Persis resep Group C GRAIN4 (i_reportFaultAxpot).
     h.activeFaultId = f.id; h.showAllFaults = false; h.showAllSlip = false;
     % Spaghetti mentah: warna-warni + TIPIS (permintaan user).
     h.lwRaw = 0.5;
@@ -167,25 +167,25 @@ end
 
 % =====================================================================
 function i_snapPot(fig, axDst, view, lo, hi, velMult, strainTot, yTop, dxPoi, focusFrame)
-%I_SNAPPOT  Render axPOT/AXSLIP PAB4 HIDUP (view='pot'|'slip') lalu SALIN child
+%I_SNAPPOT  Render axPOT/AXSLIP GRAIN4 HIDUP (view='pot'|'slip') lalu SALIN child
 %   ke axDst DENGAN KALIBRASI: X = cumulative strain % (dibalik), Y = cm/s.
 %   Y-max = yTop; jika yTop=NaN (AX SLIP) -> 1.2*max(|HW-FW|) di jendela.
 %   Modifikasi tampilan:
-%     - titik POI PAB5 (Tag nsPoint / poiVline) + garis cut-off AXSLIP DIBUANG,
+%     - titik POI GRAIN5 (Tag nsPoint / poiVline) + garis cut-off AXSLIP DIBUANG,
 %     - garis vertikal DX: HANYA yg di FRAME fokus (focusFrame, = frame diobserve)
-%       MERAH TEBAL; DX lain warna asli PAB4 (per-jenis) + TIPIS,
+%       MERAH TEBAL; DX lain warna asli GRAIN4 (per-jenis) + TIPIS,
 %     - label POI di-ROTATE 90 deg CW dari horizontal.
     if nargin < 10, focusFrame = NaN; end
-    pivui.pab4Shell.setPotView(fig, view);
-    pivui.pab4Shell.renderPOT(fig);   % decorate hook -> HW/FW/fill/DX vlines
+    pivui.grain4Shell.setPotView(fig, view);
+    pivui.grain4Shell.renderPOT(fig);   % decorate hook -> HW/FW/fill/DX vlines
     drawnow;
     h = guidata(fig); src = h.axPOT; nF = h.nF;
     xstrain = isfinite(strainTot);
     xmap = @(xf) i_xmapStrain(xf, nF, strainTot, xstrain);
 
-    % BUANG titik/garis POI PAB5 + garis horizontal cut-off AXSLIP di SUMBER.
-    try, delete(findall(src,'Tag','nsPoint'));      catch, end   % titik POI PAB5
-    try, delete(findall(src,'Tag','poiVline'));     catch, end   % garis POI PAB5
+    % BUANG titik/garis POI GRAIN5 + garis horizontal cut-off AXSLIP di SUMBER.
+    try, delete(findall(src,'Tag','nsPoint'));      catch, end   % titik POI GRAIN5
+    try, delete(findall(src,'Tag','poiVline'));     catch, end   % garis POI GRAIN5
     try, delete(findall(src,'Tag','axslipCutLine')); catch, end  % garis ambang cut-off
 
     set(axDst,'Color','w','XColor',[0 0 0],'YColor',[0 0 0],'Box','on','Layer','top');
@@ -238,7 +238,7 @@ function i_snapPot(fig, axDst, view, lo, hi, velMult, strainTot, yTop, dxPoi, fo
     if ~(yTop > ylo), yTop = ylo + 1; end
     ylim(axDst, [ylo yTop]);
 
-    % Garis vertikal DX: buang salinan PAB4 -> gambar ulang. HIGHLIGHT MERAH TEBAL
+    % Garis vertikal DX: buang salinan GRAIN4 -> gambar ulang. HIGHLIGHT MERAH TEBAL
     % HANYA garis pada FRAME yg diobserve (focusFrame). DX lain warna asli + tipis.
     try, delete(findall(axDst,'Tag','descVline')); catch, end
     ff = round(focusFrame);
@@ -265,7 +265,7 @@ function i_snapPot(fig, axDst, view, lo, hi, velMult, strainTot, yTop, dxPoi, fo
     axDst.YAxisLocation = 'left'; axDst.XAxisLocation = 'bottom';
 
     hold(axDst,'off');
-    pivui.pab4Shell.setPotView(fig, 'pot');
+    pivui.grain4Shell.setPotView(fig, 'pot');
 end
 
 function xs = i_xmapStrain(xf, nF, strainTot, xstrain)
@@ -276,8 +276,8 @@ end
 
 % =====================================================================
 function i_snapMain(fig, axDst, scalar, k, ttl)
-%I_SNAPMAIN  AX main STANDAR PAB4: render via pivui.pab4Shell.renderMain (label
-%   cumulative strain kiri-atas + glyph sp10 + GS + sumbu-cm PABAXCAL), lalu
+%I_SNAPMAIN  AX main STANDAR GRAIN4: render via pivui.grain4Shell.renderMain (label
+%   cumulative strain kiri-atas + glyph sp10 + GS + sumbu-cm GRAINAXCAL), lalu
 %   SNAPSHOT h.axMain -> axDst + colorbar SOUTHOUTSIDE (tick cm/s utk velmag).
 %   ttl = judul kustom (mis '<F#> - <POI> - Velocity Magnitude').
     if nargin < 5, ttl = ''; end
@@ -286,10 +286,10 @@ function i_snapMain(fig, axDst, scalar, k, ttl)
     h = guidata(fig);
     kk = max(1, min(round(k), pivcore.data.frameCount(h.data)));
     velMult = i_velMult(h);
-    % Set state PAB4 lalu render axMain standar.
+    % Set state GRAIN4 lalu render axMain standar.
     h.frame = kk; h.scalarSrc = scKey; h.glyphOn = true; h.glyphSp = 10;
     guidata(fig, h);
-    pivui.pab4Shell.renderMain(fig);
+    pivui.grain4Shell.renderMain(fig);
     drawnow;
     h = guidata(fig); src = h.axMain;
 
@@ -324,7 +324,7 @@ end
 
 % =====================================================================
 function rgb = i_poiColorLocal(poi)
-%I_POICOLORLOCAL  Salinan i_poiColor PAB4 (warna garis vertikal DX per-jenis POI).
+%I_POICOLORLOCAL  Salinan i_poiColor GRAIN4 (warna garis vertikal DX per-jenis POI).
     p = upper(strtrim(char(poi)));
     if strcmp(p,'START')||strcmp(p,'END')||strcmp(p,'FS-X'), rgb=[0 0 0];
     elseif strcmp(p,'FS-MAX'), rgb=[0.50 0.10 0.75];
@@ -356,10 +356,10 @@ function nm = i_poiAtFrame(dxPoi, frame)
 end
 
 function dx = i_dxPoiForFault(h, ftag)
-%I_DXPOIFORFAULT  {frame, poiName} baris DESC PAB4 utk F# (garis PSG aktif),
+%I_DXPOIFORFAULT  {frame, poiName} baris DESC GRAIN4 utk F# (garis PSG aktif),
 %   POI non-blank saja. Sumber label garis vertikal DX.
     dx = {};
-    rows = pivcore.io.pab4Desc.rowsForPsg(h.descDoc, h.activePsgId);
+    rows = pivcore.io.grain4Desc.rowsForPsg(h.descDoc, h.activePsgId);
     want = upper(strtrim(ftag));
     for k = 1:numel(rows)
         r = rows{k};
@@ -390,10 +390,10 @@ end
 
 function f = i_faultByUiNum(h, num)
     f = [];
-    F = pivui.pab5Model.faultsForPsg(h.fdoc, h.activePsgId);
+    F = pivui.grain5Model.faultsForPsg(h.fdoc, h.activePsgId);
     for k = 1:numel(F)
         fk = F(k); if iscell(F), fk = F{k}; end
-        if abs(pivui.pab5Model.faultUiNum(fk) - num) < 0.5, f = fk; return; end
+        if abs(pivui.grain5Model.faultUiNum(fk) - num) < 0.5, f = fk; return; end
     end
 end
 
@@ -417,7 +417,7 @@ function mc = i_indenterMaxCms(h, velMult)
 end
 
 function vm = i_velMult(h)
-%I_VELMULT  velMult (cm/s per px/frame) live PAB4; fallback 0.005.
+%I_VELMULT  velMult (cm/s per px/frame) live GRAIN4; fallback 0.005.
     vm = 0.005;
     if isfield(h,'velMult') && isscalar(h.velMult) && h.velMult>0, vm = h.velMult; end
 end

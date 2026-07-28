@@ -7,8 +7,8 @@ function test_smoke_shearridge()
 %   SELALU MATLAB R2025b. Senyap (DefaultFigureVisible off).
 
     here = fileparts(mfilename('fullpath'));
-    root = fileparts(here);   % PAB/
-    if isempty(which('pivui.pab4Shell'))
+    root = fileparts(here);   % GRAIN/
+    if isempty(which('pivui.grain4Shell'))
         addpath(fullfile(root,'pivcore_lib'));
     end
     addpath(root);
@@ -90,7 +90,7 @@ function test_smoke_shearridge()
     cleanupJson = onCleanup(@() i_rm(pivcore.io.shearRidge.dataPath(tmp)));
     doc2 = pivcore.io.shearRidge.read(tmp);
     assert(numel(doc2.ridges)==1, 'B: satu ridge');
-    Vrt = pivcore.io.pab4Desc.normVerts(doc2.ridges{1}.vertices);
+    Vrt = pivcore.io.grain4Desc.normVerts(doc2.ridges{1}.vertices);
     assert(isequal(size(Vrt),size(Vb)) && max(abs(Vrt(:)-Vb(:)))<1e-6, 'B: vertex round-trip');
     ids = pivcore.io.shearRidge.idsForFrame(doc2,'frac070',200);
     assert(numel(ids)==1 && strcmp(ids{1},'R1'), 'B: idsForFrame');
@@ -122,8 +122,8 @@ function test_smoke_shearridge()
         if strcmp(b, baseWant), row = r; break; end
     end
     assert(row>0, 'C: eksperimen ada di daftar');
-    pivui.pab4Shell.loadExperiment(fig, row);
-    pivui.pab4Shell.gotoFrame(fig, 200);
+    pivui.grain4Shell.loadExperiment(fig, row);
+    pivui.grain4Shell.gotoFrame(fig, 200);
     h = guidata(fig);
     assert(~isempty(h.data), 'C: data termuat');
 
@@ -154,7 +154,7 @@ function test_smoke_shearridge()
     assert(numel(pivcore.io.shearRidge.entries(docC))>=1, 'C: sidecar berisi ridge');
 
     % tabel terisi + overlay tergambar
-    pivui.pab4Shell.renderMain(fig);  % memicu afterRenderMain -> overlay
+    pivui.grain4Shell.renderMain(fig);  % memicu afterRenderMain -> overlay
     ov2 = findall(h.axMain, 'Tag','shearRidgePoly');
     fprintf('  C overlay: %d objek ridge di axMain\n', numel(ov2));
 
@@ -172,7 +172,7 @@ function fn = i_privDetect()
 end
 function i_reproDetect(fig, clickXY)
     h = guidata(fig);
-    pivui.pab4Shell.ensureFull(fig); h = guidata(fig);
+    pivui.grain4Shell.ensureFull(fig); h = guidata(fig);
     k = max(1,min(h.frame,h.imgFrames));
     Z = pivcore.data.computeShearRate(h.data,k,'mode','engineering');
     X = pivcore.data.safeFrame(h.data.x,k); Y = pivcore.data.safeFrame(h.data.y,k);

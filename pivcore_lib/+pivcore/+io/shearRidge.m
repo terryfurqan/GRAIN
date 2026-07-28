@@ -3,7 +3,7 @@ classdef shearRidge
 %   (ridge) shear strain rate hasil auto-tracing (modul SHEARSTRAINDetector).
 %
 %   Konsep: tiap ridge = 1 polyline (Nx2 koordinat piksel gambar) yang di-digitasi
-%   pada SATU frame (Tahap 1: per-frame). Disimpan TERPISAH dari _desc.json PAB4
+%   pada SATU frame (Tahap 1: per-frame). Disimpan TERPISAH dari _desc.json GRAIN4
 %   (bersih & mandiri). Beberapa ridge boleh ada per garis PSG per frame.
 %
 %   Struktur dokumen:
@@ -19,8 +19,8 @@ classdef shearRidge
 %       entry.widthPx   : lebar garis (dari lebar puncak) — placeholder Tahap 1
 %       entry.note      : catatan bebas
 %
-%   MURNI / headless (pola pivcore.io.pab4Interp). Vertices di-cell-kan saat encode.
-%   Penempatan: PAB/pivcore_lib/+pivcore/+io/shearRidge.m
+%   MURNI / headless (pola pivcore.io.grain4Interp). Vertices di-cell-kan saat encode.
+%   Penempatan: GRAIN/pivcore_lib/+pivcore/+io/shearRidge.m
 
     methods (Static)
 
@@ -100,7 +100,7 @@ classdef shearRidge
                 if ~ischar(k) || ~isfield(e,k), continue; end
                 switch k
                     case {'id','psgId','note'}, e.(k) = pivcore.io.shearRidge.tostr(v);
-                    case 'vertices', e.(k) = pivcore.io.pab4Desc.normVerts(v);
+                    case 'vertices', e.(k) = pivcore.io.grain4Desc.normVerts(v);
                     otherwise, e.(k) = pivcore.io.shearRidge.scal(v);
                 end
             end
@@ -220,7 +220,7 @@ classdef shearRidge
             if isfield(s,'id'),       e.id       = pivcore.io.shearRidge.tostr(s.id); end
             if isfield(s,'psgId'),    e.psgId    = pivcore.io.shearRidge.tostr(s.psgId); end
             if isfield(s,'frame'),    e.frame    = pivcore.io.shearRidge.scal(s.frame); end
-            if isfield(s,'vertices'), e.vertices = pivcore.io.pab4Desc.normVerts(s.vertices); end
+            if isfield(s,'vertices'), e.vertices = pivcore.io.grain4Desc.normVerts(s.vertices); end
             if isfield(s,'polarity'), e.polarity = pivcore.io.shearRidge.scal(s.polarity); end
             if isfield(s,'seedVal'),  e.seedVal  = pivcore.io.shearRidge.scal(s.seedVal); end
             if isfield(s,'meanAbs'),  e.meanAbs  = pivcore.io.shearRidge.scal(s.meanAbs); end
@@ -237,7 +237,7 @@ classdef shearRidge
             out = cell(1, numel(all));
             for k = 1:numel(all)
                 en = all{k};
-                en.vertices = pivcore.io.pab4Desc.vertsToCell(en.vertices);
+                en.vertices = pivcore.io.grain4Desc.vertsToCell(en.vertices);
                 out{k} = en;
             end
             doc.ridges = out;

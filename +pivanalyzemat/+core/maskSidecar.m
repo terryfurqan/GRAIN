@@ -2,25 +2,25 @@ classdef maskSidecar
 %MASKSIDECAR  I/O resep masking di berkas SIDECAR terpisah (JSON), di samping
 %   MAT PREP — TANPA menyentuh blob RAW mentah.
 %
-%   PRINSIP (keputusan user): PABMASK hanya PENYEMAT RESEP. Menyimpan resep
+%   PRINSIP (keputusan user): GRAINMASK hanya PENYEMAT RESEP. Menyimpan resep
 %   masking (kotak/polygon) TAK BOLEH menulis ulang file MAT PREP yang bisa
 %   1,4 GB. Karena itu resep hidup di berkas kecil `<nama>_mask.json` di folder
-%   yang sama. MAT PREP dari PAB1 dibiarkan APA ADANYA (nol tulis besar).
+%   yang sama. MAT PREP dari GRAIN1 dibiarkan APA ADANYA (nol tulis besar).
 %
 %   Satu sidecar per-eksperimen dipakai BERSAMA:
-%     - PABMASK1 (kotak persegi, sekarang)   -> field `v1_rect`
-%     - PABMASK2 (polygon + keyframe, nanti) -> field `v2_poly`
+%     - GRAINMASK1 (kotak persegi, sekarang)   -> field `v1_rect`
+%     - GRAINMASK2 (polygon + keyframe, nanti) -> field `v2_poly`
 %
 %   SKEMA `pab_masking_v1`:
 %     { "schema":"pab_masking_v1", "matfile":"<nama>.mat",
 %       "v1_rect": <struct maskRect: enabled/fill/boxes> | null,
 %       "v2_poly": null }
 %
-%   PAB2 (produksi) & decoder (readMatFrame/unpackMat) membaca resep lewat
+%   GRAIN2 (produksi) & decoder (readMatFrame/unpackMat) membaca resep lewat
 %   pivanalyzemat.core.prepBlobStore.readMasking yang MENDAHULUKAN sidecar ini.
 %
 %   Lihat juga: pivanalyzemat.core.maskRect (normalisasi/validasi),
-%               pivanalyzemat.core.prepBlobStore, PABMASK
+%               pivanalyzemat.core.prepBlobStore, GRAINMASK
 
 	methods (Static)
 
@@ -37,7 +37,7 @@ classdef maskSidecar
 		end
 
 		function m = read(matPath)
-		%READ  Baca resep PABMASK1 (v1_rect) dari sidecar -> struct maskRect
+		%READ  Baca resep GRAINMASK1 (v1_rect) dari sidecar -> struct maskRect
 		%   ter-normalisasi. [] bila sidecar tak ada / kosong / rusak.
 			m = [];
 			sp = pivanalyzemat.core.maskSidecar.path(matPath);
@@ -64,9 +64,9 @@ classdef maskSidecar
 		end
 
 		function ok = write(matPath, masking)
-		%WRITE  Tulis resep PABMASK1 (v1_rect) ke sidecar JSON. Instan (berkas
+		%WRITE  Tulis resep GRAINMASK1 (v1_rect) ke sidecar JSON. Instan (berkas
 		%   kecil), MAT PREP tak disentuh. Pertahankan v2_poly bila sidecar sudah
-		%   ada (jangan hapus resep PABMASK2). true bila sukses.
+		%   ada (jangan hapus resep GRAINMASK2). true bila sukses.
 			ok = false;
 			matPath = char(matPath);
 			sp = pivanalyzemat.core.maskSidecar.path(matPath);
@@ -109,7 +109,7 @@ classdef maskSidecar
 		end
 
 		function p = readPoly(matPath)
-		%READPOLY  Baca resep PABMASK2 (v2_poly) dari sidecar -> struct maskPoly
+		%READPOLY  Baca resep GRAINMASK2 (v2_poly) dari sidecar -> struct maskPoly
 		%   ter-normalisasi. [] bila tak ada / kosong / rusak.
 			p = [];
 			sp = pivanalyzemat.core.maskSidecar.path(matPath);
@@ -128,7 +128,7 @@ classdef maskSidecar
 		end
 
 		function ok = writePoly(matPath, poly)
-		%WRITEPOLY  Tulis resep PABMASK2 (v2_poly) ke sidecar. Pertahankan v1_rect
+		%WRITEPOLY  Tulis resep GRAINMASK2 (v2_poly) ke sidecar. Pertahankan v1_rect
 		%   bila sidecar sudah ada (jangan hapus resep kotak). true bila sukses.
 			ok = false; matPath = char(matPath);
 			sp = pivanalyzemat.core.maskSidecar.path(matPath);

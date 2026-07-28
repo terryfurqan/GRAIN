@@ -1,6 +1,6 @@
 function s = potStyle()
 %POTSTYLE  Palet warna & tebal garis ROI/kurva POT-PSG untuk GUI pratinjau
-%   (PABSA3/3a). SATU sumber gaya — sebelumnya literal warna/LW di-hardcode di
+%   (GRAINSA3/3a). SATU sumber gaya — sebelumnya literal warna/LW di-hardcode di
 %   tiap pemanggil (drawline/plot envelope/garis-frame/kurva-terpilih/marker).
 %
 %   s.psgLine   : garis PSG (ROI Line)   — color/lineWidth/markerSize

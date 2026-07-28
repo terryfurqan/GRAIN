@@ -5,8 +5,8 @@ function run_rename_verify(names)
 %                                 sebagai file fungsi (exist==2).
 %   Dipakai sebelum & sesudah tiap fase. Tidak meluncurkan GUI apa pun.
 if nargin < 1, names = {}; end
-here = fileparts(mfilename('fullpath')); addpath(here); addpath(fileparts(here));  % +root (pab_setup, PAB*) sejak tests/ dipisah
-proj = fileparts(here);   % .../PAB (root) -- tests/ kini subfolder; scan tetap di root
+here = fileparts(mfilename('fullpath')); addpath(here); addpath(fileparts(here));  % +root (grain_setup, GRAIN*) sejak tests/ dipisah
+proj = fileparts(here);   % .../GRAIN (root) -- tests/ kini subfolder; scan tetap di root
 
 rootM = dir(fullfile(proj,'*.m'));
 files = {};

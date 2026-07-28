@@ -1,6 +1,6 @@
 classdef faultAngle
 %FAULTANGLE  Sudut sesar dari 2 titik — fungsi MURNI (headless). Dipakai Tab ②
-%   PAB5 (Sesar = tampilan/final) untuk mengukur kemiringan sesar relatif bidang
+%   GRAIN5 (Sesar = tampilan/final) untuk mengukur kemiringan sesar relatif bidang
 %   detachment referensi. Pola sibling: pivcore.pot.netslip (murni, ber-test
 %   golden). TIDAK menyentuh GUI/IO.
 %
@@ -21,7 +21,7 @@ classdef faultAngle
 %     d = pivcore.pot.faultAngle.emptyDetachment()   % struct('p1',[NaN NaN],'p2',[NaN NaN])
 %     tf = pivcore.pot.faultAngle.isValidDetachment(d)
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/faultAngle.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/faultAngle.m
 
     methods (Static)
 

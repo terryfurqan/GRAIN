@@ -4,8 +4,8 @@ function test_parfor_runbatch_equiv()
 %   diproses serempak (parfor) vs antre (serial), dan worker MENEMUKAN paket
 %   +batchpivprep2/+pivprep + pivprepPackFolder. Pakai stabMethod='phasecorr'
 %   (deterministik, tanpa RANSAC) supaya perbandingan bisa EKSAK.
-%   Jalankan: pab_setup; test_parfor_runbatch_equiv
-    pab_setup();
+%   Jalankan: grain_setup; test_parfor_runbatch_equiv
+    grain_setup();
 
     if isempty(ver('parallel'))
         fprintf('SKIP: Parallel Computing Toolbox tak ada.\n'); return;

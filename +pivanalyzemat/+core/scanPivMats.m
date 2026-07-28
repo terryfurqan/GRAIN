@@ -8,7 +8,7 @@ function files = scanPivMats(root)
 %   CATATAN: pemindai INI berbeda dari scanMats (yang mendeteksi skema
 %   'pivprep_single_v1'/prep Step 1) dan dari pivcore.io.indexScanner (rekursi
 %   penuh + filter suffix). Scope & filter di sini SENGAJA dipertahankan persis
-%   seperti i_collectMats PABSA3/3a agar daftar berkas identik.
+%   seperti i_collectMats GRAINSA3/3a agar daftar berkas identik.
     files = {};
     d = dir(fullfile(root, '*.mat'));
     for i = 1:numel(d)

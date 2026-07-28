@@ -8,11 +8,11 @@ function [kept, dropped] = qpivCleanImageSet(fn1, fn2, seq, ig)
 %   seq     : 'consecutive' (default) | 'pairs'.
 %   ig      : logical/indeks pasangan yang DIABAIKAN (frame MATI: |V|≈0).
 %
-%   SEMANTIK (detektor exclusion PAB0 = FRAME MATI, mesin berhenti): bila
+%   SEMANTIK (detektor exclusion GRAIN0 = FRAME MATI, mesin berhenti): bila
 %   pasangan (a,b) mati, KEDUA gambar pembentuknya (a DAN b) diam -> keduanya
 %   dibuang. Ini memperbaiki bug lama di mana mode 'consecutive' hanya membuang
 %   gambar ke-2 pasangan (drop(k+1)) -> gambar MATI PERTAMA / gambar di zona
-%   mati AWAL (frame-1) LOLOS & muncul lagi di hilir (PABMASK).
+%   mati AWAL (frame-1) LOLOS & muncul lagi di hilir (GRAINMASK).
 %
 %   Daftar gambar disusun:
 %     consecutive : names = [fn1(1:N); fn2(N)]  (N+1 gambar unik berurutan),

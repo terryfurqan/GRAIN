@@ -1,12 +1,12 @@
 function PAB1_old(progressPath)
-%PAB1_OLD  GUI BatchPIVPrep2 (PPB2) PENUH — produksi .mat (kini "Step 2").
+%GRAIN1_OLD  GUI BatchPIVPrep2 (PPB2) PENUH — produksi .mat (kini "Step 2").
 %
 %   PAB1_old                 % luncurkan GUI kosong
 %   PAB1_old(progressPath)   % luncurkan + AUTO-LOAD progress .mat (mis. dari
-%                            % PAB1 (ROI jitter): daftar exp + anchor termuat)
+%                            % GRAIN1 (ROI jitter): daftar exp + anchor termuat)
 %
-%   CATATAN RENAME (2026-06-25): dulu bernama PAB1. Karena tool ROI jitter
-%   (dulu PAB0_old) kini jadi PAB1 ("true Step 1"), GUI BatchPIVPrep2 ini
+%   CATATAN RENAME (2026-06-25): dulu bernama GRAIN1. Karena tool ROI jitter
+%   (dulu GRAIN0_old) kini jadi GRAIN1 ("true Step 1"), GUI BatchPIVPrep2 ini
 %   turun nama jadi PAB1_old (langkah produksi .mat sesudah ROI jitter).
 %
 %   Ia meluncurkan langsung
@@ -32,11 +32,11 @@ function PAB1_old(progressPath)
 %   +batchpivprep2 TIDAK perlu diubah.
 %
 %   Semua paket (+pivprep, +batchpivprep2, lib/) sudah di-addpath oleh
-%   pab_setup. SELALU MATLAB R2025b.
+%   grain_setup. SELALU MATLAB R2025b.
 
-roots = pab_setup(); %#ok<NASGU>
+roots = grain_setup(); %#ok<NASGU>
 
-% Pastikan komponen PPB2 tersedia (sudah disalin ke PAB_SA/+batchpivprep2).
+% Pastikan komponen PPB2 tersedia (sudah disalin ke GRAIN_SA/+batchpivprep2).
 if isempty(which('batchpivprep2.ui.buildGUI'))
 	error('PAB1_old:noPPB2', ...
 		'Komponen BatchPIVPrep2 (+batchpivprep2/+ui/buildGUI) tidak ditemukan di path.');

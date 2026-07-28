@@ -117,7 +117,7 @@ function varargout = PIVlab_automasi_progress(action, varargin)
 			end
 
 		case 'setmask'
-			% setmask(expdirOrKey, recipe) — simpan resep masking PABMASK ke entry.
+			% setmask(expdirOrKey, recipe) — simpan resep masking GRAINMASK ke entry.
 			%   recipe = struct maskRect (enabled/fill/boxes) atau [] utk hapus.
 			key = i_key(varargin{1});
 			recipe = []; if numel(varargin) >= 2; recipe = varargin{2}; end
@@ -139,7 +139,7 @@ function varargout = PIVlab_automasi_progress(action, varargin)
 			if isempty(e) || ~isfield(e,'mask_recipe'); varargout{1} = []; else; varargout{1} = e.mask_recipe; end
 
 		case 'setpoly'
-			% setpoly(expdirOrKey, polyRecipe) — resep polygon PABMASK2.
+			% setpoly(expdirOrKey, polyRecipe) — resep polygon GRAINMASK2.
 			key = i_key(varargin{1});
 			recipe = []; if numel(varargin) >= 2; recipe = varargin{2}; end
 			S = i_load();
@@ -213,8 +213,8 @@ function e = i_emptyEntry()
 		'pab_anchor',    [], ...      % preset anchor stabilisasi (struct) atau []
 		'pab_crop',      [], ...      % preset ROI crop (struct) atau []
 		'pab_listed',    false, ...   % true = baris ini bagian daftar PAB_step_1
-		'mask_recipe',   [], ...      % PABMASK: resep kotak (struct maskRect) atau []
-		'poly_recipe',   [], ...      % PABMASK2: resep polygon (struct maskPoly) atau []
+		'mask_recipe',   [], ...      % GRAINMASK: resep kotak (struct maskRect) atau []
+		'poly_recipe',   [], ...      % GRAINMASK2: resep polygon (struct maskPoly) atau []
 		'updated',       '');
 end
 

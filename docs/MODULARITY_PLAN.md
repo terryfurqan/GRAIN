@@ -1,4 +1,4 @@
-# PAB_SA — Rencana Modularitas (audit terverifikasi)
+# GRAIN_SA — Rencana Modularitas (audit terverifikasi)
 
 > Hasil audit multi-agent (39 agen, 26/31 klaster terkonfirmasi adversarial).
 > Tujuan: hilangkan logika **hardcoded/duplikat yang dipakai bersama** lintas
@@ -30,7 +30,7 @@
   `+pivcore.data`(jitterSeries/jitterSummary), `+pivcore.montage.`**renderScalarPanel** (promosi i_drawPanel; 3 salinan→1),
   `+pivanalyzemat.core`(**dateTag/pivOutDir/isPivOutName/scanPivMats/probePivMat/prepJitterTol/prepTolKeys/prepRoiPts/prepGsScale**).
   (prepGsScale: skala GS 0.5/guard 0<s≤1 disatukan dari i_gsScale step_1a + unpackMat i_gsParams; teruji lewat step_2 PIV penuh.)
-  pivcore/pivui DICERMIN ke `PIVTerry/core`; pivanalyzemat hanya 1 salinan (PAB_SA). strainText lokal step_2
+  pivcore/pivui DICERMIN ke `PIVTerry/core`; pivanalyzemat hanya 1 salinan (GRAIN_SA). strainText lokal step_2
   dihapus → `pivanalyze.geom.strainText` (Unicode `≤` fidelitas V4, dicermin ke PIVprep_V2). `i_scalar`
   disatukan `double(x(1))`. Konstanta render di-seed dari helper (String via sprintf, tampilan byte-identik).
   ROI PSG (warna/LW/MS) lewat potStyle. Pola: forwarder tipis lokal (titik panggil tak disentuh).

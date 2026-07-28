@@ -3,11 +3,11 @@ function info = pivprepRawExifDt(rawFolder, fn1, fn2)
 %
 %   info = pivprepRawExifDt(rawFolder, fn1, fn2)
 %
-%   = pembaca waktu untuk PABSA0b. Berbeda dari PIVlab_automasi_exiftime yang
+%   = pembaca waktu untuk GRAINSA0b. Berbeda dari PIVlab_automasi_exiftime yang
 %   membaca tabel EXIF.mat hasil PIVPrep, fungsi ini membaca timestamp EXIF
 %   LANGSUNG dari berkas JPG mentah (via imfinfo: DigitalCamera.DateTimeOriginal
 %   + SubSecTimeOriginal) sehingga bisa dipakai pada folder RAW yang BELUM
-%   diproses PIVPrep — kebutuhan PABSA0b (deteksi counter-wrap shutter).
+%   diproses PIVPrep — kebutuhan GRAINSA0b (deteksi counter-wrap shutter).
 %
 %   ALIGNMENT FRAME: dt dihitung dari pasangan QPIV yang SUDAH dibentuk
 %   (out.fn1/out.fn2), jadi indeks frame info.dt persis sama dengan frame

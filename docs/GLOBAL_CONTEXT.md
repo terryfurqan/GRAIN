@@ -1,6 +1,6 @@
-# GLOBAL CONTEXT — **PAB** (PIVlab Automasi Batch)
+# GLOBAL CONTEXT — **GRAIN** (PIVlab Automasi Batch)
 
-> Repo ini **didedikasikan untuk PAB**. Satu aplikasi single-app modular untuk
+> Repo ini **didedikasikan untuk GRAIN**. Satu aplikasi single-app modular untuk
 > analisis PIV deformasi tanah granular: dari foto mentah → arsip → analisis →
 > produksi → interpretasi. Folder lain (`_reference/`) hanya **inspirasi/referensi**.
 > Dibuat 2026-06-22 · ditata-ulang & difokuskan 2026-06-25.
@@ -20,16 +20,16 @@
 ## TATA LETAK REPO
 ```
 Automasi PIV LAB/
-  PAB/             ← FOKUS KERJA. Semua pengembangan di sini.
+  GRAIN/             ← FOKUS KERJA. Semua pengembangan di sini.
   _reference/      ← INSPIRASI saja, JANGAN dikembangkan:
     PIVTerry/        prototipe analisis/POT (sumber pola axMain+axPOT, step2 note-taking)
-    PIVprep_V2/      cikal-bakal pipeline V1–V5 (kekusutan lama yang PAB gantikan)
+    PIVprep_V2/      cikal-bakal pipeline V1–V5 (kekusutan lama yang GRAIN gantikan)
   RAW/ , "5 cm-1"/ ← DATA (gitignored, JANGAN di-commit, JANGAN dipindah)
 ```
 **Aturan referensi:** kode di `_reference/` boleh **dibaca untuk inspirasi**
-(pola GUI, algoritma, ide). Tapi PAB adalah satu-satunya yang dikembangkan;
+(pola GUI, algoritma, ide). Tapi GRAIN adalah satu-satunya yang dikembangkan;
 jangan menambah ketergantungan baru ke `_reference/`. Bila ada logika berguna di
-sana, **salin/adaptasi ke dalam paket PAB**, bukan memanggil lintas-folder.
+sana, **salin/adaptasi ke dalam paket GRAIN**, bukan memanggil lintas-folder.
 
 ---
 
@@ -69,15 +69,15 @@ Step 0 → Step 2 (saat ini belum otomatis — lihat bagian KONFIG QPIV di bawah
 ---
 
 ## KONVENSI NAMA (sedang bertransisi)
-Target: **PABSA → PAB**, fungsi **`PAB_step_1` → `PAB1`** dst. Folder sudah
-`PAB/`. Rename fungsi dikerjakan **bertahap** — lihat [`RENAME_PLAN.md`](RENAME_PLAN.md).
+Target: **GRAINSA → GRAIN**, fungsi **`PAB_step_1` → `GRAIN1`** dst. Folder sudah
+`GRAIN/`. Rename fungsi dikerjakan **bertahap** — lihat [`RENAME_PLAN.md`](RENAME_PLAN.md).
 Selama transisi, nama fungsi lama `PAB_step_*` masih berlaku.
 
 ---
 
-## STRUKTUR KODE PAB (mandiri)
+## STRUKTUR KODE GRAIN (mandiri)
 ```
-PAB/
+GRAIN/
   pab_sa_setup.m       bootstrap path (1×/sesi): paket + lib/ + pivcore_lib/ + PIVlab inti
   PAB_step_0.m  0a 0b  Step 0 validasi frame (QPIV): exclusion + jitter-probe/map
   PAB_step_1.m  1a 1b  Step 1 stabilisasi (GUI PPB2) + pratinjau .mat + cek jitter
@@ -94,7 +94,7 @@ PAB/
   pivcore_lib/         +pivcore + +pivui (POT/PSG/colormap utk QPIV & preview GUI)
 ```
 Namespace bare (`pivprep.*`, `batchpivprep2.*`, `pivanalyze.*`, `pivanalyzemat.*`,
-`pivcore.*`, `pivui.*`) → paket di ROOT PAB, di-addpath lewat root. PIVlab inti
+`pivcore.*`, `pivui.*`) → paket di ROOT GRAIN, di-addpath lewat root. PIVlab inti
 eksternal (Add-Ons MathWorks) auto-detect via `which('PIVlab_GUI.m')`.
 
 ---
@@ -179,16 +179,16 @@ Pratinjau `<expname>.mat` PIV+GS. Paradigma axMain+axPOT (pola PIVTerry StandAlo
 
 ## CARA PAKAI
 ```matlab
-cd('.../Automasi PIV LAB/PAB'); pab_sa_setup;
+cd('.../Automasi PIV LAB/GRAIN'); pab_sa_setup;
 PAB_step_0b     % validasi frame (QPIV exclusion)
 PAB_step_1      % stabilisasi → MAT PREP (GUI PPB2)
 PAB_step_2      % analisis PIV → MAT PIV
 PAB_step_3      % pratinjau hasil
-% headless: test_smoke_pabsa_step{0,0a,0b,1a,1b,2,3,3a}
+% headless: test_smoke_grainsa_step{0,0a,0b,1a,1b,2,3,3a}
 ```
 
 ## BERIKUTNYA (belum)
 - **Step 4** (komentar & analisis — note-taking deskriptif + kuantitatif di MAT PIV).
 - Menutup **config handoff gap** Step 0 → Step 2 (jembatan key RAW↔.mat).
-- Rename konvensi nama PAB_step_* → PAB* (bertahap, lihat `RENAME_PLAN.md`).
+- Rename konvensi nama PAB_step_* → GRAIN* (bertahap, lihat `RENAME_PLAN.md`).
 - Preset anchor/crop interaktif per baris.

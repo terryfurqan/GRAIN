@@ -22,7 +22,7 @@ classdef maskRect
 %     rect_k = rect_first + (k-1)/(N-1) * (rect_last - rect_first)
 %   dengan k = posisi frame (1-based, urut SAMA dgn unpackMat/readMatFrame).
 %
-%   Penempatan berkas: PAB/+pivanalyzemat/+core/maskRect.m
+%   Penempatan berkas: GRAIN/+pivanalyzemat/+core/maskRect.m
 %   Lihat juga: pivanalyzemat.core.unpackMat, pivanalyzemat.core.readMatFrame
 
     methods (Static)
@@ -48,7 +48,7 @@ classdef maskRect
         %                 Bila >0 dan berbeda dari N aktual saat decode, indeks
         %                 acuan kotak (frame_first/last) DISKALA ke N -> resep
         %                 kebal terhadap perubahan jumlah frame antar-modul
-        %                 (mis. PABMASK menghitung nFrames sedikit beda dgn
+        %                 (mis. GRAINMASK menghitung nFrames sedikit beda dgn
         %                 prep.nFrames MAT PREP). 0 -> perilaku lama (tak skala).
         %     m.boxes   : array struct, tiap elemen:
         %                   .rect_first  [x y w h]  (frame awal)
@@ -123,7 +123,7 @@ classdef maskRect
         %   nRef (opsional): jumlah frame acuan saat resep dibuat. Bila diberi
         %   (>=2) & berbeda dari N, indeks acuan (frame_first/last) DISKALA
         %   linear ke ruang N: fN = 1 + (f-1)*(N-1)/(nRef-1). Ini menjaga posisi
-        %   RELATIF kotak saat jumlah frame berbeda (PABMASK vs MAT PREP).
+        %   RELATIF kotak saat jumlah frame berbeda (GRAINMASK vs MAT PREP).
             bb = [];
             b = pivanalyzemat.core.maskRect.normalizeBox(box);
             if isempty(b); return; end

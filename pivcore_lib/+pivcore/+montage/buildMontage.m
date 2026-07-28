@@ -218,7 +218,7 @@ end
 % Figure off-screen + export
 % =====================================================================
 function fig = i_newFig(ttl)
-    nm = 'PABSA3 Montage';
+    nm = 'GRAINSA3 Montage';
     if ~isempty(ttl), nm = ttl; end
     fig = figure('Name',nm,'NumberTitle','off','Color',[1 1 1], ...
         'Visible','off','Units','pixels','MenuBar','none','ToolBar','none');

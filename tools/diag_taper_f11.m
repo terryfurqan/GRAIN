@@ -1,6 +1,6 @@
 function diag_taper_f11()
 %DIAG_TAPER_F11  Diagnostik kenapa garis taper F11 / interpolasi tak tampil.
-%   JALANKAN saat PAB4 TERBUKA (F11 aktif, frame di sekitar 292). Cetak: keyframe
+%   JALANKAN saat GRAIN4 TERBUKA (F11 aktif, frame di sekitar 292). Cetak: keyframe
 %   taper F11, isi cache taperSamples, objek storedTaper/taperInterp/taperInterpRef
 %   yg tergambar di axMain, dan alasan bila kosong.
     figs = findall(0,'Type','figure');
@@ -11,27 +11,27 @@ function diag_taper_f11()
             fig = figs(k); break;
         end
     end
-    if isempty(fig), fprintf(2,'PAB4 tak ditemukan (buka dulu).\n'); return; end
+    if isempty(fig), fprintf(2,'GRAIN4 tak ditemukan (buka dulu).\n'); return; end
     h = guidata(fig);
-    fprintf('=== DIAG TAPER (PAB4) ===\n');
+    fprintf('=== DIAG TAPER (GRAIN4) ===\n');
     fprintf('activePsgId = %s\n', h.activePsgId);
     fprintf('frame live  = %d\n', round(pivcore.util.scalarOr(h.frame,1)));
     fprintf('taperInterpOn = %d\n', isfield(h,'taperInterpOn') && h.taperInterpOn);
 
     % sesar aktif
-    [fa, ia] = pivui.pab5Model.activeFault(h);
-    uA = NaN; if ia>=1, uA = round(pivui.pab5Model.faultUiNum(fa)); end
+    [fa, ia] = pivui.grain5Model.activeFault(h);
+    uA = NaN; if ia>=1, uA = round(pivui.grain5Model.faultUiNum(fa)); end
     fprintf('F# aktif = %g\n', uA);
 
     % keyframe taper F# aktif (baca descDoc langsung)
-    rows = pivcore.io.pab4Desc.rowsForPsg(h.descDoc, h.activePsgId);
+    rows = pivcore.io.grain4Desc.rowsForPsg(h.descDoc, h.activePsgId);
     tgt = sprintf('F%d', uA);
     fprintf('\n-- Baris DX F%d ber-taper (descDoc) --\n', uA);
     nkf = 0; vnums = [];
     for k=1:numel(rows)
         r = rows{k};
         if ~strcmp(strtrim(char(r.fNum)), tgt), continue; end
-        V = pivcore.io.pab4Desc.normVerts(r.taperVerts);
+        V = pivcore.io.grain4Desc.normVerts(r.taperVerts);
         if size(V,1) >= 2
             nkf = nkf+1; vnums(end+1) = size(V,1); %#ok<AGROW>
             fprintf('  frame %d : %d vertex, taperDeg=%.2f\n', round(r.frame), size(V,1), r.taperDeg);
@@ -48,7 +48,7 @@ function diag_taper_f11()
         if isempty(ks), fprintf(2,'  CACHE KOSONG (belum rebuild).\n'); end
         for k=1:numel(ks)
             S = h.taperSamples(ks{k});
-            ns = 0; if isfield(S,'samples'), ns = numel(pivcore.io.pab4Interp.tocell(S.samples)); end
+            ns = 0; if isfield(S,'samples'), ns = numel(pivcore.io.grain4Interp.tocell(S.samples)); end
             fprintf('  %s : %d sample, keyFrames=%s\n', ks{k}, ns, mat2str(round(S.keyFrames)));
         end
     end

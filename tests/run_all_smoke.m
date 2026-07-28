@@ -4,8 +4,8 @@ function results = run_all_smoke(pattern)
 %   `matlab -batch` per test). Buka MATLAB sekali, panggil ini, selesai.
 %
 %   Pakai:
-%     run_all_smoke                 % semua test_smoke_* + test_pab*_ (default)
-%     run_all_smoke 'pab4'          % hanya file test yang namanya memuat 'pab4'
+%     run_all_smoke                 % semua test_smoke_* + test_grain*_ (default)
+%     run_all_smoke 'grain4'          % hanya file test yang namanya memuat 'grain4'
 %     r = run_all_smoke;            % ambil ringkasan sbg struct array
 %
 %   Tiap test = fungsi yang LEMPAR error saat gagal. Runner menangkap error
@@ -16,9 +16,9 @@ function results = run_all_smoke(pattern)
 
     here = fileparts(mfilename('fullpath'));
     addpath(here);                                      % tests/
-    addpath(fileparts(here));                           % PAB/ (PAB*, pab_setup)
+    addpath(fileparts(here));                           % GRAIN/ (GRAIN*, grain_setup)
     addpath(fullfile(fileparts(here), 'pivcore_lib'));  % engine
-    try, pab_setup; catch, end
+    try, grain_setup; catch, end
 
     if nargin < 1, pattern = ''; end
 
@@ -33,7 +33,7 @@ function results = run_all_smoke(pattern)
     for i = 1:numel(names)
         n = names{i};
         isSmoke = startsWith(n, 'test_smoke_');
-        isPab   = startsWith(n, 'test_pab');   % test_pab4_*, test_pab5_*, dst.
+        isPab   = startsWith(n, 'test_grain');   % test_grain4_*, test_grain5_*, dst.
         keep(i) = isSmoke || isPab;
     end
     names = names(keep);
@@ -58,7 +58,7 @@ function results = run_all_smoke(pattern)
             feval(fn);                                   % test tanpa argumen wajib
         catch ME
             % Konvensi lokal: pesan bertanda [SKIP] = lewati, bukan gagal.
-            if contains(ME.message, '[SKIP]') || strcmp(ME.identifier, 'PAB:skip')
+            if contains(ME.message, '[SKIP]') || strcmp(ME.identifier, 'GRAIN:skip')
                 status = 'SKIP';
             else
                 status = 'FAIL';

@@ -21,7 +21,7 @@ classdef snapPoints
 %     F   = pivcore.pot.snapPoints.fields()      % {'startF','nclF','fsrF','endF'}
 %     col = pivcore.pot.snapPoints.color(which)  % warna marker titik
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/snapPoints.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/snapPoints.m
 
     methods (Static)
 

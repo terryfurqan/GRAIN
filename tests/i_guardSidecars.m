@@ -1,6 +1,6 @@
 function cleaner = i_guardSidecars(df)
 %I_GUARDSIDECARS  Lindungi data SIDECAR milik satu MAT fixture `df` selama test.
-%   Test PAB4/5/6 memakai FIXTURE NYATA (data user, mis. EXP_coll/P-CON-4cm-F) &
+%   Test GRAIN4/5/6 memakai FIXTURE NYATA (data user, mis. EXP_coll/P-CON-4cm-F) &
 %   menulis/menghapus sidecar (_desc.json, _faults.json, _faultinterp.json, dst) ->
 %   BISA MERUSAK data user. Helper ini mem-BACKUP semua sidecar (file KECIL, BUKAN
 %   .mat data mentah >100 MB) ke tempdir, lalu MENGEMBALIKANNYA saat `cleaner`
@@ -64,7 +64,7 @@ function tf = i_isSidecar(p)
 end
 
 function sufs = i_knownSuffixes()
-%I_KNOWNSUFFIXES  Akhiran sidecar kanonik yang lazim DITULIS/DIHAPUS test PAB.
+%I_KNOWNSUFFIXES  Akhiran sidecar kanonik yang lazim DITULIS/DIHAPUS test GRAIN.
     sufs = {'_desc.json','_faults.json','_faultinterp.json','_faultgeom.json', ...
             '_potdata.json','_comments.json','_axcal.json','_hb.json','_link.json', ...
             '_autopot.json'};

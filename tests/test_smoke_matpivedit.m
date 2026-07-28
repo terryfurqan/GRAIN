@@ -3,7 +3,7 @@ function test_smoke_matpivedit()
 %
 %   test_smoke_matpivedit
 %
-%   MATPIVEDIT kini GUI 3-kolom yang menumpang pivui.pab4Shell (axMain 2D +
+%   MATPIVEDIT kini GUI 3-kolom yang menumpang pivui.grain4Shell (axMain 2D +
 %   axPOT + PSG + slider) dengan panel kanan 3 tab. Uji:
 %     A. readPivBgPair latar GS tersemat (frame awal+akhir).
 %     B. Engine matpivEdit: backup .bak berlapis; writeGeom (recompute strain +
@@ -19,7 +19,7 @@ fprintf('==== TEST SMOKE MAT PIV EDITOR ====\n');
 
 here = fileparts(mfilename('fullpath'));
 addpath(here); addpath(fileparts(here));
-pab_setup();
+grain_setup();
 ov = get(0,'DefaultFigureVisible'); set(0,'DefaultFigureVisible','off');
 restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
 
@@ -28,7 +28,7 @@ assert(~isempty(which('pivanalyzemat.core.pivGeomIO')),    'pivGeomIO tak di pat
 assert(~isempty(which('pivanalyzemat.core.matpivEdit')),   'matpivEdit tak di path.');
 assert(~isempty(which('PIVlab_automasi_dropframes')),      'dropframes tak di path.');
 assert(~isempty(which('MATPIVEDIT')),                      'MATPIVEDIT tak di path.');
-assert(~isempty(which('pivui.pab4Shell')),                 'pab4Shell tak di path.');
+assert(~isempty(which('pivui.grain4Shell')),                 'grain4Shell tak di path.');
 
 % --- folder TMP + MAT PIV sintetis -----------------------------------
 tmpRoot = fullfile(tempdir, sprintf('matpivedit_test_%d', feature('getpid')));
@@ -110,7 +110,7 @@ i_cleanBaks(df);
 i_makeSyntheticPiv(df, 5, [12.0 8.0 20.0]);
 
 % =====================================================================
-% C. GUI MATPIVEDIT (pab4Shell + 3 tab)
+% C. GUI MATPIVEDIT (grain4Shell + 3 tab)
 % =====================================================================
 fprintf('-- C. GUI MATPIVEDIT --\n');
 MATPIVEDIT(tmpRoot);

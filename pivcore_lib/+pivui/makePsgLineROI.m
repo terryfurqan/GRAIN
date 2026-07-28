@@ -12,7 +12,7 @@ function roi = makePsgLineROI(ax, p1, p2, onMoved, onMoving)
 %   roi = pivui.makePsgLineROI(ax, p1, p2, @cb, @cbLive) % + ROIMoved + ROIMoving
 %
 %   SATU sumber pembuatan ROI garis PSG — sebelumnya literal warna/LW/MS disalin
-%   di i_ensureROI & cabang drawline i_onDrawLine (PABSA3/3a).
+%   di i_ensureROI & cabang drawline i_onDrawLine (GRAINSA3/3a).
     st = pivui.potStyle();  s = st.psgLine;
     roi = images.roi.Line('Parent', ax, ...
         'Position', [p1; p2], ...

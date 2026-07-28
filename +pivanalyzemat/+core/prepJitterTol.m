@@ -1,7 +1,7 @@
 function tol = prepJitterTol(prep)
 %PREPJITTERTOL  Ambil ambang toleransi jitter (px) dari struct prep, NaN bila tak
 %   terekam. SATU sumber daftar-kunci alias toleransi pada skema prep —
-%   sebelumnya disalin di i_jitterTol & i_flag (PABSA1b).
+%   sebelumnya disalin di i_jitterTol & i_flag (GRAINSA1b).
 %
 %   tol = pivanalyzemat.core.prepJitterTol(prep)
 %

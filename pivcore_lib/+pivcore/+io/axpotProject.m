@@ -1,6 +1,6 @@
 classdef axpotProject
-%AXPOTPROJECT  Berkas PROYEK AX POT (.mat) — jembatan PAB4 -> editor figur
-%   standalone PABAXPOT. Sengaja GEMBUNG: SELURUH informasi kurva AX POT masuk
+%AXPOTPROJECT  Berkas PROYEK AX POT (.mat) — jembatan GRAIN4 -> editor figur
+%   standalone GRAINAXPOT. Sengaja GEMBUNG: SELURUH informasi kurva AX POT masuk
 %   (kurva mentah + teridentifikasi + titik + net-slip + indenter + garis PSG +
 %   strain + geom). Yang TIDAK ikut = tumpukan frame piksel (frame tetap di .mat
 %   sumber, cukup DIREFERENSIKAN via `source.dataFile` + `frameRefs`).
@@ -27,10 +27,10 @@ classdef axpotProject
 %     .netslip  : struct-array (hw,partner,values[1xnF],area,dNet,start..end,units,convention)
 %     .geom     : meta geom .mat sumber (apa adanya; boleh besar)
 %     .frameRefs: [1xK] urutan frame utk montage (diisi nanti; default [])
-%     .infoPoints: struct-array anotasi (diisi di PABAXPOT; default kosong)
-%     .display  : struct setelan tampilan terakhir (diisi PABAXPOT; default kosong)
+%     .infoPoints: struct-array anotasi (diisi di GRAINAXPOT; default kosong)
+%     .display  : struct setelan tampilan terakhir (diisi GRAINAXPOT; default kosong)
 %
-%   Penempatan: PAB/pivcore_lib/+pivcore/+io/axpotProject.m
+%   Penempatan: GRAIN/pivcore_lib/+pivcore/+io/axpotProject.m
 
     methods (Static)
 
@@ -40,7 +40,7 @@ classdef axpotProject
             if nargin < 1, dataFile = ''; end
             [d, base, ext] = pivcore.io.axpotProject.parts(dataFile);
             p = struct();
-            p.formatName    = 'PAB AXPOT Project';
+            p.formatName    = 'GRAIN AXPOT Project';
             p.formatVersion = 1;
             p.savedAt       = '';
             p.source        = struct('dataFile',char(dataFile), 'base',base, ...
@@ -60,9 +60,9 @@ classdef axpotProject
             p.infoPoints    = pivcore.io.axpotProject.emptyInfo();
             p.display       = struct();
             % --- KALIBRASI sumbu-Y dunia nyata (px/frame -> cm/s) — 3 OPSI ---
-            %   (paritas PAB Exporter: 'manual' cm/px÷dt · 'calxy' · 'geom' X0/X1+dt)
+            %   (paritas GRAIN Exporter: 'manual' cm/px÷dt · 'calxy' · 'geom' X0/X1+dt)
             %   timing  = waktu antar-frame (dt). source 'exif' bila terbaca EXIF
-            %             saat ekspor PAB4; 'manual' bila di-override pengguna.
+            %             saat ekspor GRAIN4; 'manual' bila di-override pengguna.
             %   geomCal = geometri global dari .mat PIV (experiment_geometry/calxy):
             %             dxCm=|X0-X1| cm, cmPerPx (calxy terkalibrasi), strainPct.
             %   ycal    = pilihan kalibrasi aktif: source + velMult (cm/s per
@@ -73,8 +73,8 @@ classdef axpotProject
             p.ycal          = struct('source','geom', 'velMult',0.005, ...
                                      'cmPerPx',NaN, 'unit','cm/s', 'enabled',false);
             % --- SUMBER EDITAN (gembung): record POT mentah + titik observasi.
-            %     Bila ada, PABAXPOT bisa MENGEDIT (trim/assign HW/buang) sama
-            %     seperti PAB4; curves/hw/indenter = TURUNAN (deriveFromRecs).
+            %     Bila ada, GRAINAXPOT bisa MENGEDIT (trim/assign HW/buang) sama
+            %     seperti GRAIN4; curves/hw/indenter = TURUNAN (deriveFromRecs).
             p.recs          = [];
             p.pts           = pivcore.pot.snapPoints.emptyPts();
         end
@@ -112,7 +112,7 @@ classdef axpotProject
 
         % ================================================================
         function ip = infoPointStruct(p)
-        %INFOPOINTSTRUCT  Titik informasi (anotasi) — bisa "ngobrol" dgn PAB:
+        %INFOPOINTSTRUCT  Titik informasi (anotasi) — bisa "ngobrol" dgn GRAIN:
         %   frame (sumbu-x asli), strainPct, value (y), label teks, kind, color.
             if nargin < 1 || ~isstruct(p), p = struct(); end
             g  = @(f,d) pivcore.io.axpotProject.fld(p,f,d);
@@ -183,7 +183,7 @@ classdef axpotProject
         % ================================================================
         function [mult, info, ok] = velMult(proj, source)
         %VELMULT  Pengali |V| px/frame -> cm/s utk SUMBER tertentu (3 opsi, paritas
-        %   PAB Exporter i_onAutoMult). Murni/headless. ok=false bila bahan kurang.
+        %   GRAIN Exporter i_onAutoMult). Murni/headless. ok=false bila bahan kurang.
         %     'manual' : cmPerPx(override ycal) / dtSec(timing)
         %     'calxy'  : geomCal.cmPerPx (calxy terkalibrasi) / dtSec
         %     'geom'   : (dxCm/((nF-1)*dt)) / max(indenter)   [kalibrasi via indenter]
@@ -256,7 +256,7 @@ classdef axpotProject
                     if ~isfield(proj, fn{i}), proj.(fn{i}) = d.(fn{i}); end
                 end
             end
-            proj.formatName = 'PAB AXPOT Project';
+            proj.formatName = 'GRAIN AXPOT Project';
         end
 
 
@@ -371,7 +371,7 @@ classdef axpotProject
 
     % =================================================================
     %  Helper EDIT (dipakai deriveFromRecs) — clean-room kecil dari
-    %  pivui.pab4Shell supaya engine TAK bergantung ke lapisan UI.
+    %  pivui.grain4Shell supaya engine TAK bergantung ke lapisan UI.
     methods (Static)
         function tf = recExcluded(rec)
         %RECEXCLUDED  True bila record kurva ditandai DIBUANG (non-destruktif).

@@ -1,10 +1,10 @@
-# FILE_GOVERNANCE — Tata Kelola Berkas Folder PAB
+# FILE_GOVERNANCE — Tata Kelola Berkas Folder GRAIN
 
-> **Aturan inti:** ROOT folder `PAB/` **HANYA** berisi entry point `PAB*` + bootstrap
-> `pab_setup.m` + paket/library. Semua berkas lain WAJIB tinggal di subfolder yang sesuai.
+> **Aturan inti:** ROOT folder `GRAIN/` **HANYA** berisi entry point `GRAIN*` + bootstrap
+> `grain_setup.m` + paket/library. Semua berkas lain WAJIB tinggal di subfolder yang sesuai.
 
 Berlaku sejak reorganisasi 2026-06-25. Tujuannya: root jadi daftar pintu masuk yang
-bersih — buka MATLAB, jalankan `pab_setup`, lalu ketik `PAB1` dst.
+bersih — buka MATLAB, jalankan `grain_setup`, lalu ketik `GRAIN1` dst.
 
 ---
 
@@ -12,8 +12,8 @@ bersih — buka MATLAB, jalankan `pab_setup`, lalu ketik `PAB1` dst.
 
 | Pola               | Isi                                                              |
 |--------------------|-----------------------------------------------------------------|
-| `PAB0 … PAB3a.m`   | Entry point GUI/tahap (pintu masuk yang dipanggil pengguna).     |
-| `pab_setup.m`      | Bootstrap path tunggal per sesi.                                |
+| `GRAIN0 … GRAIN3a.m`   | Entry point GUI/tahap (pintu masuk yang dipanggil pengguna).     |
+| `grain_setup.m`      | Bootstrap path tunggal per sesi.                                |
 | `+*/`              | Paket MATLAB namespace (`+pivprep`, `+batchpivprep2`, `+pivanalyze`, `+pivanalyzemat`). |
 | `lib/`             | Helper non-paket (`PIVlab_automasi*`, `pivprepSingle`, …).       |
 | `pivcore_lib/`     | `+pivcore` / `+pivui` untuk QPIV GUI penuh.                      |
@@ -35,21 +35,21 @@ bersih — buka MATLAB, jalankan `pab_setup`, lalu ketik `PAB1` dst.
 
 ## 3. Cara path tetap utuh setelah pindah
 
-`pab_setup.m` meng-`addpath` root **dan** subfolder `tests/` & `_compat/`. Jadi setelah
-sekali `pab_setup`:
+`grain_setup.m` meng-`addpath` root **dan** subfolder `tests/` & `_compat/`. Jadi setelah
+sekali `grain_setup`:
 
-- entry point `PAB*` dan forwarder nama lama tetap resolve by-name;
+- entry point `GRAIN*` dan forwarder nama lama tetap resolve by-name;
 - semua `test_smoke_*` / `run_*` dapat dipanggil by-name.
 
 Bootstrap di file `tests/` memakai `addpath(here); addpath(fileparts(here))` agar **root**
-(tempat `pab_setup`, `PAB*`) ikut masuk path bila test dijalankan langsung tanpa
-`pab_setup` lebih dulu. Driver yang memindai root (`run_rename_verify`, `run_parsecheck`)
+(tempat `grain_setup`, `GRAIN*`) ikut masuk path bila test dijalankan langsung tanpa
+`grain_setup` lebih dulu. Driver yang memindai root (`run_rename_verify`, `run_parsecheck`)
 memakai `proj = fileparts(here)`; `run_smoke_subset` memakai `fileparts(fileparts(here))`
 untuk mencapai `.../Automasi PIV LAB` (induk RAW).
 
 ## 4. Saat menambah berkas baru — taruh di mana?
 
-- Pintu masuk tahap baru (`PAB4`, …) → **root**.
+- Pintu masuk tahap baru (`GRAIN4`, …) → **root**.
 - Smoke test / driver → **`tests/`** (bootstrap: `addpath(here); addpath(fileparts(here))`).
 - Dokumen/rencana/diagram → **`docs/`**.
 - Forwarder transisi nama lama → **`_compat/`**.
@@ -58,9 +58,9 @@ untuk mencapai `.../Automasi PIV LAB` (induk RAW).
 ## 5. Verifikasi (gerbang)
 
 ```matlab
-cd('.../Automasi PIV LAB/PAB'); pab_setup;
-run_rename_verify({'PAB1','PAB2','PAB3a','pab_setup','PAB_step_2','pab_sa_setup', ...
-                   'test_smoke_pab','run_smoke_subset'});
+cd('.../Automasi PIV LAB/GRAIN'); grain_setup;
+run_rename_verify({'GRAIN1','GRAIN2','GRAIN3a','grain_setup','PAB_step_2','pab_sa_setup', ...
+                   'test_smoke_grain','run_smoke_subset'});
 ```
 
 Harus melaporkan `PARSE: ALL N FILES CLEAN` dan `NAMES: ALL k RESOLVE`. Jalankan ini

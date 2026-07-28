@@ -3,7 +3,7 @@ function out = pivprepJitterGrid(files, refImg, rawDir, opts)
 %
 %   out = pivprepJitterGrid(files, refImg, rawDir, opts)
 %
-%   = ENGINE inti PABSA0a (PAB_step_0a). Bila PABSA0 menguji SATU ROI yang
+%   = ENGINE inti GRAINSA0a (PAB_step_0a). Bila GRAINSA0 menguji SATU ROI yang
 %   ditebak pengguna, fungsi ini MEMINDAI seluruh frame dengan GRID rapat
 %   area kecil dan mengukur "seberapa jauh tiap area menyimpang dari posisi
 %   frame-1" sepanjang urutan. Area yang paling DIAM (simpangan terendah)
@@ -12,7 +12,7 @@ function out = pivprepJitterGrid(files, refImg, rawDir, opts)
 %   ATAU justru zona observasi (pasir/dinding pendorong) — engine tidak
 %   membedakan keduanya, ia hanya MEMERINGKAT kediaman.
 %
-%   ENGINE = SAMA dengan PABSA0/Step 1 (tanpa duplikasi algoritma): tiap sel
+%   ENGINE = SAMA dengan GRAINSA0/Step 1 (tanpa duplikasi algoritma): tiap sel
 %   memakai pivprep.stab.buildReference + estimateTransform dengan
 %       roiPad        = 0      -> pengukuran terkurung di sel itu
 %       lastGoodTform = I      -> dx/dy ABSOLUT relatif frame-1

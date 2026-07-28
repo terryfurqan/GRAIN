@@ -4,9 +4,9 @@ function test_smoke_maskpoly_reconcile()
 %   Fitur: edit polygon TUNGGAL berkeyframe — tambah/hapus titik di 1 frame otomatis
 %   merambat ke SEMUA keyframe agar K tetap seragam & interpVerts tetap sah.
 %
-%   Jalankan: pab_setup; test_smoke_maskpoly_reconcile   (SELALU R2025b)
+%   Jalankan: grain_setup; test_smoke_maskpoly_reconcile   (SELALU R2025b)
     fprintf('\n=== TEST maskPoly reconcile vertex ===\n');
-    pab_setup();
+    grain_setup();
     mp = @pivanalyzemat.core.maskPoly;
     MP = pivanalyzemat.core.maskPoly; %#ok<NASGU>
 

@@ -1,7 +1,7 @@
 classdef hwLabel
 %HWLABEL  Labeling Hanging-Wall RINGAN di-tempat (HW-#/F-#/F0/FFW) atas array
 %   record POT — fungsi murni/headless di atas pivcore.pot.labels + records +
-%   netslip. Dipakai PAB4B (tanpa lewat PAB3a). SATU sumber pengelompokan HW.
+%   netslip. Dipakai GRAIN4B (tanpa lewat GRAIN3a). SATU sumber pengelompokan HW.
 %
 %   API:
 %     recs   = pivcore.pot.hwLabel.assign(recs, rowIdx, ty, num)  % set label+warna
@@ -14,7 +14,7 @@ classdef hwLabel
 %     st     = pivcore.pot.hwLabel.completeness(recs)     % nHW/hasFFW/canNetslip/...
 %     tyList = pivcore.pot.hwLabel.typeList()             % {'HW','F','F0','FFW'}
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/hwLabel.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/hwLabel.m
 
     methods (Static)
 

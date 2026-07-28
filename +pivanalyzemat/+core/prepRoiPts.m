@@ -1,7 +1,7 @@
 function pts = prepRoiPts(prep, field, ptsField, roiField)
 %PREPROIPTS  Ambil titik poligon ROI (Nx2) dari preset tersemat di prep.
 %   Prioritas *Pts (Nx2); fallback *ROI ([x y w h] -> 4 sudut). [] bila tak ada.
-%   SATU sumber pembaca ROI preset skema prep — sebelumnya i_roiPts (PABSA1a).
+%   SATU sumber pembaca ROI preset skema prep — sebelumnya i_roiPts (GRAINSA1a).
 %
 %   pts = pivanalyzemat.core.prepRoiPts(prep, field, ptsField, roiField)
 %     field    : nama sub-struct preset (mis. 'anchor_used' / 'crop_used')

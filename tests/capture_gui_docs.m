@@ -1,5 +1,5 @@
 function capture_gui_docs(force)
-%CAPTURE_GUI_DOCS  Luncurkan tiap modul PAB dgn data contoh, tangkap jendela GUI
+%CAPTURE_GUI_DOCS  Luncurkan tiap modul GRAIN dgn data contoh, tangkap jendela GUI
 %   ke docs/img/gui_<modul>.png + generate AXPOT/AXPSG dari MAT PIV contoh.
 %   Dipakai untuk dokumentasi ALUR_KERJA_V2.html. SELALU R2025b.
 %
@@ -8,7 +8,7 @@ function capture_gui_docs(force)
 %      Hanya untuk regenerasi screenshot dokumentasi secara MANUAL.
 %      JANGAN masukkan ke suite tes otomatis.
 %
-%   Jalankan (opt-in wajib):  pab_setup; capture_gui_docs(true)
+%   Jalankan (opt-in wajib):  grain_setup; capture_gui_docs(true)
 
 if nargin < 1 || ~isequal(force,true)
     error('capture_gui_docs:needsForce', ...
@@ -17,9 +17,9 @@ if nargin < 1 || ~isequal(force,true)
 end
 
 here   = fileparts(mfilename('fullpath'));
-pabDir = fileparts(here);
-proj   = fileparts(pabDir);
-imgDir = fullfile(pabDir,'docs','img');
+grainDir = fileparts(here);
+proj   = fileparts(grainDir);
+imgDir = fullfile(grainDir,'docs','img');
 if ~exist(imgDir,'dir'), mkdir(imgDir); end
 
 rawRoot  = fullfile(proj,'RAW');             % MAT mentah/PREP + PIV_<tgl>
@@ -31,15 +31,15 @@ fprintf('imgDir = %s\n', imgDir);
 
 % ---- modul GUI: {nama, fungsi pemanggil} ; arg root dipilih per modul ----
 mods = {
-  'pab0', @() PAB0(jpgRoot)
-  'pab1', @() PAB1(jpgRoot)
-  'pabmask', @() PABMASK(rawRoot)
-  'pab2', @() PAB2(rawRoot)
+  'grain0', @() GRAIN0(jpgRoot)
+  'pab1', @() GRAIN1(jpgRoot)
+  'pabmask', @() GRAINMASK(rawRoot)
+  'grain2', @() GRAIN2(rawRoot)
   'matpivedit', @() MATPIVEDIT(pivDir)
-  'pab3', @() PAB3(pivDir)
-  'pab3a', @() PAB3a(pivDir)
-  'pab4', @() PAB4(pivDir)
-  'pabexport', @() PABEXPORT(pivDir)
+  'grain3', @() GRAIN3(pivDir)
+  'grain3a', @() GRAIN3a(pivDir)
+  'grain4', @() GRAIN4(pivDir)
+  'grainexport', @() GRAINEXPORT(pivDir)
 };
 
 for i = 1:size(mods,1)

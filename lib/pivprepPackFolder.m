@@ -26,7 +26,7 @@ function info = pivprepPackFolder(baseFolder, outMatPath, varargin)
 %     'EmbedGS'    : true = sematkan blob GS ke .mat (perilaku lama). false
 %                    (DEFAULT) = JANGAN simpan blob GS; .mat hanya berisi RAW +
 %                    METADATA GS (prep.gs_scale / prep.gs_quality). GS
-%                    diregenerasi DARI RAW di hilir (PABSA2 unpack), sehingga
+%                    diregenerasi DARI RAW di hilir (GRAINSA2 unpack), sehingga
 %                    .mat jauh lebih irit. Konsumer yang regen GS membaca
 %                    gs_scale/gs_quality ini.
 %     'GsScale'    : skala GS 0..1 yang dicatat sbg metadata (default: deteksi

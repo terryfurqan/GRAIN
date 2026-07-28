@@ -1,6 +1,6 @@
-# Glosarium ID → EN (migrasi teks UI PAB)
+# Glosarium ID → EN (migrasi teks UI GRAIN)
 
-Acuan TUNGGAL penerjemahan teks UI PAB dari Bahasa Indonesia ke Inggris.
+Acuan TUNGGAL penerjemahan teks UI GRAIN dari Bahasa Indonesia ke Inggris.
 Tujuannya: istilah yang sama selalu diterjemahkan sama di semua modul.
 
 ## Aturan cakupan
@@ -13,10 +13,10 @@ Tujuannya: istilah yang sama selalu diterjemahkan sama di semua modul.
 - **teks** pesan `error()` / `warning()`
 
 **TIDAK DISENTUH**:
-- identifier error (`'PAB0:cancel'`), nama fungsi/variabel, field struct
+- identifier error (`'GRAIN0:cancel'`), nama fungsi/variabel, field struct
 - `ItemsData` dropdown, kunci JSON/sidecar, nama berkas & folder
 - komentar kode (tahap terpisah bila diminta)
-- `OLD PAB/` dan `_reference/`
+- `OLD GRAIN/` dan `_reference/`
 
 **Hati-hati**: string opsi `uiconfirm` dibandingkan pakai `strcmp` — daftar opsi
 dan perbandingannya HARUS diubah bersamaan. Begitu pula label tombol/`ColumnName`
@@ -107,11 +107,11 @@ yang dicari test.
 
 | Tahap | Modul | Status |
 |---|---|---|
-| 1 | `PAB0.m` (+ 4 test) | ✅ selesai — 152 penggantian, test LULUS R2025b |
-| 2 | `PAB1.m` (+ stub questdlg di test) | ✅ selesai — 179 penggantian, test LULUS R2025b |
-| 3 | `PAB2.m` | ⏳ |
-| 4 | `PAB3.m`, `PAB3a.m` | ⏳ |
-| 5 | `PAB4.m` (+ turunan) | ⏳ |
-| 6 | `PAB5.m`, `PAB6_temp.m` | ⏳ |
-| 7 | tool standalone (PABMASK, PABEXPORT, PABEDIT, …) | ⏳ |
+| 1 | `GRAIN0.m` (+ 4 test) | ✅ selesai — 152 penggantian, test LULUS R2025b |
+| 2 | `GRAIN1.m` (+ stub questdlg di test) | ✅ selesai — 179 penggantian, test LULUS R2025b |
+| 3 | `GRAIN2.m` | ⏳ |
+| 4 | `GRAIN3.m`, `GRAIN3a.m` | ⏳ |
+| 5 | `GRAIN4.m` (+ turunan) | ⏳ |
+| 6 | `GRAIN5.m`, `GRAIN6_temp.m` | ⏳ |
+| 7 | tool standalone (GRAINMASK, GRAINEXPORT, GRAINEDIT, …) | ⏳ |
 | 8 | teks UI di `pivcore_lib/` | ⏳ |

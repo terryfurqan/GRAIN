@@ -7,7 +7,7 @@ function outFile = buildMontagePOT(data, cfg)
 %   READ-ONLY. Sama dengan pivcore.montage.buildMontage (grid skalar+GS+glyph,
 %   CLim global, off-screen -> PNG) TAPI menambah satu axes POT lebar di bawah
 %   grid. Plot POT = spaghetti kurva |V| + envelope MAX (garis hitam), persis
-%   tampilan axPOT PABSA3. Untuk SETIAP bingkai yang ditampilkan di grid, sebuah
+%   tampilan axPOT GRAINSA3. Untuk SETIAP bingkai yang ditampilkan di grid, sebuah
 %   garis vertikal merah ditarik di axPOT dengan label angka di atasnya. Label
 %   bisa: nomor frame, strain hasil interpolasi posisi (X0/X1/L_pos), atau
 %   strain override manual.
@@ -292,7 +292,7 @@ end
 
 
 function fig = i_newFig(ttl)
-    nm = 'PABSA3 Montage POT';
+    nm = 'GRAINSA3 Montage POT';
     if ~isempty(ttl), nm = ttl; end
     fig = figure('Name',nm,'NumberTitle','off','Color',[1 1 1], ...
         'Visible','off','Units','pixels','MenuBar','none','ToolBar','none');

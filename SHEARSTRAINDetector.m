@@ -6,7 +6,7 @@ function figOut = SHEARSTRAINDetector(rootDir, varargin)
 %   (auto-trace) sepanjang punggungan ke DUA arah sampai |shear| turun di bawah
 %   ambang. Hasil = 1 polyline yang bisa diedit & disimpan.
 %
-%   Reuse kerangka PAB4 (pivui.pab4Shell) SEPENUHNYA: input = SATU FOLDER
+%   Reuse kerangka GRAIN4 (pivui.grain4Shell) SEPENUHNYA: input = SATU FOLDER
 %   eksperimen (output Step 2 / PIV_<tgl>/), axMain 3-kolom, load eksperimen,
 %   scrub frame. HANYA panel kanan yang diganti dgn alat digitasi ridge. axMain
 %   otomatis di-set ke mode SHEAR (skala ± absolut, merah/biru).
@@ -17,7 +17,7 @@ function figOut = SHEARSTRAINDetector(rootDir, varargin)
 %
 %   Basis ridge = |shear| ABSOLUT (atas-bawah sama; user atur "maks-min shear" =
 %   ambang thrAbs, mis. 0.04). Hasil disimpan di sidecar TERPISAH
-%   `<base>_shearridge.json` (tak menyentuh _desc.json PAB4). Engine murni:
+%   `<base>_shearridge.json` (tak menyentuh _desc.json GRAIN4). Engine murni:
 %   pivcore.detect.ridgeWalk (auto-trace) + pivcore.io.shearRidge (sidecar).
 %
 %   HOTKEY: Ctrl+D = mode klik-deteksi ON/OFF · Ctrl+,/. = frame ·
@@ -26,11 +26,11 @@ function figOut = SHEARSTRAINDetector(rootDir, varargin)
 %   SHEARSTRAINDetector                 % pilih folder ROOT (dialog)
 %   SHEARSTRAINDetector(rootDir)        % langsung ke folder
 %
-%   Jalankan `pab_setup` sekali per sesi. SELALU MATLAB R2025b.
+%   Jalankan `grain_setup` sekali per sesi. SELALU MATLAB R2025b.
 
     figOut = [];
     here = fileparts(mfilename('fullpath'));
-    if isempty(which('pivui.pab4Shell'))
+    if isempty(which('pivui.grain4Shell'))
         pivc = fullfile(here, 'pivcore_lib');
         if isfolder(pivc), addpath(pivc); end
     end
@@ -48,10 +48,10 @@ function figOut = SHEARSTRAINDetector(rootDir, varargin)
         'onFrameChanged',  @i_onFrameChanged, ...
         'afterRenderMain', @i_afterRenderMain);
 
-    h = pivui.pab4Shell.build(opts);
+    h = pivui.grain4Shell.build(opts);
     try, set(h.pnlR, 'Position', [0.686 0.010 0.308 0.985]); catch, end
 
-    % axMain lebih tinggi (isi whitespace) — sama pola PAB4.
+    % axMain lebih tinggi (isi whitespace) — sama pola GRAIN4.
     AXMAIN_POS = [0.205 0.470 0.455 0.400];
     h.axMainPos = AXMAIN_POS;
     try, set(h.axMain, 'Position', AXMAIN_POS); catch, end
@@ -75,7 +75,7 @@ function figOut = SHEARSTRAINDetector(rootDir, varargin)
 
     set(h.fig, 'CloseRequestFcn', @(s,e) i_onClose(s));
     set(h.fig, 'WindowKeyPressFcn', @(s,e) i_onKeyPress(s, e));
-    pivui.pab4Shell.setRoot(h.fig, rootDir);
+    pivui.grain4Shell.setRoot(h.fig, rootDir);
 
     if ~pivui.quiet()
         try, set(h.fig, 'WindowState', 'maximized'); catch, end
@@ -195,7 +195,7 @@ function i_onExpLoaded(fig)
         numel(pivcore.io.shearRidge.entries(h.rdoc))));
     % pastikan axMain di mode shear
     h = guidata(fig); h.scalarSrc = 'shear'; guidata(fig, h);
-    try, pivui.pab4Shell.renderMain(fig); catch, end
+    try, pivui.grain4Shell.renderMain(fig); catch, end
 end
 
 function i_onLineChanged(fig)
@@ -260,7 +260,7 @@ end
 function i_detectAt(fig, clickXY)
     h = guidata(fig);
     % Pastikan semua frame termuat (shear butuh data lengkap frame k).
-    if ~pivui.pab4Shell.ensureFull(fig)
+    if ~pivui.grain4Shell.ensureFull(fig)
         i_setStatus(fig, 'Data belum lengkap termuat; coba lagi.');
         return;
     end
@@ -312,12 +312,12 @@ function i_roiCommit(fig)
     h = guidata(fig);
     if isempty(h.roiRidge) || ~isvalid(h.roiRidge), return; end
     V = h.roiRidge.Position;
-    V = pivcore.io.pab4Desc.normVerts(V);
+    V = pivcore.io.grain4Desc.normVerts(V);
     if size(V,1) < 2, return; end
     info  = h.roiInfo;
     frame = h.roiFrame;
     cmPerPx = i_cmPerPx(h);
-    lenCm = pivcore.io.pab4Desc.lenCmOf(V, cmPerPx);
+    lenCm = pivcore.io.grain4Desc.lenCmOf(V, cmPerPx);
     psgId = i_activePsgId(h);
 
     id = h.editRidgeId;
@@ -363,7 +363,7 @@ function i_drawStoredRidges(fig)
     for i = 1:numel(ridges)
         e = ridges{i};
         if strcmp(e.id, editId), continue; end   % yg sedang diedit ROI -> jangan gambar ganda
-        V = pivcore.io.pab4Desc.normVerts(e.vertices);
+        V = pivcore.io.grain4Desc.normVerts(e.vertices);
         if size(V,1) < 2, continue; end
         col = i_polarColor(e.polarity);
         plot(ax, V(:,1), V(:,2), '-', 'Color',col, 'LineWidth',2.0, ...
@@ -392,13 +392,13 @@ function i_refreshRidgeTable(fig)
     data = cell(n, 6);
     for i = 1:n
         e = ridges{i};
-        V = pivcore.io.pab4Desc.normVerts(e.vertices);
+        V = pivcore.io.grain4Desc.normVerts(e.vertices);
         data{i,1} = e.id;
         data{i,2} = e.frame;
         data{i,3} = i_polarStr(e.polarity);
         data{i,4} = size(V,1);
         data{i,5} = i_fmt(e.meanAbs, 4);
-        data{i,6} = i_fmt(pivcore.io.pab4Desc.polylineLenPx(V), 0);
+        data{i,6} = i_fmt(pivcore.io.grain4Desc.polylineLenPx(V), 0);
     end
     if n == 0, data = cell(0,6); end
     set(h.tblRidge, 'Data', data);
@@ -518,9 +518,9 @@ function i_onKeyPress(fig, evt)
             case 'd'
                 i_onToggleDetect(fig);
             case {'comma'}
-                pivui.pab4Shell.stepFrame(fig, -1);
+                pivui.grain4Shell.stepFrame(fig, -1);
             case {'period'}
-                pivui.pab4Shell.stepFrame(fig, +1);
+                pivui.grain4Shell.stepFrame(fig, +1);
             case {'backspace','delete'}
                 i_onDeleteRidge(fig);
         end
@@ -577,7 +577,7 @@ function cmPerPx = i_cmPerPx(h)
         end
         span = NaN;
         if isfield(h,'xExt') && numel(h.xExt)==2, span = abs(diff(h.xExt)); end
-        cmPerPx = pivcore.io.pab4Desc.cmPerPxFromGeom(dxCm, span);
+        cmPerPx = pivcore.io.grain4Desc.cmPerPxFromGeom(dxCm, span);
     catch
         cmPerPx = NaN;
     end

@@ -1,16 +1,16 @@
 function MATPIVEDIT(rootDir)
-%MATPIVEDIT  Penyunting + QC MAT PIV (output Step 2) — GUI 3 kolom gaya PAB4.
+%MATPIVEDIT  Penyunting + QC MAT PIV (output Step 2) — GUI 3 kolom gaya GRAIN4.
 %
 %   MATPIVEDIT                % dialog pilih folder berisi .mat PIV
 %   MATPIVEDIT(rootDir)       % langsung ke folder ROOT (scan otomatis)
 %
 %   Satu app untuk MERAWAT berkas MAT PIV yang SUDAH ADA (output Step 2) TANPA
-%   menjalankan ulang PIV. Menumpang kerangka BERSAMA `pivui.pab4Shell` (dipakai
-%   PAB3/PAB4/PAB5) sehingga visualizer QC (bidang skalar 2D velmag/shear + latar
+%   menjalankan ulang PIV. Menumpang kerangka BERSAMA `pivui.grain4Shell` (dipakai
+%   GRAIN3/GRAIN4/GRAIN5) sehingga visualizer QC (bidang skalar 2D velmag/shear + latar
 %   GS + glyph + axPOT + garis PSG + slider frame) TERPAKAI ULANG apa adanya —
 %   bukan ditulis ulang. Tema TERANG dipaksa, font hitam (bawaan shell).
 %
-%   TATA LETAK (3 kolom, dari pab4Shell):
+%   TATA LETAK (3 kolom, dari grain4Shell):
 %     KIRI   : tabel berkas .mat PIV (+ kolom Strain% & ✎/masking).
 %     TENGAH : axMain (bidang skalar 2D velmag/shear + GS + glyph) di atas,
 %              axPOT (kurva POT sepanjang garis PSG) di bawah, + slider frame
@@ -31,14 +31,14 @@ function MATPIVEDIT(rootDir)
 %   berfungsi sebagai CATATAN region (QC / dipakai ulang bila kembali ke PREP
 %   dengan nama sepadan). Latar GS untuk menggambar kotak dibaca dari MAT PIV.
 %
-%   Lihat memori [[matpivedit-geom-editor]], [[pab-step4-ecosystem]],
-%   [[pabmask-nondestructive-masking]], [[pab-step2-mat-input]].
+%   Lihat memori [[matpivedit-geom-editor]], [[grain-step4-ecosystem]],
+%   [[pabmask-nondestructive-masking]], [[grain-step2-mat-input]].
 
     here = fileparts(mfilename('fullpath'));
     if isempty(which('pivanalyzemat.core.pivGeomIO'))
         addpath(here);
     end
-    if isempty(which('pivui.pab4Shell'))
+    if isempty(which('pivui.grain4Shell'))
         pivc = fullfile(here, 'pivcore_lib');
         if isfolder(pivc), addpath(pivc); end
     end
@@ -57,7 +57,7 @@ function MATPIVEDIT(rootDir)
         'onExpLoaded',     @i_onExpLoaded, ...
         'afterRenderMain', @i_afterRenderMain, ...
         'onFrameChanged',  @i_onFrameChanged);
-    h = pivui.pab4Shell.build(opts);
+    h = pivui.grain4Shell.build(opts);
 
     % --- State khusus MATPIVEDIT (di atas state shell) ---
     h.me = i_defaultMeState();
@@ -70,7 +70,7 @@ function MATPIVEDIT(rootDir)
     set(h.fig, 'CloseRequestFcn', @(s,e) i_onClose(s));
 
     % Folder + pindai (auto-load exp pertama via shell).
-    pivui.pab4Shell.setRoot(h.fig, rootDir);
+    pivui.grain4Shell.setRoot(h.fig, rootDir);
 end
 
 % =====================================================================
@@ -259,7 +259,7 @@ function h = i_buildRightTabs(h)
         'Position',[0.04 0.22 0.92 0.05],'String','Pratinjau tempel putih di axMain', ...
         'Value',0,'BackgroundColor',WHITE,'ForegroundColor',[0 0 0], ...
         'TooltipString','Tampilkan efek masking (isi putih) pada frame tampil.', ...
-        'Callback',@(s,e) pivui.pab4Shell.renderMain(ancestor(s,'figure')));
+        'Callback',@(s,e) pivui.grain4Shell.renderMain(ancestor(s,'figure')));
     h.me_btnSaveMask = uicontrol('Parent',tM,'Style','pushbutton','Units','normalized', ...
         'Position',[0.04 0.11 0.92 0.09],'String','💾 Simpan masking → sidecar _mask.json', ...
         'FontWeight','bold','BackgroundColor',[0.83 0.94 0.83], ...
@@ -405,7 +405,7 @@ function i_onSaveGeom(fig)
         [g, bak] = pivanalyzemat.core.matpivEdit.writeGeom(h.me.file, X0, X1, Lp, true);
         h.me.geom0 = [X0 X1 Lp]; guidata(fig, h);
         i_markGeomDirty(fig);
-        pivui.pab4Shell.fillTable(fig);   % kolom Strain% ikut segar
+        pivui.grain4Shell.fillTable(fig);   % kolom Strain% ikut segar
         pivui.setStatus(fig, sprintf('Geometri tersimpan: strain %+.4g%% (%s). Backup=%s', ...
             g.strain_cumm_pct, g.mode, i_short(bak)));
     catch ME
@@ -460,7 +460,7 @@ function i_onPickDrop(fig)
     sel = get(h.me_lstDrop,'Value');
     if isempty(sel) || sel(1) < 1 || sel(1) > numel(h.me.dropSet), return; end
     k = h.me.dropSet(sel(1));
-    pivui.pab4Shell.gotoFrame(fig, k);   % lompat ke frame itu di axMain utk verifikasi
+    pivui.grain4Shell.gotoFrame(fig, k);   % lompat ke frame itu di axMain utk verifikasi
 end
 
 function i_refreshDropList(fig)
@@ -520,8 +520,8 @@ function i_reloadActive(fig)
         end
     catch
     end
-    pivui.pab4Shell.fillTable(fig);
-    pivui.pab4Shell.loadExperiment(fig, row);
+    pivui.grain4Shell.fillTable(fig);
+    pivui.grain4Shell.loadExperiment(fig, row);
 end
 
 % =====================================================================
@@ -717,7 +717,7 @@ function i_onSaveMask(fig)
         ok = pivanalyzemat.core.matpivEdit.writeMask(h.me.file, m);
         if ok
             h.me.maskDirty = false; guidata(fig, h);
-            pivui.pab4Shell.fillTable(fig);   % kolom mask ▭ ikut segar
+            pivui.grain4Shell.fillTable(fig);   % kolom mask ▭ ikut segar
             nb = 0; if pivanalyzemat.core.maskRect.isActive(m), nb = numel(m.boxes); end
             pivui.setStatus(fig, sprintf('Masking tersimpan (%d kotak) → %s_mask.json', ...
                 nb, i_baseOnly(h.me.file)));
@@ -739,8 +739,8 @@ function i_onClearMaskSidecar(fig)
     h.me.boxes = {}; h.me.activeBox = 0; h.me.activeRoi = []; h.me.maskDirty = false;
     guidata(fig, h);
     i_refreshMaskList(fig);
-    pivui.pab4Shell.fillTable(fig);
-    pivui.pab4Shell.renderMain(fig);   % afterRenderMain redraw (kini kosong)
+    pivui.grain4Shell.fillTable(fig);
+    pivui.grain4Shell.renderMain(fig);   % afterRenderMain redraw (kini kosong)
     pivui.setStatus(fig, 'Sidecar masking dihapus (masking nonaktif).');
 end
 

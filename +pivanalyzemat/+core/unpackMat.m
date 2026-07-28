@@ -17,7 +17,7 @@ function entry = unpackMat(matEntry, varargin)
 %   Dengan begitu SELURUH engine V4/+pivanalyze (PIV, embed GS, waktu EXIF,
 %   geometri, Quick PIV, buang frame) berjalan APA ADANYA pada folder ini —
 %   tanpa menyentuh logika ilmiah. Hasil bongkar di-cache per-sesi (persistent
-%   Map berdasar path .mat); namun PAB Step 2 kini memakai bongkaran secara
+%   Map berdasar path .mat); namun GRAIN Step 2 kini memakai bongkaran secara
 %   TEMPORER (on-demand lalu hapus) — pemanggil yang ingin selalu segar mengoper
 %   'Force', true dan menghapus folder bongkaran setelah pekerjaan selesai.
 %
@@ -113,8 +113,8 @@ function entry = unpackMat(matEntry, varargin)
 	%     citra RAW saat decode (frame asli di blob TAK tersentuh). GS regen dari
 	%     RAW ter-masking otomatis ikut bersih (i_regenGsFromRaw baca RAW). ---
 	%     Resep dibaca via prepBlobStore.readMasking: SIDECAR '<nama>_mask.json'
-	%     diprioritaskan; fallback warisan pmasking/prep.masking. -> PAB2 produksi
-	%     otomatis ter-masking dari sidecar tanpa perubahan PAB2.
+	%     diprioritaskan; fallback warisan pmasking/prep.masking. -> GRAIN2 produksi
+	%     otomatis ter-masking dari sidecar tanpa perubahan GRAIN2.
 	masking = [];
 	mCand = [];
 	try
@@ -134,7 +134,7 @@ function entry = unpackMat(matEntry, varargin)
 		rectM = mCand;
 		i_log(logf, '     MASK: kotak aktif (%d)', numel(rectM.boxes));
 	end
-	% Layer-2 polygon (PABMASK2) dari sidecar v2_poly.
+	% Layer-2 polygon (GRAINMASK2) dari sidecar v2_poly.
 	try
 		pCand = pivanalyzemat.core.maskSidecar.readPoly(matPath);
 		if ~isempty(pCand) && pivanalyzemat.core.maskPoly.isActive(pCand)

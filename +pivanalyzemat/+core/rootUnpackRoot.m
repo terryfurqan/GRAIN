@@ -9,9 +9,9 @@ function root = rootUnpackRoot(rootFolder)
 %   dipindai, dengan NAMA YANG DI-HASH dari path root tsb supaya:
 %     - stabil lintas-sesi (root sama -> folder unpack sama, bisa dipakai ulang),
 %     - tidak bentrok bila beberapa root berbeda kebetulan sebaris,
-%     - mudah dikenali sbg artefak tool (prefiks '.pabsa2_unpack_').
+%     - mudah dikenali sbg artefak tool (prefiks '.grainsa2_unpack_').
 %
-%       <rootFolder>/.pabsa2_unpack_<hash8>/<name>_<hash8>/RAW|GS|EXIF
+%       <rootFolder>/.grainsa2_unpack_<hash8>/<name>_<hash8>/RAW|GS|EXIF
 %
 %   Folder ini bersifat TEMPORER: bongkaran dibuat on-demand (menjelang QPIV /
 %   batch satu eksperimen) lalu DIHAPUS segera setelah pekerjaan selesai, dan
@@ -27,7 +27,7 @@ function root = rootUnpackRoot(rootFolder)
 	end
 	canon = i_canon(rootFolder);
 	tag   = i_hash8(canon);
-	root  = fullfile(rootFolder, sprintf('.pabsa2_unpack_%s', tag));
+	root  = fullfile(rootFolder, sprintf('.grainsa2_unpack_%s', tag));
 	if ~isfolder(root); mkdir(root); end
 end
 

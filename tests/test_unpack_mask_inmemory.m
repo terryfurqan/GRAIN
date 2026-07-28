@@ -9,14 +9,14 @@ function test_unpack_mask_inmemory()
 %     C. Non-destruktif: blob asli di .mat TAK berubah (byte-identik sebelum/
 %        sesudah unpack ber-masking).
 %
-%   Kita panggil unpackMat penuh (jalur produksi PAB2). Bila decode in-memory
+%   Kita panggil unpackMat penuh (jalur produksi GRAIN2). Bila decode in-memory
 %   salah, kotak tak muncul / warna kanal salah -> assert gagal.
 %
-%   Jalankan: pab_setup; test_unpack_mask_inmemory   (SELALU R2025b)
+%   Jalankan: grain_setup; test_unpack_mask_inmemory   (SELALU R2025b)
     fprintf('\n=== TEST unpack masking in-memory decode ===\n');
     here = fileparts(mfilename('fullpath'));
     addpath(here); addpath(fileparts(here));
-    pab_setup();
+    grain_setup();
 
     troot = fullfile(tempdir, sprintf('unpmask_%d', feature('getpid')));
     if isfolder(troot), rmdir(troot,'s'); end; mkdir(troot);

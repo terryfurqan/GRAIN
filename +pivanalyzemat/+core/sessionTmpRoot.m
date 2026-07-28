@@ -17,7 +17,7 @@ function root = sessionTmpRoot()
 	% pakai feature('getpid') + tic untuk keunikan praktis.
 	try, pid = feature('getpid'); catch, pid = 0; end
 	tag = sprintf('%d_%d', pid, round(mod(now*8.64e7, 1e9))); %#ok<TNOW1>
-	ROOT = fullfile(base, sprintf('pab_step2_unpack_%s', tag));
+	ROOT = fullfile(base, sprintf('grain_step2_unpack_%s', tag));
 	if ~isfolder(ROOT); mkdir(ROOT); end
 	root = ROOT;
 end

@@ -5,7 +5,7 @@ function d = climDefaults()
 %   d.snapStep  : kelipatan pembulatan KE ATAS batas vel 0.5  (lihat snapClim)
 %   d.cmapN     : jumlah level colormap                  256
 %   d.shearMode : mode regangan shear                    'engineering'
-%   SATU sumber konstanta render — sebelumnya di-hardcode di PABSA3/3a init.
+%   SATU sumber konstanta render — sebelumnya di-hardcode di GRAINSA3/3a init.
     d = struct('velCLim', [0 5], 'shearAbs', 0.05, 'snapStep', 0.5, ...
                'cmapN', 256, 'shearMode', 'engineering');
 end

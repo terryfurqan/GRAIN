@@ -37,9 +37,9 @@ function PIVlab_automasi_qpiv_GUI_V2(job, progressKey, onDoneFcn, navFcn)
 
 here = fileparts(mfilename('fullpath'));
 addpath(here);
-% PAB_SA: pivcore/pivui di-addpath oleh pab_setup (pivcore_lib/).
-if exist('pab_setup', 'file') == 2 && isempty(which('pivcore.data.buildDataset'))
-	pab_setup();
+% GRAIN_SA: pivcore/pivui di-addpath oleh grain_setup (pivcore_lib/).
+if exist('grain_setup', 'file') == 2 && isempty(which('pivcore.data.buildDataset'))
+	grain_setup();
 end
 
 if nargin < 1 || ~isstruct(job)

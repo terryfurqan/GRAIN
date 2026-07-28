@@ -154,7 +154,7 @@ function results = runBatch(folders, cfg, stopCheck)
         'Keluaran per folder: RAW_/GS_/EXIF_ + ANCHOR_used.mat + CROP_used.mat + JITTER_curve.png.'], ...
         head, nDone, nFolders, totalOK, totalSkip, elapsedAll, util.secsToHMS(elapsedAll));
     % Pop-up ringkasan akhir opsional (default ON = perilaku lama GUI Step 1).
-    % Pemanggil non-interaktif (mis. PAB1 "Lanjutkan ke Step 2") set
+    % Pemanggil non-interaktif (mis. GRAIN1 "Lanjutkan ke Step 2") set
     % cfg.showSummaryDialog=false agar tak ada pop-up setelah simpan MAT PREP.
     if local_get(cfg, 'showSummaryDialog', true)
         msgbox(msg, ttl, 'help');
@@ -246,7 +246,7 @@ function [R, logStr] = local_oneFolder(f, cfg, opts, template, progressFcn)
             seq = local_folderSeq(f);   % urutan file -> metadata di .mat
             % GS TIDAK disematkan: .mat hanya RAW + metadata GS (gs_scale/
             % gs_quality dari cfg). GS diregenerasi dari RAW saat analisis
-            % (PABSA2 unpack) -> .mat jauh lebih irit.
+            % (GRAINSA2 unpack) -> .mat jauh lebih irit.
             gsSc = 0.5; gsQ = 92;
             if isfield(cfgThis, 'gsScale');   gsSc = cfgThis.gsScale;   end
             if isfield(cfgThis, 'gsQuality'); gsQ  = cfgThis.gsQuality; end
@@ -307,8 +307,8 @@ function local_ensurePool()
     if isempty(pool); return; end
     try
         thisDir = fileparts(mfilename('fullpath'));   % .../+batchpivprep2/+core
-        pabRoot = fileparts(fileparts(thisDir));      % .../PAB
-        roots = {pabRoot};
+        grainRoot = fileparts(fileparts(thisDir));      % .../GRAIN
+        roots = {grainRoot};
         pp = which('pivprepPackFolder');
         if ~isempty(pp); roots{end+1} = fileparts(pp); end
         fut = parfevalOnAll(@addpath, 0, roots{:});

@@ -5,9 +5,9 @@ function test_smoke_maskpoly()
 %   C. normalize: buang polygon dgn K vertex tak seragam.
 %   D. sidecar v2_poly round-trip TANPA merusak v1_rect (kotak).
 %
-%   Jalankan: pab_setup; test_smoke_maskpoly   (SELALU R2025b)
+%   Jalankan: grain_setup; test_smoke_maskpoly   (SELALU R2025b)
     fprintf('\n=== TEST maskPoly (Fase C) ===\n');
-    pab_setup();
+    grain_setup();
     MP = 'pivanalyzemat.core.maskPoly';
     assert(~isempty(which(MP)), 'maskPoly tak di-path');
 

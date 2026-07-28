@@ -1,11 +1,11 @@
 function gen_output_examples()
 %GEN_OUTPUT_EXAMPLES  Render AX PSG dari MAT PIV P-CON-4cm-F-1.
-%   velmag/shear pakai keluaran PABEXPORT asli; AX POT pakai _axpot.jpg asli.
-%   pab_setup; gen_output_examples
+%   velmag/shear pakai keluaran GRAINEXPORT asli; AX POT pakai _axpot.jpg asli.
+%   grain_setup; gen_output_examples
 
 here   = fileparts(mfilename('fullpath'));
-pabDir = fileparts(here);
-imgDir = fullfile(pabDir,'docs','img');
+grainDir = fileparts(here);
+imgDir = fullfile(grainDir,'docs','img');
 
 matPiv = '/Users/terryfurqan/MACTERR_shared/EXP_coll/P-CON-4cm-F/P-CON-4cm-F-1-OVL-S0-349to348-3p25px.mat';
 fprintf('Memuat %s ...\n', matPiv);

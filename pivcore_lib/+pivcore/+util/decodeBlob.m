@@ -6,7 +6,7 @@ function img = decodeBlob(bytes, ext)
 %   img = pivcore.util.decodeBlob(bytes, ext)   % ext mis. 'jpg' / 'png'
 %
 %   ext default 'jpg' bila tak diberi. Pemanggil yang punya cache/ekstensi
-%   bervariasi (mis. PABSA1a i_frameImage) urus itu di luar; ini hanya inti
+%   bervariasi (mis. GRAINSA1a i_frameImage) urus itu di luar; ini hanya inti
 %   tulis->baca->hapus. Sebelumnya disalin sebagai i_decodeImg/i_decodePNG.
     img = [];
     if isempty(bytes), return; end

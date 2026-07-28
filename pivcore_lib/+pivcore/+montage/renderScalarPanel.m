@@ -15,14 +15,14 @@ function renderScalarPanel(ax, data, k, scalar, cfg)
 %   daspect [1 1 1], box, Layer top). TIDAK menyetel XTick/YTick, TIDAK
 %   menggambar colorbar/judul/teks: hal-hal itu BEDA per-pemanggil dan menjadi
 %   tanggung jawab pemanggil SETELAH fungsi ini (montase: set XTick/YTick=[];
-%   PABSA3/3a: colorbar+label, judul, teks "kosong", penguncian interaksi).
+%   GRAINSA3/3a: colorbar+label, judul, teks "kosong", penguncian interaksi).
 %
 %   Argumen:
 %     ax      : target axes (digambari, sumbu ditata; cla() oleh pemanggil)
 %     data    : struct dataset PIVLAB terstandar (pivcore.data.buildDataset)
 %     k       : indeks bingkai (fallback ke 1 bila x/y bingkai-k kosong)
 %     scalar  : 'shear' -> shear strain; selain itu -> velocity_magnitude
-%     cfg     : struct opsi lukis. Field yang dipakai (struct h dari PABSA3/3a
+%     cfg     : struct opsi lukis. Field yang dipakai (struct h dari GRAINSA3/3a
 %               maupun cfg montase sudah memuat semuanya):
 %        .gsOn     logical overlay GS         .glyphOn  logical overlay glyph
 %        .gsAlpha  transparansi GS (def 0.30) .glyphLW  lebar garis glyph

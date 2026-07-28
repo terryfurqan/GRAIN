@@ -43,7 +43,7 @@ ip.parse(varargin{:});
 o = ip.Results;
 vb = logical(o.Verbose);
 
-pab_setup();   % bootstrap path PAB_SA (paket + lib + PIVlab inti)
+grain_setup();   % bootstrap path GRAIN_SA (paket + lib + PIVlab inti)
 
 rawFolder = char(rawFolder);
 if ~isfolder(rawFolder)

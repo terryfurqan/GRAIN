@@ -205,7 +205,7 @@ end
 function pivanalyze_addpaths_safe()
 if exist('pivanalyze_addpaths', 'file') == 2
 	pivanalyze_addpaths();
-elseif exist('pab_setup', 'file') == 2 && isempty(which('pivanalyze.config'))
-	pab_setup();
+elseif exist('grain_setup', 'file') == 2 && isempty(which('pivanalyze.config'))
+	grain_setup();
 end
 end

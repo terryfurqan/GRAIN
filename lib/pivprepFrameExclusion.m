@@ -3,7 +3,7 @@ function out = pivprepFrameExclusion(peak, dt, opts)
 %
 %   out = pivprepFrameExclusion(peak, dt, opts)
 %
-%   = logika inti PABSA0b. Menggabungkan DUA detektor independen ke satu
+%   = logika inti GRAINSA0b. Menggabungkan DUA detektor independen ke satu
 %   daftar frame "abaikan", masing-masing dengan alasannya:
 %
 %     1. FRAME MATI (mesin berhenti gerak): |V| puncak QPIV < motionMin

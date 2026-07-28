@@ -2,14 +2,14 @@ function run_check_step2()
 %RUN_CHECK_STEP2  Cek ringan refaktor step_2: parse OK + pivui.forceLightTheme &
 %   pivanalyze.geom.strainText ter-resolve + strainText hasil benar (incl Unicode badL0).
 here = fileparts(mfilename('fullpath'));
-addpath(here); addpath(fileparts(here));  % +root (pab_setup, PAB*) sejak tests/ dipisah
-pab_setup;
+addpath(here); addpath(fileparts(here));  % +root (grain_setup, GRAIN*) sejak tests/ dipisah
+grain_setup;
 
-% 1) parse: pastikan PAB2 tak punya error sintaks (tanpa eksekusi GUI)
-chk = checkcode('PAB2.m','-string');
+% 1) parse: pastikan GRAIN2 tak punya error sintaks (tanpa eksekusi GUI)
+chk = checkcode('GRAIN2.m','-string');
 isErr = contains(lower(chk),'error');
-assert(~isErr, 'PAB2.m checkcode melaporkan ERROR:\n%s', chk);
-fprintf('[ok] PAB2.m parse bersih (checkcode tanpa error)\n');
+assert(~isErr, 'GRAIN2.m checkcode melaporkan ERROR:\n%s', chk);
+fprintf('[ok] GRAIN2.m parse bersih (checkcode tanpa error)\n');
 
 % 2) resolusi paket
 assert(~isempty(which('pivui.forceLightTheme')), 'pivui.forceLightTheme tak di path');
@@ -26,10 +26,10 @@ assert(isempty(t3) && isempty(c3), 'kasus kosong salah');
 fprintf('[ok] strainText: lengthening=%s, badL0="%s", kosong OK\n', t1, t2);
 
 % 4) pastikan TIDAK ada subfungsi strainText lokal lagi di step_2
-src = fileread('PAB2.m');
+src = fileread('GRAIN2.m');
 assert(isempty(regexp(src,'function\s+\[txt, cat\]\s*=\s*strainText','once')), ...
-    'masih ada strainText lokal di PAB2.m');
-fprintf('[ok] strainText lokal sudah dihapus dari PAB2.m\n');
+    'masih ada strainText lokal di GRAIN2.m');
+fprintf('[ok] strainText lokal sudah dihapus dari GRAIN2.m\n');
 
 fprintf('\n========== CHECK STEP 2 (refaktor) LULUS ==========\n');
 end

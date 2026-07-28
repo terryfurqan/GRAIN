@@ -1,25 +1,25 @@
 classdef frameCatalog
 %FRAMECATALOG  Render BATCH gambar AX main (velmag/shear) SEMUA bingkai sebuah
-%   eksperimen ke katalog JPEG (PAB Exporter). HEADLESS: pakai figure OFFSCREEN
+%   eksperimen ke katalog JPEG (GRAIN Exporter). HEADLESS: pakai figure OFFSCREEN
 %   (Visible='off'), tak mengganggu GUI hidup.
 %
-%   Berbeda dari PAB3 (viewer efemeral 1-tatapan): di sini SEMUA bingkai x 2
+%   Berbeda dari GRAIN3 (viewer efemeral 1-tatapan): di sini SEMUA bingkai x 2
 %   skalar dirender ke disk -> arsip tetap, ter-katalog (manifest), sumber
 %   montase siap-pakai (tak render ulang). Renderer = pivcore.montage.
-%   renderScalarPanel (IDENTIK PAB3/PAB4 -> gambar konsisten).
+%   renderScalarPanel (IDENTIK GRAIN3/GRAIN4 -> gambar konsisten).
 %
 %   ALUR per-eksperimen:
 %     1. resolveRender(dataFile) -> tentukan garis PSG + CLim:
-%          - _potdata.json PAB4 (garis terkunci + CLim) bila ada -> psgSource
-%            'potdata'; else _autopot PAB3a (loadLine) -> 'autopot'; else
+%          - _potdata.json GRAIN4 (garis terkunci + CLim) bila ada -> psgSource
+%            'potdata'; else _autopot GRAIN3a (loadLine) -> 'autopot'; else
 %            autoPSG 75% dari atas -> 'auto'. CLim |V| dari indenter-max (envelope
-%            kurva POT) dibulatkan ke 0.5 (sama PAB3); CLim shear default.
+%            kurva POT) dibulatkan ke 0.5 (sama GRAIN3); CLim shear default.
 %     2. renderExperiment(...) -> loadAllFrames + loop bingkai -> JPEG +
 %        manifest + indeks global.
 %
 %   Argumen DPI & jpegQuality dari pemanggil (paper-grade; user atur DPI).
 %
-%   Lihat [[pab-step4-ecosystem]] (renderScalarPanel, indenter), [[pab-step3-preview]].
+%   Lihat [[grain-step4-ecosystem]] (renderScalarPanel, indenter), [[grain-step3-preview]].
 
     methods (Static)
 
@@ -28,7 +28,7 @@ classdef frameCatalog
         %RESOLVERENDER  Turunkan setelan render (garis PSG + CLim) untuk 1 exp,
         %   TANPA GUI. R = struct: line(p1/p2/frac), psgSource, climVel, shearAbs,
         %   spacing, nFrames, indenterMax. Sumber garis PSG (prioritas):
-        %     (1) _potdata.json PAB4 garis pertama, (2) _autopot PAB3a loadLine,
+        %     (1) _potdata.json GRAIN4 garis pertama, (2) _autopot GRAIN3a loadLine,
         %     (3) autoPSG 75% dari atas (butuh extent bingkai-1).
             R = struct('line',[], 'psgSource','auto', ...
                 'climVel',[0 5], 'shearAbs',0.05, 'spacing',NaN, ...
@@ -86,7 +86,7 @@ classdef frameCatalog
             R.line = line; R.psgSource = src;
 
             % --- CLim |V| dari indenter-max (envelope kurva POT sepanjang garis) ---
-            % Sampling POT seluruh bingkai -> envelope MAX (sama dgn PAB3/PAB4).
+            % Sampling POT seluruh bingkai -> envelope MAX (sama dgn GRAIN3/GRAIN4).
             indMax = NaN;
             try
                 dataAll = pivcore.io.step1Session.loadAllFrames(dataFile);
@@ -126,9 +126,9 @@ classdef frameCatalog
         % =============================================================
         function spec = specFromResolve(R, userPrefs)
         %SPECFROMRESOLVE  Gabung hasil resolveRender + preferensi user (scalars,
-        %   glyph/gs toggle) -> spec katalog (pivcore.io.pabExportCatalog.specStruct).
+        %   glyph/gs toggle) -> spec katalog (pivcore.io.grainExportCatalog.specStruct).
             if nargin < 2 || ~isstruct(userPrefs), userPrefs = struct(); end
-            g = @(f,d) pivcore.io.pabExportCatalog.getf(userPrefs, f, d);
+            g = @(f,d) pivcore.io.grainExportCatalog.getf(userPrefs, f, d);
             p = struct();
             p.scalars    = g('scalars', {{'velmag','shear'}});
             p.climVel    = R.climVel;
@@ -153,11 +153,11 @@ classdef frameCatalog
             p.strainPos  = g('strainPos', [0.02 0.04]);
             p.strainColor= g('strainColor', [0 0 0]);
             p.strainBg   = g('strainBg', [1 1 1]);
-            spec = pivcore.io.pabExportCatalog.specStruct(p);
+            spec = pivcore.io.grainExportCatalog.specStruct(p);
         end
 
         % =============================================================
-        function manifest = renderExperiment(pabRoot, dataFile, opts)
+        function manifest = renderExperiment(grainRoot, dataFile, opts)
         %RENDEREXPERIMENT  Render SEMUA bingkai (skalar di spec) -> JPEG + manifest.
         %   opts (struct):
         %     .dpi          resolusi (default 300)
@@ -169,7 +169,7 @@ classdef frameCatalog
         %     .resolve      hasil resolveRender (opsional; bila kosong dihitung di sini)
         %   Mengembalikan manifest yang ditulis.
             if nargin < 3 || ~isstruct(opts), opts = struct(); end
-            g = @(f,d) pivcore.io.pabExportCatalog.getf(opts, f, d);
+            g = @(f,d) pivcore.io.grainExportCatalog.getf(opts, f, d);
             dpi   = g('dpi', 300);
             jq    = g('jpegQuality', 95);
             up    = g('userPrefs', struct());
@@ -185,7 +185,7 @@ classdef frameCatalog
 
             % Regenerate BERSIH: buang berkas lama (setelan lama) lebih dulu.
             if doPurge
-                pivcore.io.pabExportCatalog.purgeExp(pabRoot, dataFile);
+                pivcore.io.grainExportCatalog.purgeExp(grainRoot, dataFile);
             end
 
             % Muat SEMUA bingkai (sekali) untuk loop render.
@@ -205,7 +205,7 @@ classdef frameCatalog
             if ~(isscalar(mlp) && isfinite(mlp) && mlp > 0), mlp = NaN; end
             decOpts.maxLongPx = mlp;
 
-            manifest = pivcore.io.pabExportCatalog.emptyManifest(dataFile, nF);
+            manifest = pivcore.io.grainExportCatalog.emptyManifest(dataFile, nF);
             manifest.producedAt  = char(stamp);
             manifest.dpi         = dpi;
             manifest.jpegQuality = jq;
@@ -215,8 +215,8 @@ classdef frameCatalog
             % --- bangun DAFTAR TUGAS datar (scalar,k,file) + siapkan folder ---
             keys = cell(1, numel(spec.scalars));
             for s = 1:numel(spec.scalars)
-                keys{s} = pivcore.io.pabExportCatalog.scalarKey(spec.scalars{s});
-                sdir = pivcore.io.pabExportCatalog.scalarDir(pabRoot, dataFile, spec.scalars{s});
+                keys{s} = pivcore.io.grainExportCatalog.scalarKey(spec.scalars{s});
+                sdir = pivcore.io.grainExportCatalog.scalarDir(grainRoot, dataFile, spec.scalars{s});
                 if ~isfolder(sdir), mkdir(sdir); end
             end
             nTask = numel(keys) * nF;
@@ -226,10 +226,10 @@ classdef frameCatalog
             taskName = cell(1, nTask);   % nama berkas (utk manifest)
             t = 0;
             for s = 1:numel(keys)
-                sdir = pivcore.io.pabExportCatalog.scalarDir(pabRoot, dataFile, spec.scalars{s});
+                sdir = pivcore.io.grainExportCatalog.scalarDir(grainRoot, dataFile, spec.scalars{s});
                 for k = 1:nF
                     t = t+1;
-                    fn = pivcore.io.pabExportCatalog.frameFile(dataFile, keys{s}, k, 'jpg');
+                    fn = pivcore.io.grainExportCatalog.frameFile(dataFile, keys{s}, k, 'jpg');
                     taskKey{t}=keys{s}; taskK(t)=k;
                     taskFile{t}=fullfile(sdir, fn); taskName{t}=fn;
                 end
@@ -280,13 +280,13 @@ classdef frameCatalog
             for s = 1:numel(keys)
                 files = cell(1, nF);
                 for k = 1:nF
-                    files{k} = pivcore.io.pabExportCatalog.frameFile(dataFile, keys{s}, k, 'jpg');
+                    files{k} = pivcore.io.grainExportCatalog.frameFile(dataFile, keys{s}, k, 'jpg');
                 end
                 manifest.scalars.(keys{s}) = struct('dir', keys{s}, 'count', nF, 'files', {files});
             end
 
-            pivcore.io.pabExportCatalog.write(pabRoot, dataFile, manifest);
-            pivcore.io.pabExportCatalog.rebuildIndex(pabRoot);
+            pivcore.io.grainExportCatalog.write(grainRoot, dataFile, manifest);
+            pivcore.io.grainExportCatalog.rebuildIndex(grainRoot);
 
             % progress tick (nested) — laporkan KE KLIEN saat send() dari worker.
             function i_tick(~)
@@ -296,14 +296,14 @@ classdef frameCatalog
         end
 
         % =============================================================
-        function file = previewFrame(pabRoot, dataFile, k, scalar, opts)
+        function file = previewFrame(grainRoot, dataFile, k, scalar, opts)
         %PREVIEWFRAME  Render SATU bingkai (skalar) ke PAB_export/_preview/ untuk
         %   TES sebelum export semua. BUKAN katalog resmi (tak ada manifest/indeks
         %   /purge). Pakai resolve+spec yang SAMA dgn export -> hasil representatif.
         %   opts: dpi/jpegQuality/userPrefs/resolve/dataAll (opsional). Mengembalikan
         %   path JPEG yang ditulis.
             if nargin < 5 || ~isstruct(opts), opts = struct(); end
-            g = @(f,d) pivcore.io.pabExportCatalog.getf(opts, f, d);
+            g = @(f,d) pivcore.io.grainExportCatalog.getf(opts, f, d);
             dpi = g('dpi', 300); jq = g('jpegQuality', 95);
             up  = g('userPrefs', struct());
             R   = g('resolve', []);
@@ -319,17 +319,17 @@ classdef frameCatalog
             spec = pivcore.export.frameCatalog.specFromResolve(R, up);
             cfg  = pivcore.export.frameCatalog.renderCfg(spec);
             decOpts = pivcore.export.frameCatalog.decOptsFromSpec(spec, up);
-            key = pivcore.io.pabExportCatalog.scalarKey(scalar);
-            pdir = pivcore.io.pabExportCatalog.previewDir(pabRoot);
+            key = pivcore.io.grainExportCatalog.scalarKey(scalar);
+            pdir = pivcore.io.grainExportCatalog.previewDir(grainRoot);
             if ~isfolder(pdir), mkdir(pdir); end
-            fn = pivcore.io.pabExportCatalog.frameFile(dataFile, key, k, 'jpg');
+            fn = pivcore.io.grainExportCatalog.frameFile(dataFile, key, k, 'jpg');
             file = fullfile(pdir, ['PREVIEW_' fn]);
             pivcore.export.frameCatalog.renderFrameToFile( ...
                 dataAll, k, key, cfg, R, dataFile, file, dpi, jq, decOpts);
         end
 
         % =============================================================
-        function files = exportSingleFrame(pabRoot, dataFile, k, opts)
+        function files = exportSingleFrame(grainRoot, dataFile, k, opts)
         %EXPORTSINGLEFRAME  Render SATU bingkai untuk KEDUA skalar (velmag+shear)
         %   ke PAB_export/<exp>/_frame/ — berkas nyata (bukan preview). Memakai
         %   resolve+spec+decOpts yang SAMA dgn ekspor batch -> "what you see =
@@ -337,7 +337,7 @@ classdef frameCatalog
         %   opts: dpi/jpegQuality/userPrefs/resolve/dataAll (opsional, sama spt
         %   previewFrame). Mengembalikan cellstr path {velmag; shear} yg ditulis.
             if nargin < 4 || ~isstruct(opts), opts = struct(); end
-            g = @(f,d) pivcore.io.pabExportCatalog.getf(opts, f, d);
+            g = @(f,d) pivcore.io.grainExportCatalog.getf(opts, f, d);
             dpi = g('dpi', 300); jq = g('jpegQuality', 95);
             up  = g('userPrefs', struct());
             R   = g('resolve', []);
@@ -353,13 +353,13 @@ classdef frameCatalog
             spec = pivcore.export.frameCatalog.specFromResolve(R, up);
             cfg  = pivcore.export.frameCatalog.renderCfg(spec);
             decOpts = pivcore.export.frameCatalog.decOptsFromSpec(spec, up);
-            fdir = pivcore.io.pabExportCatalog.frameDir(pabRoot, dataFile);
+            fdir = pivcore.io.grainExportCatalog.frameDir(grainRoot, dataFile);
             if ~isfolder(fdir), mkdir(fdir); end
             keys = {'velmag','shear'};
             files = cell(numel(keys),1);
             for ii = 1:numel(keys)
                 key = keys{ii};
-                fn  = pivcore.io.pabExportCatalog.frameFile(dataFile, key, k, 'jpg');
+                fn  = pivcore.io.grainExportCatalog.frameFile(dataFile, key, k, 'jpg');
                 files{ii} = fullfile(fdir, fn);
                 pivcore.export.frameCatalog.renderFrameToFile( ...
                     dataAll, k, key, cfg, R, dataFile, files{ii}, dpi, jq, decOpts);
@@ -381,7 +381,7 @@ classdef frameCatalog
         %     .strainPos     [x y] normalized posisi caption (def [0.02 0.04])
         %     .strainPct     nilai strain kumulatif % bingkai ini (NaN -> auto via R.geom)
         %     .titleOverride teks judul kustom (kosong -> nama exp saja)
-        %     .axCal         doc kalibrasi sumbu cm (pivcore.io.pabAxCal). Bila
+        %     .axCal         doc kalibrasi sumbu cm (pivcore.io.grainAxCal). Bila
         %                    diberikan & .enabled -> tick X/Y jadi cm + label +
         %                    segitiga indenter (override tick pixel). [] -> pixel.
             if nargin < 8 || ~isstruct(opts), opts = struct(); end
@@ -486,9 +486,9 @@ classdef frameCatalog
         function applyCmAxes(ax, calDoc, R, k, nF, xExt, yExt)
         %APPLYCMAXES  Terapkan tick/label sumbu cm + segitiga indenter ke `ax`.
         %   SUMBER TUNGGAL rupa sumbu-cm -> dipakai BERSAMA preview WYSIWYG,
-        %   axMain live PAB4 (pab4Shell.renderMain) & ekspor (drawScalarPanel).
+        %   axMain live GRAIN4 (grain4Shell.renderMain) & ekspor (drawScalarPanel).
         %
-        %   calDoc = doc pivcore.io.pabAxCal (harus .enabled utk berefek).
+        %   calDoc = doc pivcore.io.grainAxCal (harus .enabled utk berefek).
         %   R      = struct render (butuh R.dxCm utk segitiga; boleh []/NaN).
         %   k,nF   = bingkai aktif & total (posisi segitiga = shortening frame).
         %   xExt/yExt = extent PIXEL sumbu [min max] (utk letak segitiga & limit).
@@ -498,13 +498,13 @@ classdef frameCatalog
             if ~isstruct(calDoc) || ~isfield(calDoc,'enabled') || ~calDoc.enabled
                 return;
             end
-            ax0 = pivcore.io.pabAxCal;   %#ok<NASGU> (alias ringkas tak dipakai; kejelasan)
+            ax0 = pivcore.io.grainAxCal;   %#ok<NASGU> (alias ringkas tak dipakai; kejelasan)
 
             % --- Sumbu-X: tick cm + label ---
-            if pivcore.io.pabAxCal.isValid(calDoc, 'x')
+            if pivcore.io.grainAxCal.isValid(calDoc, 'x')
                 tx = calDoc.x.tickCm; tx = tx(isfinite(tx));
                 if ~isempty(tx)
-                    xt = pivcore.io.pabAxCal.cmToPx(calDoc, 'x', tx);
+                    xt = pivcore.io.grainAxCal.cmToPx(calDoc, 'x', tx);
                     [xt, ord] = sort(xt(:).'); txs = tx(ord);
                     set(ax, 'XTick', xt, ...
                         'XTickLabel', arrayfun(@(v) sprintf('%g',v), txs, 'UniformOutput',false));
@@ -519,10 +519,10 @@ classdef frameCatalog
             end
 
             % --- Sumbu-Y: tick cm + label ---
-            if pivcore.io.pabAxCal.isValid(calDoc, 'y')
+            if pivcore.io.grainAxCal.isValid(calDoc, 'y')
                 ty = calDoc.y.tickCm; ty = ty(isfinite(ty));
                 if ~isempty(ty)
-                    yt = pivcore.io.pabAxCal.cmToPx(calDoc, 'y', ty);
+                    yt = pivcore.io.grainAxCal.cmToPx(calDoc, 'y', ty);
                     [yt, ord] = sort(yt(:).'); tys = ty(ord);
                     set(ax, 'YTick', yt, ...
                         'YTickLabel', arrayfun(@(v) sprintf('%g',v), tys, 'UniformOutput',false));
@@ -543,21 +543,21 @@ classdef frameCatalog
                 fn = fieldnames(calDoc.indenter);
                 for i = 1:numel(fn), ind.(fn{i}) = calDoc.indenter.(fn{i}); end
             end
-            if ~ind.show || ~pivcore.io.pabAxCal.isValid(calDoc, 'x'), return; end
+            if ~ind.show || ~pivcore.io.grainAxCal.isValid(calDoc, 'x'), return; end
 
             shortCm = NaN;
             if strcmpi(ind.mode,'fixed')
-                shortCm = pivcore.io.pabAxCal.scal(ind.fixedCm);
+                shortCm = pivcore.io.grainAxCal.scal(ind.fixedCm);
             else   % 'shortening': ikut frame via dxCm
                 dxCm = NaN;
-                if isstruct(R) && isfield(R,'dxCm'), dxCm = pivcore.io.pabAxCal.scal(R.dxCm); end
+                if isstruct(R) && isfield(R,'dxCm'), dxCm = pivcore.io.grainAxCal.scal(R.dxCm); end
                 if isfinite(dxCm)
                     if nF <= 1, shortCm = dxCm; else, shortCm = (k-1)/(nF-1) * dxCm; end
                 end
             end
             if ~isfinite(shortCm), return; end   % dxCm/geom tak ada -> skip senyap
 
-            xTri = pivcore.io.pabAxCal.cmToPx(calDoc, 'x', shortCm);
+            xTri = pivcore.io.grainAxCal.cmToPx(calDoc, 'x', shortCm);
             if ~isfinite(xTri), return; end
             yBase = min(yExt);   % tepi bawah gambar
             col = ind.color; if numel(col) ~= 3, col = [1 0 0]; end
@@ -654,7 +654,7 @@ classdef frameCatalog
         %   tak dipaksa serial (opts.parallel=false). opts.parallel: []=auto,
         %   true/false=paksa. SENYAP saat quiet test (hindari pool di -batch CI).
             if nargin < 2, opts = struct(); end
-            force = pivcore.io.pabExportCatalog.getf(opts, 'parallel', []);
+            force = pivcore.io.grainExportCatalog.getf(opts, 'parallel', []);
             if islogical(force) && isscalar(force), tf = force; return; end
             tf = false;
             try, if pivui.quiet(), return; end, catch, end   % tes: serial
@@ -664,7 +664,7 @@ classdef frameCatalog
 
         function ensurePool(maxW)
         %ENSUREPOOL  Pastikan parpool aktif dgn ≤ maxW worker (default 5). Pakai
-        %   pool yg ada bila ukuran cocok; else buat. Sebar addpath PAB ke worker.
+        %   pool yg ada bila ukuran cocok; else buat. Sebar addpath GRAIN ke worker.
             if nargin < 1 || isempty(maxW), maxW = 5; end
             p = gcp('nocreate');
             if isempty(p)
@@ -679,10 +679,10 @@ classdef frameCatalog
                 % pool kebesaran -> kecilkan agar tak berat (user minta ~5).
                 delete(p); p = parpool(maxW); %#ok<NASGU>
             end
-            % Sebar path PAB (pivcore/pivui) ke worker (defensif).
+            % Sebar path GRAIN (pivcore/pivui) ke worker (defensif).
             try
                 here = fileparts(fileparts(fileparts(mfilename('fullpath'))));  % .../pivcore_lib
-                root = fileparts(here);                                          % .../PAB
+                root = fileparts(here);                                          % .../GRAIN
                 parfevalOnAll(@addpath, 0, here, root);
             catch
             end
@@ -711,8 +711,8 @@ classdef frameCatalog
         %DECOPTSFROMSPEC  Opsi dekorasi drawScalarPanel dari spec (+ up utk
         %   showPSG/CB/Title). SATU sumber -> preview & ekspor identik.
             if nargin < 2 || ~isstruct(up), up = struct(); end
-            gu = @(f,d) pivcore.io.pabExportCatalog.getf(up, f, d);
-            gs = @(f,d) pivcore.io.pabExportCatalog.getf(spec, f, d);
+            gu = @(f,d) pivcore.io.grainExportCatalog.getf(up, f, d);
+            gs = @(f,d) pivcore.io.grainExportCatalog.getf(spec, f, d);
             dec = struct( ...
                 'showPSG',         gu('showPSG', true), ...
                 'showColorbar',    gu('showColorbar', true), ...
@@ -730,7 +730,7 @@ classdef frameCatalog
 
         function env = indenterEnvelope(recs, nF)
         %INDENTERENVELOPE  Envelope MAX |V| antar-kurva POT (clean-room dari
-        %   pab4Shell.indenterEnvelope; tanpa flag excluded — recs mentah).
+        %   grain4Shell.indenterEnvelope; tanpa flag excluded — recs mentah).
             env = [];
             if isempty(recs), return; end
             M = -inf(1, nF); any_ = false;
@@ -745,10 +745,10 @@ classdef frameCatalog
         end
 
         function ln = lineFromPotData(dataFile)
-        %LINEFROMPOTDATA  Garis PSG pertama dari _potdata.json PAB4 (bila ada).
+        %LINEFROMPOTDATA  Garis PSG pertama dari _potdata.json GRAIN4 (bila ada).
         %   [] bila tak ada. struct p1/p2/frac.
             ln = [];
-            doc = pivcore.io.pab4PotData.read(dataFile);
+            doc = pivcore.io.grain4PotData.read(dataFile);
             if ~isstruct(doc) || ~isfield(doc,'psgLines') || isempty(doc.psgLines)
                 return;
             end
@@ -828,7 +828,7 @@ classdef frameCatalog
 
         function dt = readExifDt(dataFile)
         %READEXIFDT  dt detik/frame dari .mat (median EXIF). NaN bila tak ada.
-        %   Clean-room dari PAB4 i_readExifTiming.
+        %   Clean-room dari GRAIN4 i_readExifTiming.
             dt = NaN;
             try
                 V = whos('-file', dataFile); names = {V.name};

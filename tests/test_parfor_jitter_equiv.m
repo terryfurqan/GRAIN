@@ -1,10 +1,10 @@
 function test_parfor_jitter_equiv()
-%TEST_PARFOR_JITTER_EQUIV  Bukti: sapu jitter parfor == serial (PAB1 Step 1).
+%TEST_PARFOR_JITTER_EQUIV  Bukti: sapu jitter parfor == serial (GRAIN1 Step 1).
 %   Memvalidasi loop antar-frame independen (lastGoodTform=identitas) memberi
 %   dx/dy IDENTIK saat dijalankan parfor vs serial, dan worker MENEMUKAN paket
 %   +pivprep (risiko AutoAddClientPath). Engine = pivprep.stab.* (sama Step 1).
     here = fileparts(mfilename('fullpath'));
-    run(fullfile(here, '..', 'pab_setup.m'));
+    run(fullfile(here, '..', 'grain_setup.m'));
 
     folder = fullfile(here, '..', '..', '5 cm-1');
     d = dir(fullfile(folder, '*.JPG'));
@@ -47,7 +47,7 @@ function test_parfor_jitter_equiv()
 end
 
 function [dx,dy,jit,ok] = local_one(basePath, fname, ref, prm)
-%LOCAL_ONE  Replika i_oneFrameJitter (PAB1) — parfor-safe, tanpa GUI.
+%LOCAL_ONE  Replika i_oneFrameJitter (GRAIN1) — parfor-safe, tanpa GUI.
     try
         im  = imread(fullfile(basePath, fname));
         o   = pivprep.stab.estimateTransform(im, ref, prm);

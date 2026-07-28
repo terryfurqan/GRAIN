@@ -5,7 +5,7 @@ function L = currentLineFromROI(roi, fallback)
 %
 %   L = pivui.currentLineFromROI(roi, fallback)
 %
-%   Sebelumnya logika i_currentLine di PABSA3/3a.
+%   Sebelumnya logika i_currentLine di GRAINSA3/3a.
     L = [];
     if ~isempty(roi) && isvalid(roi) && ~isempty(roi.Position)
         P = roi.Position;

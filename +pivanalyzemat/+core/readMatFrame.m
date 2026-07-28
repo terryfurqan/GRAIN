@@ -14,7 +14,7 @@ function [img, name, nFrames] = readMatFrame(matEntry, which, applyMask)
 %               Default 'first'.
 %   applyMask : true (DEFAULT) = tempel masking persegi non-destruktif bila
 %               prep.masking aktif (citra siap-tampil/siap-PIV). false = frame
-%               BERSIH apa adanya (dipakai editor PABMASK saat menggambar kotak).
+%               BERSIH apa adanya (dipakai editor GRAINMASK saat menggambar kotak).
 %
 %   KELUARAN
 %     img     : citra (uint8) hasil decode blob JPEG; [] bila gagal.
@@ -86,7 +86,7 @@ function img = i_maybeMask(matPath, img, applyMask, k, nFrames)
 	if ~isempty(m) && pivanalyzemat.core.maskRect.isActive(m)
 		img = pivanalyzemat.core.maskRect.applyMask(img, m, k, nFrames);
 	end
-	% Layer-2 polygon (PABMASK2) — komposisi setelah kotak (idempoten).
+	% Layer-2 polygon (GRAINMASK2) — komposisi setelah kotak (idempoten).
 	try
 		p = pivanalyzemat.core.maskSidecar.readPoly(matPath);
 		if ~isempty(p) && pivanalyzemat.core.maskPoly.isActive(p)

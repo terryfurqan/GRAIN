@@ -12,8 +12,12 @@ measurements: velocity magnitude and shear-strain fields, plot-over-time (POT)
 curves, hanging-wall / footwall velocities, net slip, fault geometry, and a
 frame-by-frame description table ready for a manuscript.
 
-The application suite inside GRAIN is called **PAB** (*PIVlab Automasi Batch*),
-which is why every entry point is named `PAB*`.
+Every entry point is named `GRAIN*` — `GRAIN0` through `GRAIN5` for the pipeline
+steps, plus the standalone tools listed below. The project grew up under the
+working name **PAB** (*PIVlab Automasi Batch*); thin `PAB*` aliases are kept so
+older scripts still run, and file names written by earlier versions (progress
+files, `PAB4_DESC/`, export folders) are deliberately left untouched so existing
+data stays readable.
 
 > **Scope of this release.** Source code and documentation only. The photographic
 > data, PIV result files (`.mat`) and exported figures from our own experiments are
@@ -57,11 +61,11 @@ GRAIN closes the gap with three ideas:
 
 ```matlab
 cd /path/to/GRAIN
-pab_setup          % once per MATLAB session — sets up the path
-PAB0               % Step 0: pick a ROOT folder of experiments
+grain_setup          % once per MATLAB session — sets up the path
+GRAIN0               % Step 0: pick a ROOT folder of experiments
 ```
 
-`pab_setup` resolves every path relative to its own location, so the folder can be
+`grain_setup` resolves every path relative to its own location, so the folder can be
 renamed or moved freely. It also picks up PIVlab automatically if it is on the
 MATLAB path.
 
@@ -72,34 +76,34 @@ MATLAB path.
 ```
 photographs (JPEG)
       │
-   PAB0     Step 0 · Quick-PIV screening — drop dead frames (machine stopped)
+   GRAIN0     Step 0 · Quick-PIV screening — drop dead frames (machine stopped)
       │              and flag irregular shutter intervals from EXIF
-   PABMASK  Area masking on the raw photographs (non-destructive recipe)
+   GRAINMASK  Area masking on the raw photographs (non-destructive recipe)
       │
-   PAB1     Step 1 · Jitter/anchor ROI per experiment → produces MAT PREP
+   GRAIN1     Step 1 · Jitter/anchor ROI per experiment → produces MAT PREP
       │              (one packed .mat per experiment)
-   PAB2     Step 2 · Full PIV production → MAT PIV
+   GRAIN2     Step 2 · Full PIV production → MAT PIV
       │
-   PAB3     Step 3 · Read-only preview, montage
-   PAB3a    Step 3a · Assign POT curves to hanging wall / footwall / faults
+   GRAIN3     Step 3 · Read-only preview, montage
+   GRAIN3a    Step 3a · Assign POT curves to hanging wall / footwall / faults
       │
-   PAB4     Step 4 · Integrated workstation: labelling, net slip, fault geometry,
+   GRAIN4     Step 4 · Integrated workstation: labelling, net slip, fault geometry,
       │              fault-plane evolution, description table, exports
-   PAB5     Fault-first view: one table of faults per PSG line, batch export
+   GRAIN5     Fault-first view: one table of faults per PSG line, batch export
 ```
 
 ### Standalone tools
 
 | Tool | Purpose |
 |---|---|
-| `PABMASK` / `PABMASK2` | Rectangle and keyframed-polygon masking |
-| `PABEXPORT` | WYSIWYG catalogue of per-frame velocity-magnitude / shear images |
-| `PABEDIT` | WYSIWYG editor producing a single publication figure |
-| `PABAXPOT`, `PAB4AXPOT` | Plot-over-time figure editors (graph-paper style) |
-| `PABAXCAL` | Two-point pixel↔centimetre axis calibration |
-| `PABLINK` / `PABSYNC` | Tie cross-section strain to the map view via fault-scarp reference points |
+| `GRAINMASK` / `GRAINMASK2` | Rectangle and keyframed-polygon masking |
+| `GRAINEXPORT` | WYSIWYG catalogue of per-frame velocity-magnitude / shear images |
+| `GRAINEDIT` | WYSIWYG editor producing a single publication figure |
+| `GRAINAXPOT`, `GRAIN4AXPOT` | Plot-over-time figure editors (graph-paper style) |
+| `GRAINAXCAL` | Two-point pixel↔centimetre axis calibration |
+| `GRAINLINK` / `GRAINSYNC` | Tie cross-section strain to the map view via fault-scarp reference points |
 | `MATPIVEDIT` | QC editor for produced MAT PIV files |
-| `PABIMAGEDT` | Inter-photo interval (Δt) diagnostics from EXIF |
+| `GRAINIMAGEDT` | Inter-photo interval (Δt) diagnostics from EXIF |
 | `SHEARSTRAINDetector` | Semi-automatic digitisation of shear-strain ridges |
 
 Further documentation, including a visual walkthrough of the workflow, is in
@@ -113,7 +117,7 @@ and [`docs/GLOBAL_CONTEXT.md`](docs/GLOBAL_CONTEXT.md).
 Smoke and regression tests live in [`tests/`](tests) and run headless:
 
 ```matlab
-pab_setup
+grain_setup
 set(0,'DefaultFigureVisible','off')   % keep the tests silent
 run_parsecheck                        % every file parses
 run_all_smoke                         % smoke suite
@@ -124,7 +128,7 @@ run_all_smoke                         % smoke suite
 ## A note on language
 
 The suite was written in Indonesian and its user interface is being migrated to
-English module by module. `PAB0` and `PAB1` are already in English; the remaining
+English module by module. `GRAIN0` and `GRAIN1` are already in English; the remaining
 modules still show Indonesian labels. Code comments remain in Indonesian for now.
 The translation glossary and per-stage status are tracked in
 [`docs/GLOSSARY_ID_EN.md`](docs/GLOSSARY_ID_EN.md).

@@ -2,9 +2,9 @@ classdef netslip
 %NETSLIP  Net-slip sesar dari kurva POT — fungsi MURNI (headless). RE-
 %   IMPLEMENTASI CLEAN-ROOM dari pola PIVTerry tabStep4 (dibaca read-only;
 %   TIDAK dipanggil lintas-folder). Divalidasi terhadap ANGKA GOLDEN sintetik
-%   (test_pab4_engines), BUKAN diff terhadap tabStep4.
+%   (test_grain4_engines), BUKAN diff terhadap tabStep4.
 %
-%   DEFINISI (PAB4_PLAN §3b):
+%   DEFINISI (GRAIN4_PLAN §3b):
 %     repVec      kurva representatif satu HW = rata-rata per-frame kurva-kurva
 %                 anggota HW itu (omitnan). Satu kurva -> kurva itu sendiri.
 %     netslipVec  net-slip(frame) = repA(frame) - repB(frame), dgn:
@@ -25,7 +25,7 @@ classdef netslip
 %     ns = pivcore.pot.netslip.applySign(ns, conv)    % 'signed'|'absolute'
 %     R  = pivcore.pot.netslip.compute(repA, repB, pt [, conv])  % struct rangkum
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/netslip.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/netslip.m
 
     methods (Static)
 

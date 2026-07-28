@@ -19,7 +19,7 @@ classdef ridgeWalk
 %   Koordinat keluaran memakai matriks X,Y (grid PIV, satuan piksel gambar) bila
 %   diberikan; bila tidak, memakai indeks [col row].
 %
-%   Penempatan: PAB/pivcore_lib/+pivcore/+detect/ridgeWalk.m
+%   Penempatan: GRAIN/pivcore_lib/+pivcore/+detect/ridgeWalk.m
 
     methods (Static)
 

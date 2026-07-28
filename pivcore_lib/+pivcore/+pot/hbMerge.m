@@ -1,6 +1,6 @@
 classdef hbMerge
 %HBMERGE  Gabung beberapa kurva KANDIDAT menjadi SATU garis HB (Hinterland
-%   Block) — fungsi MURNI (headless). Dipakai PAB6 (analisis tampak PETA) untuk
+%   Block) — fungsi MURNI (headless). Dipakai GRAIN6 (analisis tampak PETA) untuk
 %   membangun garis HB = "mirip max-indenter, tapi untuk Hanging Wall aktif".
 %   Pola sibling: pivcore.pot.faultAngle / netslip (murni, tak menyentuh GUI/IO).
 %
@@ -23,7 +23,7 @@ classdef hbMerge
 %     y            = pivcore.pot.hbMerge.clipToRange(values, x0, x1, nF)
 %     tf           = pivcore.pot.hbMerge.isCoveredAt(x0, x1, f, nF)
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/hbMerge.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/hbMerge.m
 
     methods (Static)
 

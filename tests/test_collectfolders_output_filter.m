@@ -2,10 +2,10 @@ function test_collectfolders_output_filter()
 %TEST_COLLECTFOLDERS_OUTPUT_FILTER  Kunci: scan rekursif TIDAK menyeret folder
 %   EKSPOR bergambar (PAB_export/PABLINK_export/velmag/shear/_preview) sbg
 %   "eksperimen", TAPI folder input sah (termasuk yg kebetulan bernama PIV_*)
-%   TETAP terpindai. Melindungi dari pembengkakan/perlambatan daftar exp PAB1.
+%   TETAP terpindai. Melindungi dari pembengkakan/perlambatan daftar exp GRAIN1.
 %
-%   HEADLESS. Jalankan: pab_setup; test_collectfolders_output_filter
-    pab_setup();
+%   HEADLESS. Jalankan: grain_setup; test_collectfolders_output_filter
+    grain_setup();
 
     root = fullfile(tempdir, sprintf('cf_filter_%d', feature('getpid')));
     if isfolder(root); rmdir(root, 's'); end

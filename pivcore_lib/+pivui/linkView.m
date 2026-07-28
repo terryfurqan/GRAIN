@@ -1,7 +1,7 @@
 classdef linkView
 %LINKVIEW  Panel penampil SATU MAT PIV (velmag + GS + garis PSG) dengan slider
-%   frame + label frame/strain — dipakai BERSAMA oleh PABLINK (pengikat) &
-%   PABSYNC (penafsir). Renderer IDENTIK dengan PABEXPORT/PAB3/PAB4
+%   frame + label frame/strain — dipakai BERSAMA oleh GRAINLINK (pengikat) &
+%   GRAINSYNC (penafsir). Renderer IDENTIK dengan GRAINEXPORT/GRAIN3/GRAIN4
 %   (`pivcore.export.frameCatalog.drawScalarPanel`) → "what you see = what you get".
 %
 %   Pola pakai (host yang menyimpan struct panel di guidata + memasang callback):
@@ -12,9 +12,9 @@ classdef linkView
 %
 %   `strainOverride` (%): isi caption strain. NaN → auto via geometri (R.geom);
 %   untuk view TARGET (tampak peta) tanpa geometri, host mengoper strain hasil
-%   KALIBRASI (pivcore.io.pabLink) ke sini.
+%   KALIBRASI (pivcore.io.grainLink) ke sini.
 %
-%   Penempatan: PAB/pivcore_lib/+pivui/linkView.m
+%   Penempatan: GRAIN/pivcore_lib/+pivui/linkView.m
 
     methods (Static)
 

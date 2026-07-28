@@ -1,6 +1,6 @@
 function PAB_step_3(varargin)
-%PAB_STEP_3  Forwarder transisi -> PAB3 (lihat RENAME_PLAN.md, Fase 5).
+%GRAIN_STEP_3  Forwarder transisi -> GRAIN3 (lihat RENAME_PLAN.md, Fase 5).
 %   Nama lama dipertahankan sementara agar pemanggil belum-pindah tak patah.
-%   Hapus setelah semua pemanggil memakai PAB3 (Fase 7).
-PAB3(varargin{:});
+%   Hapus setelah semua pemanggil memakai GRAIN3 (Fase 7).
+GRAIN3(varargin{:});
 end

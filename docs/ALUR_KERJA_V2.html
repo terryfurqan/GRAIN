@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alur Kerja PAB — Lab Geodynamics ITB (V2)</title>
+<title>Alur Kerja GRAIN — Lab Geodynamics ITB (V2)</title>
 <style>
   :root{
     --ink:#1d2230; --muted:#5b6478; --line:#dde2ec; --bg:#f6f8fc; --card:#ffffff;
-    --pab:#2563eb; --pab-soft:#e8f0ff; --tool:#7c3aed; --tool-soft:#f1eafe;
+    --grain:#2563eb; --grain-soft:#e8f0ff; --tool:#7c3aed; --tool-soft:#f1eafe;
     --ok:#0f9d58; --warn:#d97706; --accent:#0d9488;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
   .wrap{max-width:1060px;margin:0 auto;padding:32px 22px 80px;}
-  header.top{border-bottom:3px solid var(--pab);padding-bottom:18px;margin-bottom:8px;}
+  header.top{border-bottom:3px solid var(--grain);padding-bottom:18px;margin-bottom:8px;}
   h1{margin:0 0 4px;font-size:30px;letter-spacing:-.5px}
   .sub{color:var(--muted);font-size:14px}
-  .tag{display:inline-block;background:var(--pab-soft);color:var(--pab);
+  .tag{display:inline-block;background:var(--grain-soft);color:var(--grain);
     border-radius:999px;padding:3px 12px;font-size:12px;font-weight:600;margin-top:8px}
-  h2{margin:42px 0 6px;font-size:21px;border-left:5px solid var(--pab);padding-left:12px}
+  h2{margin:42px 0 6px;font-size:21px;border-left:5px solid var(--grain);padding-left:12px}
   h3{margin:26px 0 6px;font-size:16px;color:var(--ink)}
   p{margin:8px 0}
   .lead{font-size:16px;color:#39435a}
@@ -28,11 +28,11 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
     padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,30,60,.04)}
   .grid{display:grid;gap:14px}
-  .mod{border-left:5px solid var(--pab)}
+  .mod{border-left:5px solid var(--grain)}
   .mod.tool{border-left-color:var(--tool)}
   .mod .name{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px}
   .pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
-  .pill.step{background:var(--pab-soft);color:var(--pab)}
+  .pill.step{background:var(--grain-soft);color:var(--grain)}
   .pill.tool{background:var(--tool-soft);color:var(--tool)}
   .pill.ro{background:#e7f6ee;color:var(--ok)}
   .pill.fwd{background:#fff3e0;color:var(--warn)}
@@ -51,7 +51,7 @@
   figcaption{color:var(--muted);font-size:12.5px;margin-top:6px}
   footer{margin-top:56px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:13px}
   .toc{columns:2;font-size:13.5px}
-  .toc a{color:var(--pab);text-decoration:none}
+  .toc a{color:var(--grain);text-decoration:none}
   svg{max-width:100%;height:auto}
   .shot{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fbfcfe}
   .shot img{display:block;width:100%;height:auto}
@@ -68,27 +68,27 @@
 <div class="wrap">
 
 <header class="top">
-  <h1>Alur Kerja PAB</h1>
-  <div class="sub">Pipeline otomasi PIV — Lab Geodynamics ITB &middot; MATLAB R2025b &middot; folder <code>PAB/</code> (self-contained)</div>
+  <h1>Alur Kerja GRAIN</h1>
+  <div class="sub">Pipeline otomasi PIV — Lab Geodynamics ITB &middot; MATLAB R2025b &middot; folder <code>GRAIN/</code> (self-contained)</div>
   <span class="tag">Dokumentasi V2 &middot; evaluasi penuh semua modul &middot; 2026-06-27</span>
 </header>
 
-<p class="lead">Dokumen ini memetakan <b>seluruh</b> modul PAB: 7 langkah pipa utama (Step 0&rarr;4) plus 4 alat <b>standalone</b> yang menyisip di antara langkah. Setiap modul = 1 file <code>.m</code> di akar <code>PAB/</code>, dijalankan setelah <code>pab_setup</code>. Satu kebenaran (<i>one truth</i>) per tahap; alat lanjut tiap modul menjaga pekerjaan tak ditinggal sebelum tuntas.</p>
+<p class="lead">Dokumen ini memetakan <b>seluruh</b> modul GRAIN: 7 langkah pipa utama (Step 0&rarr;4) plus 4 alat <b>standalone</b> yang menyisip di antara langkah. Setiap modul = 1 file <code>.m</code> di akar <code>GRAIN/</code>, dijalankan setelah <code>grain_setup</code>. Satu kebenaran (<i>one truth</i>) per tahap; alat lanjut tiap modul menjaga pekerjaan tak ditinggal sebelum tuntas.</p>
 
 <div class="card">
   <b>Daftar isi</b>
   <div class="toc">
     <a href="#peta">1. Peta pipa (diagram)</a><br>
     <a href="#data">2. Format data & provenance</a><br>
-    <a href="#step0">3. PAB0 — Step 0 QPIV</a><br>
-    <a href="#step1">4. PAB1 — Step 1 ROI jitter</a><br>
-    <a href="#mask">5. PABMASK (standalone)</a><br>
-    <a href="#step2">6. PAB2 — Step 2 PIV penuh</a><br>
+    <a href="#step0">3. GRAIN0 — Step 0 QPIV</a><br>
+    <a href="#step1">4. GRAIN1 — Step 1 ROI jitter</a><br>
+    <a href="#mask">5. GRAINMASK (standalone)</a><br>
+    <a href="#step2">6. GRAIN2 — Step 2 PIV penuh</a><br>
     <a href="#edit">7. MATPIVEDIT (standalone)</a><br>
-    <a href="#step3">8. PAB3 / PAB3a — Step 3</a><br>
-    <a href="#step4">9. PAB4 — Step 4 terpadu (5 tab)</a><br>
-    <a href="#export">10. PABEXPORT & PABAXPOT</a><br>
-    <a href="#komentar">11. Komentar PAB4 &harr; Claude Cowork</a><br>
+    <a href="#step3">8. GRAIN3 / GRAIN3a — Step 3</a><br>
+    <a href="#step4">9. GRAIN4 — Step 4 terpadu (5 tab)</a><br>
+    <a href="#export">10. GRAINEXPORT & GRAINAXPOT</a><br>
+    <a href="#komentar">11. Komentar GRAIN4 &harr; Claude Cowork</a><br>
     <a href="#euler">12. Sampling Eulerian AX POT</a><br>
     <a href="#out">13. Contoh output gambar</a><br>
     <a href="#run">14. Cara menjalankan</a><br>
@@ -119,17 +119,17 @@
     .lbl{font-size:11px;fill:#37506e}
   </style>
 
-  <!-- Row 1: JPG -> PAB0 -> PAB1 -->
+  <!-- Row 1: JPG -> GRAIN0 -> GRAIN1 -->
   <rect class="box data" x="20" y="30" width="120" height="52"/>
   <text class="t" x="80" y="52" text-anchor="middle">Foto JPG</text>
   <text class="ts" x="80" y="68" text-anchor="middle">RAW eksperimen</text>
 
   <rect class="box step" x="185" y="30" width="150" height="52"/>
-  <text class="t" x="260" y="52" text-anchor="middle">PAB0 · Step 0</text>
+  <text class="t" x="260" y="52" text-anchor="middle">GRAIN0 · Step 0</text>
   <text class="ts" x="260" y="68" text-anchor="middle">QPIV — exclusion</text>
 
   <rect class="box step" x="380" y="30" width="150" height="52"/>
-  <text class="t" x="455" y="52" text-anchor="middle">PAB1 · Step 1</text>
+  <text class="t" x="455" y="52" text-anchor="middle">GRAIN1 · Step 1</text>
   <text class="ts" x="455" y="68" text-anchor="middle">ROI jitter / anchor</text>
 
   <rect class="box data" x="575" y="30" width="150" height="52"/>
@@ -140,15 +140,15 @@
   <line class="e" x1="335" y1="56" x2="378" y2="56" marker-end="url(#ar)"/>
   <line class="e" x1="530" y1="56" x2="573" y2="56" marker-end="url(#ar)"/>
 
-  <!-- PABMASK on MAT PREP -->
+  <!-- GRAINMASK on MAT PREP -->
   <rect class="box tool" x="575" y="120" width="150" height="46"/>
-  <text class="t" x="650" y="140" text-anchor="middle">PABMASK</text>
+  <text class="t" x="650" y="140" text-anchor="middle">GRAINMASK</text>
   <text class="ts" x="650" y="155" text-anchor="middle">masking kotak putih</text>
   <line class="e2" x1="650" y1="82" x2="650" y2="118" marker-end="url(#ar2)"/>
 
-  <!-- Row 2: MAT PREP -> PAB2 -> MAT PIV -->
+  <!-- Row 2: MAT PREP -> GRAIN2 -> MAT PIV -->
   <rect class="box step" x="380" y="210" width="150" height="52"/>
-  <text class="t" x="455" y="232" text-anchor="middle">PAB2 · Step 2</text>
+  <text class="t" x="455" y="232" text-anchor="middle">GRAIN2 · Step 2</text>
   <text class="ts" x="455" y="248" text-anchor="middle">PIV penuh + geom</text>
 
   <rect class="box data" x="185" y="210" width="150" height="52"/>
@@ -164,13 +164,13 @@
   <text class="ts" x="95" y="247" text-anchor="middle">koreksi X0/X1/Lpos</text>
   <line class="e2" x1="185" y1="236" x2="172" y2="236" marker-end="url(#ar2)"/>
 
-  <!-- Row 3: MAT PIV -> PAB3/3a -> PAB4 -->
+  <!-- Row 3: MAT PIV -> GRAIN3/3a -> GRAIN4 -->
   <rect class="box step" x="185" y="320" width="150" height="52"/>
-  <text class="t" x="260" y="341" text-anchor="middle">PAB3 / PAB3a</text>
+  <text class="t" x="260" y="341" text-anchor="middle">GRAIN3 / GRAIN3a</text>
   <text class="ts" x="260" y="357" text-anchor="middle">pratinjau · assign HW</text>
 
   <rect class="box step" x="380" y="320" width="200" height="52"/>
-  <text class="t" x="480" y="341" text-anchor="middle">PAB4 · Step 4 (terpadu)</text>
+  <text class="t" x="480" y="341" text-anchor="middle">GRAIN4 · Step 4 (terpadu)</text>
   <text class="ts" x="480" y="357" text-anchor="middle">label·net-slip·komentar·gambar</text>
 
   <path class="e" d="M260,262 L260,318" marker-end="url(#ar)"/>
@@ -178,12 +178,12 @@
 
   <!-- export tools -->
   <rect class="box tool" x="625" y="320" width="150" height="52"/>
-  <text class="t" x="700" y="341" text-anchor="middle">PABEXPORT</text>
+  <text class="t" x="700" y="341" text-anchor="middle">GRAINEXPORT</text>
   <text class="ts" x="700" y="357" text-anchor="middle">katalog velmag/shear</text>
   <line class="e2" x1="580" y1="346" x2="623" y2="346" marker-end="url(#ar2)"/>
 
   <rect class="box tool" x="625" y="392" width="150" height="50"/>
-  <text class="t" x="700" y="412" text-anchor="middle">PABAXPOT</text>
+  <text class="t" x="700" y="412" text-anchor="middle">GRAINAXPOT</text>
   <text class="ts" x="700" y="427" text-anchor="middle">editor figur AX POT</text>
   <line class="e2" x1="540" y1="372" x2="624" y2="406" marker-end="url(#ar2)"/>
 
@@ -197,16 +197,16 @@
   <rect class="box step" x="20" y="400" width="22" height="14"/><text class="lbl" x="48" y="411">Step (pipa utama)</text>
   <rect class="box tool" x="20" y="420" width="22" height="14"/><text class="lbl" x="48" y="431">Alat standalone</text>
 </svg>
-<figcaption>Diagram 1 — Pipa PAB: JPG &rarr; Step 0 (QPIV) &rarr; Step 1 (MAT PREP) &rarr; Step 2 (MAT PIV) &rarr; Step 3/4. Alat ungu menyisip non-destruktif.</figcaption>
+<figcaption>Diagram 1 — Pipa GRAIN: JPG &rarr; Step 0 (QPIV) &rarr; Step 1 (MAT PREP) &rarr; Step 2 (MAT PIV) &rarr; Step 3/4. Alat ungu menyisip non-destruktif.</figcaption>
 </figure>
 
 <h2 id="data">2. Format data & provenance</h2>
 <p>Tiga aset data kanonik mengalir melalui pipa. Aturan emas: <b>1 eksperimen = 1 file</b>; blob asli JPG tak pernah disentuh (masking & exclusion bersifat <i>resep</i> non-destruktif).</p>
 <table>
   <tr><th>Aset</th><th>Dihasilkan oleh</th><th>Isi</th><th>Dipakai oleh</th></tr>
-  <tr><td><span class="chip">MAT PREP</span></td><td>PAB1 (handoff)</td><td>blob JPG RAW + EXIF dt + kurva jitter + resep masking + config QPIV</td><td>PAB2, PABMASK</td></tr>
-  <tr><td><span class="chip">MAT PIV</span></td><td>PAB2</td><td>vektor PIV + GS tersemat + geometri/strain bertanda — arsip akhir</td><td>PAB3/3a/4, MATPIVEDIT, PABEXPORT</td></tr>
-  <tr><td><span class="chip">_potdata.json<br>_comments.json</span></td><td>PAB4</td><td>garis PSG, label HW, net-slip, titik POI, komentar bertag</td><td>PAB4, ekspor Claude</td></tr>
+  <tr><td><span class="chip">MAT PREP</span></td><td>GRAIN1 (handoff)</td><td>blob JPG RAW + EXIF dt + kurva jitter + resep masking + config QPIV</td><td>GRAIN2, GRAINMASK</td></tr>
+  <tr><td><span class="chip">MAT PIV</span></td><td>GRAIN2</td><td>vektor PIV + GS tersemat + geometri/strain bertanda — arsip akhir</td><td>GRAIN3/3a/4, MATPIVEDIT, GRAINEXPORT</td></tr>
+  <tr><td><span class="chip">_potdata.json<br>_comments.json</span></td><td>GRAIN4</td><td>garis PSG, label HW, net-slip, titik POI, komentar bertag</td><td>GRAIN4, ekspor Claude</td></tr>
 </table>
 <p class="note"><b>Provenance.</b> MAT PIV mencatat MAT PREP induknya; MAT PREP mencatat daftar keluaran MAT PIV. Rantai dapat ditelusuri bila salah satu berkas rusak.</p>
 
@@ -214,7 +214,7 @@
 
 <div class="grid c2">
   <div class="card mod">
-    <div class="name">PAB0 <span class="pill step">Step 0 · QPIV</span></div>
+    <div class="name">GRAIN0 <span class="pill step">Step 0 · QPIV</span></div>
     <div class="role">Saring foto bermasalah <b>sebelum</b> langkah berat, lewat Quick PIV pada strip tipis.</div>
     <ul>
       <li>Deteksi <b>frame mati</b> (mesin berhenti: |V| puncak &asymp; 0).</li>
@@ -223,26 +223,26 @@
       <li>Exclusion non-destruktif &rarr; Save/Load Progress per-root.</li>
     </ul>
     <div class="io"><b>in</b> <span class="chip">folder JPG</span> <b>out</b> <span class="chip">daftar exclusion</span> &rarr; tombol "Lanjut &rarr; Step 1"</div>
-    <div class="shot"><img src="img/gui_pab0.png" alt="GUI PAB0"><div class="cap">Tampilan GUI PAB0 — 3 kolom (daftar exp · axMain/PSG/POT · tabel frame).</div></div>
+    <div class="shot"><img src="img/gui_grain0.png" alt="GUI GRAIN0"><div class="cap">Tampilan GUI GRAIN0 — 3 kolom (daftar exp · axMain/PSG/POT · tabel frame).</div></div>
   </div>
 
   <div class="card mod">
-    <div class="name">PAB1 <span class="pill step">Step 1 · ROI jitter</span></div>
+    <div class="name">GRAIN1 <span class="pill step">Step 1 · ROI jitter</span></div>
     <div class="role">Tentukan ROI anchor stabilisasi (uji jitter area kecil) untuk banyak eksperimen sekaligus.</div>
     <ul>
       <li>Scan rekursif ROOT &rarr; daftar eksperimen.</li>
       <li>ROI tarik-sekali (&#9645;/&#11041;) + 4-kurva auto-jitter; pinjam/sebar ROI antar-exp.</li>
       <li>Filter frame yang lolos QPIV Step 0.</li>
-      <li><b>Handoff:</b> tombol "Lanjutkan ke Step 2" memproduksi semua <b>MAT PREP</b> &rarr; buka PAB2.</li>
+      <li><b>Handoff:</b> tombol "Lanjutkan ke Step 2" memproduksi semua <b>MAT PREP</b> &rarr; buka GRAIN2.</li>
     </ul>
     <div class="io"><b>in</b> <span class="chip">JPG + exclusion</span> <b>out</b> <span class="chip">MAT PREP</span></div>
-    <div class="shot"><img src="img/gui_pab1.png" alt="GUI PAB1"><div class="cap">Tampilan GUI PAB1 — ROI jitter multi-eksperimen + handoff ke Step 2.</div></div>
+    <div class="shot"><img src="img/gui_grain1.png" alt="GUI GRAIN1"><div class="cap">Tampilan GUI GRAIN1 — ROI jitter multi-eksperimen + handoff ke Step 2.</div></div>
   </div>
 </div>
 
-<h2 id="mask">4. Sisipan: PABMASK <span class="pill tool">standalone</span> <span class="pill ro">non-destruktif</span></h2>
+<h2 id="mask">4. Sisipan: GRAINMASK <span class="pill tool">standalone</span> <span class="pill ro">non-destruktif</span></h2>
 <div class="card mod tool">
-  <div class="name">PABMASK</div>
+  <div class="name">GRAINMASK</div>
   <div class="role">Masking kotak putih borderless yang ukurannya <b>diinterpolasi per-frame</b> antara kondisi awal &amp; akhir — menutup area belakang dinding pendorong / bukan-pasir yang mengotori vektor PIV.</div>
   <ul>
     <li>Beroperasi pada <b>MAT PREP</b> (di antara Step 1 dan Step 2).</li>
@@ -251,11 +251,11 @@
     <li>Tombol "Tampilkan frame ini" (preview on-demand) + Save/Load Progress per-folder.</li>
   </ul>
   <div class="io"><b>in/out</b> <span class="chip">MAT PREP</span> (in-place, reversible)</div>
-  <div class="shot"><img src="img/gui_pabmask.png" alt="GUI PABMASK"><div class="cap">Tampilan GUI PABMASK — editor kotak putih interpolasi awal&rarr;akhir.</div></div>
+  <div class="shot"><img src="img/gui_grainmask.png" alt="GUI GRAINMASK"><div class="cap">Tampilan GUI GRAINMASK — editor kotak putih interpolasi awal&rarr;akhir.</div></div>
 </div>
 
 <div class="card mod">
-  <div class="name">PAB2 <span class="pill step">Step 2 · PIV penuh</span></div>
+  <div class="name">GRAIN2 <span class="pill step">Step 2 · PIV penuh</span></div>
   <div class="role">Analisis PIV penuh dengan input <b>.mat</b> (bukan folder) — padanan persis PIVlab_automasi_batch_GUI_V4.</div>
   <ul>
     <li>PIV + GS tersemat + waktu EXIF (px/s) + geometri strain bertanda + Quick PIV buang frame mati.</li>
@@ -264,7 +264,7 @@
     <li>Produksi paralel antar-folder (1 worker = 1 folder).</li>
   </ul>
   <div class="io"><b>in</b> <span class="chip">MAT PREP</span> <b>out</b> <span class="chip">MAT PIV</span></div>
-  <div class="shot"><img src="img/gui_pab2.png" alt="GUI PAB2"><div class="cap">Tampilan GUI PAB2 — analisis PIV penuh, input .mat per-eksperimen.</div></div>
+  <div class="shot"><img src="img/gui_grain2.png" alt="GUI GRAIN2"><div class="cap">Tampilan GUI GRAIN2 — analisis PIV penuh, input .mat per-eksperimen.</div></div>
 </div>
 
 <h2 id="edit">5. Sisipan: MATPIVEDIT <span class="pill tool">standalone</span></h2>
@@ -283,31 +283,31 @@
 <h2 id="step3">6. Step 3 — Pratinjau & Assign</h2>
 <div class="grid c2">
   <div class="card mod">
-    <div class="name">PAB3 <span class="pill step">Step 3</span> <span class="pill ro">read-only</span></div>
+    <div class="name">GRAIN3 <span class="pill step">Step 3</span> <span class="pill ro">read-only</span></div>
     <div class="role">Pratinjau cepat output Step 2.</div>
     <ul>
       <li>axMain (skalar velmag/shear + GS + slider frame) — di sini garis PSG ditarik.</li>
       <li>axPOT (kurva |V| sepanjang garis, auto-PSG 70%).</li>
       <li>Montase &rarr; PNG (grid / 2-kolom). Tak menyentuh berkas.</li>
     </ul>
-    <div class="shot"><img src="img/gui_pab3.png" alt="GUI PAB3"><div class="cap">Tampilan GUI PAB3 — axMain (skalar+GS) di atas, axPOT di bawah.</div></div>
+    <div class="shot"><img src="img/gui_grain3.png" alt="GUI GRAIN3"><div class="cap">Tampilan GUI GRAIN3 — axMain (skalar+GS) di atas, axPOT di bawah.</div></div>
   </div>
   <div class="card mod">
-    <div class="name">PAB3a <span class="pill step">Step 3a</span></div>
+    <div class="name">GRAIN3a <span class="pill step">Step 3a</span></div>
     <div class="role">Assign kurva POT &rarr; label HW-#/F/F0/FFW di atas MAT PIV.</div>
     <ul>
       <li>POT disampel sendiri dari garis PSG (tanpa Step 1 PIVTerry).</li>
       <li>Auto-save <code>&lt;base&gt;_autopot.mat</code> (format kompatibel suite PIVTerry).</li>
-      <li>Round-trip restore; jadi <b>seed</b> baca-saja untuk PAB4.</li>
+      <li>Round-trip restore; jadi <b>seed</b> baca-saja untuk GRAIN4.</li>
     </ul>
-    <div class="shot"><img src="img/gui_pab3a.png" alt="GUI PAB3a"><div class="cap">Tampilan GUI PAB3a — assign kurva POT &rarr; label HW + tabel kurva.</div></div>
+    <div class="shot"><img src="img/gui_grain3a.png" alt="GUI GRAIN3a"><div class="cap">Tampilan GUI GRAIN3a — assign kurva POT &rarr; label HW + tabel kurva.</div></div>
   </div>
 </div>
 
-<h2 id="step4">7. PAB4 — Step 4 terpadu <span class="pill step">5 tab</span></h2>
+<h2 id="step4">7. GRAIN4 — Step 4 terpadu <span class="pill step">5 tab</span></h2>
 <div class="card mod">
-  <div class="name">PAB4</div>
-  <div class="role">Satu app, ruang kerja sama (1 dataset, 1 garis PSG, 1 truth <code>_potdata.json</code> + <code>_comments.json</code>). Tak ada reload antar-operasi. <code>PAB4A</code>/<code>PAB4B</code> kini <span class="pill fwd">forwarder</span> tipis ke tab tertentu.</div>
+  <div class="name">GRAIN4</div>
+  <div class="role">Satu app, ruang kerja sama (1 dataset, 1 garis PSG, 1 truth <code>_potdata.json</code> + <code>_comments.json</code>). Tak ada reload antar-operasi. <code>GRAIN4A</code>/<code>GRAIN4B</code> kini <span class="pill fwd">forwarder</span> tipis ke tab tertentu.</div>
 </div>
 
 <figure>
@@ -335,21 +335,21 @@
   <text class="td" x="800" y="76" text-anchor="middle">1 gambar axPOT</text>
   <text class="td" x="800" y="90" text-anchor="middle">layer toggle</text>
 </svg>
-<figcaption>Diagram 2 — Lima tab PAB4 berbagi satu ruang kerja &amp; satu garis PSG.</figcaption>
+<figcaption>Diagram 2 — Lima tab GRAIN4 berbagi satu ruang kerja &amp; satu garis PSG.</figcaption>
 </figure>
 
 <ul>
-  <li><b>Garis PSG:</b> exp baru mulai 75% tak-terkunci; setel lalu kunci untuk sampel. Exp dengan garis di <code>_potdata</code> langsung aktif (terkunci+seed); fallback ke seed <code>_autopot</code> PAB3a (baca-saja).</li>
+  <li><b>Garis PSG:</b> exp baru mulai 75% tak-terkunci; setel lalu kunci untuk sampel. Exp dengan garis di <code>_potdata</code> langsung aktif (terkunci+seed); fallback ke seed <code>_autopot</code> GRAIN3a (baca-saja).</li>
   <li><b>Net-slip</b> negatif auto-clip ke 0; HW jadi titik ikat cerita sesar.</li>
   <li><b>Ekspor Claude:</b> bundel <code>PAB4_claude/&lt;base&gt;/</code> = comments.json + curves.json (data numerik kurva HW) + hw_story.json + PNG per-komentar + README pengarah.</li>
   <li><b>Sumbu-X gambar produksi</b> Frame &harr; Strain% (live tetap Frame).</li>
 </ul>
-<div class="shot"><img src="img/gui_pab4.png" alt="GUI PAB4"><div class="cap">Tampilan GUI PAB4 terpadu — ruang kerja axMain+axPOT (kiri) &amp; panel kanan 5 tab.</div></div>
+<div class="shot"><img src="img/gui_grain4.png" alt="GUI GRAIN4"><div class="cap">Tampilan GUI GRAIN4 terpadu — ruang kerja axMain+axPOT (kiri) &amp; panel kanan 5 tab.</div></div>
 
 <h2 id="export">8. Alat ekspor figur <span class="pill tool">standalone</span></h2>
 <div class="grid c2">
   <div class="card mod tool">
-    <div class="name">PABEXPORT</div>
+    <div class="name">GRAINEXPORT</div>
     <div class="role">WYSIWYG katalog gambar AX main (velmag + shear) untuk arsip persisten.</div>
     <ul>
       <li>Kanvas 1-frame + slider + toggle velmag&harr;shear; preview = byte-identik dengan export.</li>
@@ -357,13 +357,13 @@
       <li>Immutable (hapus+regenerate, tanda ⚠BASI bila fingerprint berubah). Setelan GLOBAL ke file (setpref) + SESSION; DPI/CLim auto.</li>
     </ul>
     <div class="io"><b>in</b> <span class="chip">MAT PIV</span> <b>out</b> <span class="chip">PAB_export/</span></div>
-    <div class="shot"><img src="img/gui_pabexport.png" alt="GUI PABEXPORT"><div class="cap">Tampilan GUI PABEXPORT — kanvas WYSIWYG + setelan render katalog.</div></div>
+    <div class="shot"><img src="img/gui_grainexport.png" alt="GUI GRAINEXPORT"><div class="cap">Tampilan GUI GRAINEXPORT — kanvas WYSIWYG + setelan render katalog.</div></div>
   </div>
   <div class="card mod tool">
-    <div class="name">PABAXPOT</div>
+    <div class="name">GRAINAXPOT</div>
     <div class="role">Editor figur AX POT grade-paper — merakit kurva untuk bercerita, tanpa sistem komentar.</div>
     <ul>
-      <li>Baca <code>&lt;base&gt;_axpot.mat</code> (ekspor PAB4 tab ⑤ "Save as AX POT").</li>
+      <li>Baca <code>&lt;base&gt;_axpot.mat</code> (ekspor GRAIN4 tab ⑤ "Save as AX POT").</li>
       <li>Kanvas WYSIWYG fisik (cm); renderer dipakai bersama preview &amp; export &rarr; paritas terjamin.</li>
       <li>Keluaran PNG/JPEG + JSON sidecar; titik informasi disimpan balik ke .mat.</li>
     </ul>
@@ -371,13 +371,13 @@
   </div>
 </div>
 
-<h2 id="komentar">9. Sistem Komentar &amp; Deskripsi PAB4 &harr; Claude Cowork</h2>
-<p class="lead">Tab ③ PAB4 bukan sekadar catatan. Ini <b>kanal dua-arah</b> antara peneliti dan Claude: peneliti menulis deskripsi/interpretasi yang <b>tertaut ke objek eksperimen</b> (frame, garis PSG, kurva HW, titik), PAB4 memproduksi gambar yang <b>sinkron persis</b> dengan tiap komentar, lalu mengekspor semuanya sebagai <b>bundel</b> yang dibaca <b>Claude Cowork (CLCW)</b> untuk menyusun laporan ilmiah. Tujuannya: Claude membaca narasi + gambar + angka <b>tanpa ambiguitas</b>.</p>
+<h2 id="komentar">9. Sistem Komentar &amp; Deskripsi GRAIN4 &harr; Claude Cowork</h2>
+<p class="lead">Tab ③ GRAIN4 bukan sekadar catatan. Ini <b>kanal dua-arah</b> antara peneliti dan Claude: peneliti menulis deskripsi/interpretasi yang <b>tertaut ke objek eksperimen</b> (frame, garis PSG, kurva HW, titik), GRAIN4 memproduksi gambar yang <b>sinkron persis</b> dengan tiap komentar, lalu mengekspor semuanya sebagai <b>bundel</b> yang dibaca <b>Claude Cowork (CLCW)</b> untuk menyusun laporan ilmiah. Tujuannya: Claude membaca narasi + gambar + angka <b>tanpa ambiguitas</b>.</p>
 
 <h3>9.1 Dua peran Claude</h3>
 <table>
   <tr><th>Peran</th><th>Singkatan</th><th>Tugas</th></tr>
-  <tr><td><b>Claude Code</b> (di MATLAB/repo)</td><td><span class="chip">CLCC</span></td><td>Membangun &amp; memelihara modul PAB; menjalankan ekspor; menjamin bundel konsisten (guard fingerprint, tulis <code>_HANDSHAKE.md</code>).</td></tr>
+  <tr><td><b>Claude Code</b> (di MATLAB/repo)</td><td><span class="chip">CLCC</span></td><td>Membangun &amp; memelihara modul GRAIN; menjalankan ekspor; menjamin bundel konsisten (guard fingerprint, tulis <code>_HANDSHAKE.md</code>).</td></tr>
   <tr><td><b>Claude Cowork</b> (pembaca bundel)</td><td><span class="chip">CLCW</span></td><td>Membaca <code>PAB4_claude/</code>, menafsirkan komentar+gambar+angka, menulis <code>REPORT.md</code>, opsional membalas komentar sebagai <code>role:"CLAUDE"</code>.</td></tr>
 </table>
 
@@ -389,10 +389,10 @@
   <!-- peneliti -->
   <rect x="20" y="40" width="150" height="64" rx="10" fill="#e8f0ff" stroke="#2563eb" stroke-width="2"/>
   <text x="95" y="68" text-anchor="middle" font-size="13" font-weight="700">Peneliti</text>
-  <text x="95" y="86" text-anchor="middle" font-size="10.5" fill="#5b6478">tulis komentar di PAB4</text>
-  <!-- PAB4 -->
+  <text x="95" y="86" text-anchor="middle" font-size="10.5" fill="#5b6478">tulis komentar di GRAIN4</text>
+  <!-- GRAIN4 -->
   <rect x="220" y="30" width="180" height="84" rx="10" fill="#e8f0ff" stroke="#2563eb" stroke-width="2"/>
-  <text x="310" y="56" text-anchor="middle" font-size="13" font-weight="700">PAB4 tab ③/④</text>
+  <text x="310" y="56" text-anchor="middle" font-size="13" font-weight="700">GRAIN4 tab ③/④</text>
   <text x="310" y="74" text-anchor="middle" font-size="10.5" fill="#5b6478">komentar bertag refs</text>
   <text x="310" y="89" text-anchor="middle" font-size="10.5" fill="#5b6478">+ produksi gambar ber-spec</text>
   <text x="310" y="104" text-anchor="middle" font-size="10.5" fill="#5b6478">(CLCC jalankan Export)</text>
@@ -423,7 +423,7 @@
   <text x="435" y="309" text-anchor="middle" font-size="10.5" fill="#7c5b12">tulis _HANDSHAKE.md: ✅ SINKRON / ⚠️ DESYNC (CLCW cek DULU sebelum melapor)</text>
   <line x1="435" y1="124" x2="435" y2="248" stroke="#d97706" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#cah)"/>
 </svg>
-<figcaption>Diagram 3 — Kanal komentar PAB4: peneliti &rarr; PAB4 (komentar+gambar) &rarr; bundel <code>PAB4_claude/</code> &rarr; Claude Cowork; balasan kembali sebagai komentar <code>role:"CLAUDE"</code>. Guard fingerprint menjamin gambar ↔ data sinkron.</figcaption>
+<figcaption>Diagram 3 — Kanal komentar GRAIN4: peneliti &rarr; GRAIN4 (komentar+gambar) &rarr; bundel <code>PAB4_claude/</code> &rarr; Claude Cowork; balasan kembali sebagai komentar <code>role:"CLAUDE"</code>. Guard fingerprint menjamin gambar ↔ data sinkron.</figcaption>
 </figure>
 
 <h3>9.3 Anatomi satu komentar</h3>
@@ -440,7 +440,7 @@
 <p><b>Tag inline</b> = rujukan objek di tengah kalimat (konsistensi penyebutan unsur): <code>@exp:&lt;base&gt;</code> (wajib, auto-prepend), <code>@psg:&lt;id&gt;</code>, <code>@curve:HW-N</code>, <code>@frame:N</code>, <code>@strain</code>, plus rujukan POI. Jadi saat CLCW membaca "...melintasi <code>@curve:HW-2</code>...", ia tahu persis kurva mana dan bisa menariknya ke angka di <code>curves.json</code>.</p>
 
 <h3>9.4 Gambar sinkron-tag (tab ④ Produksi Gambar)</h3>
-<p>Masalah klasik: narasi bilang X, gambar menunjukkan Y. PAB4 menutupnya dengan <b>kontrak sinkron</b>: <b>satu</b> <code>shotSpec</code> menggerakkan render PNG <b>dan</b> ditulis ke JSON — UI tak pernah dibaca ulang saat ekspor, jadi PNG ↔ JSON tak bisa beda.</p>
+<p>Masalah klasik: narasi bilang X, gambar menunjukkan Y. GRAIN4 menutupnya dengan <b>kontrak sinkron</b>: <b>satu</b> <code>shotSpec</code> menggerakkan render PNG <b>dan</b> ditulis ke JSON — UI tak pernah dibaca ulang saat ekspor, jadi PNG ↔ JSON tak bisa beda.</p>
 <ul>
   <li><b>spec</b> mencatat apa yang ditampilkan: panel (velmag/shear/axpot), frame, garis PSG, kurva HW yang tampak, titik, CLim, xUnit (frame/strain%).</li>
   <li><b>fingerprint</b> (FNV-1a 8-hex, urutan-kurva-invarian) = "sidik jari" data-penentu. Bila peneliti re-label / trim / geser garis / ubah CLim, fingerprint berubah → gambar lama ditandai <b>⚠BASI</b>.</li>
@@ -451,7 +451,7 @@
 <h3>9.5 Isi bundel <code>PAB4_claude/&lt;base&gt;/</code></h3>
 <table>
   <tr><th>Berkas</th><th>Untuk CLCW</th></tr>
-  <tr><td><code>comments.json</code></td><td>Semua komentar + refs + tautan gambar (skema PAB4 Comments).</td></tr>
+  <tr><td><code>comments.json</code></td><td>Semua komentar + refs + tautan gambar (skema GRAIN4 Comments).</td></tr>
   <tr><td><code>curves.json</code></td><td><b>Data numerik</b> kurva HW teridentifikasi: |V| per-frame, puncak, cutFrame, net-slip (start/nuc/fsr/end/area/dNet) → menautkan <code>@curve:HW-N</code> ke angka.</td></tr>
   <tr><td><code>hw_story.json</code> + <code>HW/HW-N_axpot.png</code></td><td><b>Paket cerita ber-anchor HW</b>: tiap hanging wall = 1 gambar axPOT + kurva + titik observasi + net-slip + komentar tertaut. HW = titik ikat narasi sesar (thrust).</td></tr>
   <tr><td><code>comments/&lt;id&gt;/</code></td><td>Satu folder per komentar: PNG ber-spec + <code>comment.json</code>.</td></tr>
@@ -464,9 +464,9 @@
 <p>Setiap Export, CLCC menjalankan guard otomatis: tiap asset terdaftar harus punya file; tiap PNG harus terdaftar (anti-yatim); fingerprint asset harus padan fingerprint dari spec-nya. Hasil ditulis ke <code>_HANDSHAKE.md</code>:</p>
 <div class="note"><b>✅ SINKRON</b> — registry↔file konsisten, fingerprint padan → CLCW boleh melapor.<br>
 <b>⚠️ DESYNC</b> — ada over-claim / yatim / fingerprint beda → CLCW <b>jangan</b> melapor; minta CLCC re-export.</div>
-<p>Konvensi pelaporan CLCW: saat menulis <code>REPORT.md</code>, sebutkan jumlah asset per komentar + fingerprint yang dibaca, agar CLCC bisa konfirmasi versi data yang dipakai memang terkini. Balasan CLCW (opsional) ditulis sebagai komentar baru <code>role:"CLAUDE"</code> (frame/psgId/curve sama) → muncul <b>inline</b> di tabel PAB4 dengan prefiks <code>[CLAUDE]:</code>, bukan kolom terpisah.</p>
+<p>Konvensi pelaporan CLCW: saat menulis <code>REPORT.md</code>, sebutkan jumlah asset per komentar + fingerprint yang dibaca, agar CLCC bisa konfirmasi versi data yang dipakai memang terkini. Balasan CLCW (opsional) ditulis sebagai komentar baru <code>role:"CLAUDE"</code> (frame/psgId/curve sama) → muncul <b>inline</b> di tabel GRAIN4 dengan prefiks <code>[CLAUDE]:</code>, bukan kolom terpisah.</p>
 
-<p class="note"><b>Engine:</b> <code>pivcore.io.pab4Comments</code> (CRUD atomic + <code>exportClaude</code>/<code>verifyBundle</code>/<code>writeHandshake</code>/<code>writeClaudeReadme</code>), <code>pivcore.io.pab4Shots</code> (<code>specStruct</code>/<code>fingerprint</code>), <code>pivcore.io.pab4Curves</code> (<code>curves.json</code>). Semua murni/headless &amp; lulus R2025b.</p>
+<p class="note"><b>Engine:</b> <code>pivcore.io.grain4Comments</code> (CRUD atomic + <code>exportClaude</code>/<code>verifyBundle</code>/<code>writeHandshake</code>/<code>writeClaudeReadme</code>), <code>pivcore.io.grain4Shots</code> (<code>specStruct</code>/<code>fingerprint</code>), <code>pivcore.io.grain4Curves</code> (<code>curves.json</code>). Semua murni/headless &amp; lulus R2025b.</p>
 
 <h2 id="euler">10. Sampling Eulerian AX POT</h2>
 <p class="lead">Inti analisis POT: kita tidak mengikuti partikel pasir (itu Lagrangian). Kita pasang deret <b>probe diam</b> di sepanjang garis PSG — posisinya <b>tetap di ruang</b> sepanjang eksperimen. Tiap frame, tiap probe membaca |V| pada selnya (rata-rata blok 3&times;3). Material bergerak <i>melewati</i> probe; probe merekam apa yang lewat. Itulah <b>sampling Eulerian</b>.</p>
@@ -592,19 +592,19 @@
 </figure>
 
 <table>
-  <tr><th>Aspek</th><th>Eulerian (yang dipakai PAB)</th><th>Lagrangian (bukan ini)</th></tr>
+  <tr><th>Aspek</th><th>Eulerian (yang dipakai GRAIN)</th><th>Lagrangian (bukan ini)</th></tr>
   <tr><td><b>Yang diamati</b></td><td>Titik tetap di ruang (garis PSG)</td><td>Partikel material yang ikut bergerak</td></tr>
   <tr><td><b>Pembacaan</b></td><td>|V| yang lewat tiap probe, per frame</td><td>Lintasan tiap partikel sepanjang waktu</td></tr>
   <tr><td><b>Sumbu kurva</b></td><td>posisi probe &amp; waktu/strain</td><td>perpindahan partikel</td></tr>
   <tr><td><b>Untuk apa</b></td><td>Mendeteksi <i>kapan</i> &amp; <i>di mana</i> sesar/HW melintas (puncak kurva)</td><td>Melacak deformasi partikel individual</td></tr>
 </table>
-<p class="note"><b>Implementasi:</b> <code>pivcore.pot.step1Collect.collectAlongLine</code> menebar <code>n = floor(L/spacing)+1</code> probe pada garis p1&rarr;p2; tiap probe mengambil rata-rata blok 3&times;3 sel PIV per frame &rarr; deret-waktu (1&times;nFrames). Inilah <i>record</i> yang di-label HW di PAB4 dan dirender sebagai AX POT.</p>
+<p class="note"><b>Implementasi:</b> <code>pivcore.pot.step1Collect.collectAlongLine</code> menebar <code>n = floor(L/spacing)+1</code> probe pada garis p1&rarr;p2; tiap probe mengambil rata-rata blok 3&times;3 sel PIV per frame &rarr; deret-waktu (1&times;nFrames). Inilah <i>record</i> yang di-label HW di GRAIN4 dan dirender sebagai AX POT.</p>
 
 <h2 id="out">11. Contoh output gambar</h2>
-<p>Empat jenis keluaran kanonik yang dihasilkan pipa, dari data contoh nyata (TKS / P-CON). <b>Vel mag</b> &amp; <b>shear strain</b> = gambar AX main (PABEXPORT / PAB4 tab ④). <b>AX PSG</b> = medan skalar dengan garis PSG tempat sampling. <b>AX POT</b> = profil |V| sepanjang garis itu, dianalisis lintas frame.</p>
+<p>Empat jenis keluaran kanonik yang dihasilkan pipa, dari data contoh nyata (TKS / P-CON). <b>Vel mag</b> &amp; <b>shear strain</b> = gambar AX main (GRAINEXPORT / GRAIN4 tab ④). <b>AX PSG</b> = medan skalar dengan garis PSG tempat sampling. <b>AX POT</b> = profil |V| sepanjang garis itu, dianalisis lintas frame.</p>
 <div class="gallery">
   <div class="gitem"><img src="img/example_velmag.jpg" alt="Vel mag">
-    <div class="gcap"><b>Vel mag (velocity magnitude)</b><span>P-CON-4cm-F-1: medan |V| + overlay GS + glyph (keluaran PABEXPORT); CLim terkunci per-eksperimen.</span></div></div>
+    <div class="gcap"><b>Vel mag (velocity magnitude)</b><span>P-CON-4cm-F-1: medan |V| + overlay GS + glyph (keluaran GRAINEXPORT); CLim terkunci per-eksperimen.</span></div></div>
   <div class="gitem"><img src="img/example_shear.jpg" alt="Shear strain">
     <div class="gcap"><b>Shear strain (strain rate)</b><span>P-CON-4cm-F-1: bidang shear du/dy+dv/dx bertanda; skala simetris.</span></div></div>
   <div class="gitem"><img src="img/example_axpsg.png" alt="AX PSG">
@@ -616,16 +616,16 @@
 <h2 id="run">12. Cara menjalankan</h2>
 <div class="card">
 <p>Sekali per sesi MATLAB (selalu <b>R2025b</b>):</p>
-<p><code>pab_setup</code></p>
+<p><code>grain_setup</code></p>
 <p>Lalu, mengikuti urutan pipa:</p>
-<p><code>PAB0</code> &rarr; <code>PAB1</code> &rarr; <code>PAB2</code> &rarr; <code>PAB3</code> / <code>PAB3a</code> &rarr; <code>PAB4</code></p>
-<p>Alat standalone dipanggil kapan perlu: <code>PABMASK</code>, <code>MATPIVEDIT</code>, <code>PABEXPORT</code>, <code>PABAXPOT</code>. Tiap modul menerima argumen folder root opsional (mis. <code>PAB2(prepDir,true)</code>) dan punya tombol "Lanjut" ke modul berikutnya agar pekerjaan tak ditinggal sebelum tuntas.</p>
+<p><code>GRAIN0</code> &rarr; <code>GRAIN1</code> &rarr; <code>GRAIN2</code> &rarr; <code>GRAIN3</code> / <code>GRAIN3a</code> &rarr; <code>GRAIN4</code></p>
+<p>Alat standalone dipanggil kapan perlu: <code>GRAINMASK</code>, <code>MATPIVEDIT</code>, <code>GRAINEXPORT</code>, <code>GRAINAXPOT</code>. Tiap modul menerima argumen folder root opsional (mis. <code>GRAIN2(prepDir,true)</code>) dan punya tombol "Lanjut" ke modul berikutnya agar pekerjaan tak ditinggal sebelum tuntas.</p>
 </div>
 
-<div class="note"><b>Catatan governance.</b> Akar <code>PAB/</code> hanya berisi <code>PAB*</code> + <code>pab_setup</code> + paket. <code>_reference/</code> (PIVprep_V2 + PIVTerry) = inspirasi baca-saja — jangan dikembangkan / dipanggil lintas-folder.</div>
+<div class="note"><b>Catatan governance.</b> Akar <code>GRAIN/</code> hanya berisi <code>GRAIN*</code> + <code>grain_setup</code> + paket. <code>_reference/</code> (PIVprep_V2 + PIVTerry) = inspirasi baca-saja — jangan dikembangkan / dipanggil lintas-folder.</div>
 
 <h2 id="web">13. Rencana web katalog hasil</h2>
-<p class="lead">Tahap lanjut (di luar pipa MATLAB): membuat <b>katalog web read-only</b> agar seluruh anggota lab dapat melihat hasil akhir analisis PIV dari mana saja lewat URL. Saat ini hasil hanya berupa berkas lokal di mesin operator (<code>PAB/PAB_export/</code> + <code>EXP_coll/</code>) dan tak bisa diakses bersama. Rencana ini <b>tidak menyentuh modul PAB mana pun</b> — ia hanya menurunkan katalog dari keluaran yang sudah ada.</p>
+<p class="lead">Tahap lanjut (di luar pipa MATLAB): membuat <b>katalog web read-only</b> agar seluruh anggota lab dapat melihat hasil akhir analisis PIV dari mana saja lewat URL. Saat ini hasil hanya berupa berkas lokal di mesin operator (<code>GRAIN/PAB_export/</code> + <code>EXP_coll/</code>) dan tak bisa diakses bersama. Rencana ini <b>tidak menyentuh modul GRAIN mana pun</b> — ia hanya menurunkan katalog dari keluaran yang sudah ada.</p>
 
 <h3>13.1 Prinsip yang dikunci</h3>
 <table>
@@ -735,7 +735,7 @@
 <p class="note"><b>Data acuan (read-only, jangan diubah):</b> <code>PAB_export/_catalog.json</code> (indeks global), <code>PAB_export/&lt;exp&gt;/manifest.json</code> (spec + daftar file scalar), folder <code>velmag/</code> &amp; <code>shear/</code> (JPEG ~238 KB), <code>EXP_coll/&lt;grup&gt;/&lt;exp&gt;_axpot.jpg</code>, dan <code>_potdata.json</code> (kurva sebagai angka, untuk fase numerik). Penamaan exp terurai jadi kolom filter mengikuti kode kanonik penamaan eksperimen. <b>Penting:</b> jumlah frame dihitung dari isi folder, bukan dari count di JSON (bisa mismatch saat render belum tuntas).</p>
 
 <footer>
-  Dokumentasi alur kerja PAB &middot; V2 (menggantikan ALUR_KERJA.html yang konseptual) &middot; MATLAB R2025b &middot; Lab Geodynamics ITB &middot; pembaruan 2026-06-27
+  Dokumentasi alur kerja GRAIN &middot; V2 (menggantikan ALUR_KERJA.html yang konseptual) &middot; MATLAB R2025b &middot; Lab Geodynamics ITB &middot; pembaruan 2026-06-27
 </footer>
 
 </div>

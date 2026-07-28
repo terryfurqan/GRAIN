@@ -17,7 +17,7 @@ classdef matpivEdit
 %   berkas .mat = versi rapi tanpa frame error. Ireversibel tanpa .bak (sesuai
 %   keputusan user: buang benar-benar dari blob).
 %
-%   Penempatan: PAB/+pivanalyzemat/+core/matpivEdit.m
+%   Penempatan: GRAIN/+pivanalyzemat/+core/matpivEdit.m
 %   Lihat juga: pivGeomIO, maskSidecar, maskRect, PIVlab_automasi_dropframes.
 
     methods (Static)

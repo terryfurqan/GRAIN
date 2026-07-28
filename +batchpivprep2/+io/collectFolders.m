@@ -103,7 +103,7 @@ function tf = local_isOutputFolder(p)
 %         subfoldernya velmag / shear / _preview (berisi frame JPG hasil render).
 %   SENGAJA TIDAK memangkas PIV_<tgl>/ maupun "montage/montase": pola PIV_*
 %   berisiko menabrak nama eksperimen input (domain PIV), dan folder PIV_<tgl>/
-%   berisi .mat (otomatis dilewati listImages); montase PAB3 = file PNG tunggal
+%   berisi .mat (otomatis dilewati listImages); montase GRAIN3 = file PNG tunggal
 %   (bukan folder), modul itu akan di-deprecate.
     [~, nm] = fileparts(p);
     tf = ~isempty(regexpi(nm, ...

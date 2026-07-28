@@ -2,7 +2,7 @@ function test_qpiv_clean_imageset()
 %TEST_QPIV_CLEAN_IMAGESET  Frame MATI (mesin berhenti) dibuang UTUH — termasuk
 %   gambar mati PERTAMA & zona mati di AWAL (frame-1). Regresi bug: mode
 %   'consecutive' dulu hanya buang gambar ke-2 pasangan (drop(k+1)) sehingga
-%   frame-1 di zona mati awal LOLOS & muncul lagi di PABMASK.
+%   frame-1 di zona mati awal LOLOS & muncul lagi di GRAINMASK.
 %
 %   Uji engine bersama batchpivprep2.io.qpivCleanImageSet:
 %     A. consecutive, zona mati AWAL (pasangan 1..3) -> gambar 1..4 dibuang.
@@ -12,9 +12,9 @@ function test_qpiv_clean_imageset()
 %     E. kept & dropped PARTISI sempurna (tak tumpang-tindih, gabung=semua).
 %     F. ignore sbg INDEKS maupun LOGICAL menghasilkan sama.
 %
-%   Jalankan: pab_setup; test_qpiv_clean_imageset   (SELALU R2025b)
+%   Jalankan: grain_setup; test_qpiv_clean_imageset   (SELALU R2025b)
     fprintf('\n=== TEST qpivCleanImageSet (frame mati dibuang utuh) ===\n');
-    pab_setup();
+    grain_setup();
     F = 'batchpivprep2.io.qpivCleanImageSet';
     assert(~isempty(which(F)), 'engine qpivCleanImageSet tak di-path');
 

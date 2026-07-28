@@ -14,7 +14,7 @@ function [imgFirst, imgLast, nameFirst, nameLast, nFrames] = readMatFramePair(ma
 %   applyMask : true (DEFAULT) = tempel masking persegi non-destruktif bila
 %               prep.masking aktif → pratinjau SAMA dengan citra yang dimakan
 %               PIV (WYSIWYG). false = frame BERSIH apa adanya. Konsisten dgn
-%               readMatFrame supaya PAB2 kompatibel PABMASK.
+%               readMatFrame supaya GRAIN2 kompatibel GRAINMASK.
 %
 %   Lihat juga: pivanalyzemat.core.readMatFrame, pivanalyzemat.core.unpackMat
 

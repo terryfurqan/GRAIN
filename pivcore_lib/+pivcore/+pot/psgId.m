@@ -1,6 +1,6 @@
 classdef psgId
 %PSGID  ID GARIS PSG STABIL dari geometri garis — supaya catatan & data POT
-%   "nyambung" saat eksperimen yang sama dibuka ulang (poin-6 PAB4_PLAN).
+%   "nyambung" saat eksperimen yang sama dibuka ulang (poin-6 GRAIN4_PLAN).
 %
 %   Observasi POT selalu dilakukan pada SATU garis PSG. Geser garis = observasi
 %   lain. Maka tiap garis butuh ID yang STABIL: garis yang sama (dibuka ulang)
@@ -29,7 +29,7 @@ classdef psgId
 %     tf = pivcore.pot.psgId.isFrac(id)
 %     [p1,p2] = pivcore.pot.psgId.geomCoords(id)    % balik koordinat dari geom id ([] bila bukan geom)
 %
-%   Penempatan berkas: PAB/pivcore_lib/+pivcore/+pot/psgId.m
+%   Penempatan berkas: GRAIN/pivcore_lib/+pivcore/+pot/psgId.m
 
     properties (Constant)
         % TOLPX = toleransi pembulatan koordinat garis kustom (piksel). Koordinat
