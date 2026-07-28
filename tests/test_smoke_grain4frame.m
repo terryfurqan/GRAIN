@@ -21,7 +21,7 @@ function test_smoke_grain4frame(rootDir)
 
     if nargin < 1 || isempty(rootDir)
         cand = {fullfile(fileparts(fileparts(here)), 'RAW', 'PIV_2026-06-24'), ...
-                '/Users/terryfurqan/MACTERR_shared/Automasi PIV LAB/RAW/PIV_2026-06-24'};
+                fullfile(grain_fixture_root(),'RAW','PIV_2026-06-24')};
         rootDir = '';
         for i = 1:numel(cand)
             if isfolder(cand{i}), rootDir = cand{i}; break; end

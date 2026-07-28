@@ -4,10 +4,10 @@ function GRAIN1(rootDir)
 %   GRAIN1                 % pilih folder ROOT (dialog), scan rekursif
 %   GRAIN1(rootDir)        % langsung ke ROOT
 %
-%   CATATAN RENAME (2026-06-25): dulu bernama GRAIN0 (ROI jitter), sempat jadi
-%   GRAIN0_old. Kini = "true GRAIN1" (Step 1, sesudah Step 0 QPIV exclusion).
-%   Diluncurkan dari GRAIN0 lewat tombol "Lanjut → Step 1". GUI BatchPIVPrep2
-%   (produksi .mat) yang dulu GRAIN1 kini turun jadi PAB1_old (_compat).
+%   CATATAN NAMA (2026-06-25): alat ROI jitter ini dulu memakai nomor 0; kini
+%   = Step 1, sesudah Step 0 (QPIV exclusion) yang dipegang GRAIN0. Diluncurkan
+%   dari GRAIN0 lewat tombol "Lanjut → Step 1". GUI BatchPIVPrep2 (produksi
+%   .mat) turun jadi PAB1_old (_compat).
 %
 %   FOKUS: menentukan ROI
 %   anchor stabilisasi (uji jitter area kecil) untuk BANYAK eksperimen

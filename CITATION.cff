@@ -9,13 +9,13 @@ abstract: >-
   magnitude and shear-strain fields, plot-over-time curves, hanging-wall/footwall
   velocities, net slip, fault geometry, and a frame-by-frame description table.
 authors:
-  # TODO: replace with your full name, ORCID and affiliation before publishing.
-  - given-names: "REPLACE-ME"
-    family-names: "REPLACE-ME"
+  # TODO: add `orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"` below once you have
+  # one — Zenodo links the deposit to your ORCID profile when it is present.
+  - given-names: "Terry Alfa"
+    family-names: "Furqan"
     email: "isma@upi.edu"
     affiliation: "Universitas Pendidikan Indonesia"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
-repository-code: "https://github.com/REPLACE-ME/GRAIN"
+repository-code: "https://github.com/terryfurqan/GRAIN"
 license: GPL-3.0-or-later
 version: "1.0.0"
 date-released: "2026-07-28"

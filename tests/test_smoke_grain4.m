@@ -22,8 +22,8 @@ function test_smoke_grain4(rootDir)
 
     % ---------- Fixture ----------
     if nargin < 1 || isempty(rootDir)
-        cand = {'/Users/terryfurqan/MACTERR_shared/EXP_coll/EXP Q1/P-CON-4cm-F', ...
-                '/Users/terryfurqan/MACTERR_shared/EXP_coll/P-CON-4cm-F'};
+        cand = {fullfile(grain_fixture_root(),'EXP_coll','EXP Q1','P-CON-4cm-F'), ...
+                fullfile(grain_fixture_root(),'EXP_coll','P-CON-4cm-F')};
         rootDir = '';
         for i = 1:numel(cand)
             if isfolder(cand{i}) && ~isempty(i_findMatWithFaults(cand{i}))
@@ -32,7 +32,7 @@ function test_smoke_grain4(rootDir)
         end
         % Fallback: cari rekursif folder pertama ber-pasangan .mat + _faults.json.
         if isempty(rootDir)
-            rootDir = i_searchFixture('/Users/terryfurqan/MACTERR_shared/EXP_coll');
+            rootDir = i_searchFixture(fullfile(grain_fixture_root(),'EXP_coll'));
         end
     end
     if isempty(rootDir) || ~isfolder(rootDir)

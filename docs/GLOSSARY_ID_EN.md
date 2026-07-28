@@ -109,7 +109,7 @@ yang dicari test.
 |---|---|---|
 | 1 | `GRAIN0.m` (+ 4 test) | ✅ selesai — 152 penggantian, test LULUS R2025b |
 | 2 | `GRAIN1.m` (+ stub questdlg di test) | ✅ selesai — 179 penggantian, test LULUS R2025b |
-| 3 | `GRAIN2.m` | ⏳ |
+| 3 | `GRAIN2.m` | ✅ selesai — 262 penggantian, test LULUS R2025b |
 | 4 | `GRAIN3.m`, `GRAIN3a.m` | ⏳ |
 | 5 | `GRAIN4.m` (+ turunan) | ⏳ |
 | 6 | `GRAIN5.m`, `GRAIN6_temp.m` | ⏳ |

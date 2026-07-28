@@ -44,7 +44,7 @@ function test_smoke_grain_step0b()
     fprintf('  [2] toggle detektor & guard dt-NaN OK\n');
 
     % --- 2. EXIF dt langsung dari JPG (data nyata, bila ada) -----------
-    raw = '/Users/terryfurqan/MACTERR_shared/Automasi PIV LAB/5 cm-1';
+    raw = fullfile(grain_fixture_root(),'5 cm-1');
     if isfolder(raw)
         d = dir(fullfile(raw,'*.JPG')); [~,o]=sort({d.name}); names={d(o).name};
         fn1 = names(1:end-1)'; fn2 = names(2:end)';

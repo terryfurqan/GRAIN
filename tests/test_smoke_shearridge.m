@@ -193,7 +193,7 @@ end
 function m = i_findReal()
     m = '';
     cands = { ...
-      '/Users/terryfurqan/MACTERR_shared/EXP_coll/EXP Q1/P-HF-4cm-F/P-HF-4cm-F-1-OVL-S0-411to410-3p25px.mat'};
+      fullfile(grain_fixture_root(),'EXP_coll','EXP Q1','P-HF-4cm-F','P-HF-4cm-F-1-OVL-S0-411to410-3p25px.mat')};
     for i=1:numel(cands)
         if isfile(cands{i}), m = cands{i}; return; end
     end

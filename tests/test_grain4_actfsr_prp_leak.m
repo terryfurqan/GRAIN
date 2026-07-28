@@ -18,8 +18,8 @@ function test_grain4_actfsr_prp_leak(rootDir)
     restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
 
     if nargin < 1 || isempty(rootDir)
-        cand = {'/Users/terryfurqan/MACTERR_shared/EXP_coll/EXP Q1/P-CON-4cm-F', ...
-                '/Users/terryfurqan/MACTERR_shared/EXP_coll/P-CON-4cm-F'};
+        cand = {fullfile(grain_fixture_root(),'EXP_coll','EXP Q1','P-CON-4cm-F'), ...
+                fullfile(grain_fixture_root(),'EXP_coll','P-CON-4cm-F')};
         rootDir = '';
         for i = 1:numel(cand)
             if isfolder(cand{i}) && ~isempty(i_findMat(cand{i})), rootDir = cand{i}; break; end

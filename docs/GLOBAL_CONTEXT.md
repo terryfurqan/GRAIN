@@ -190,5 +190,5 @@ PAB_step_3      % pratinjau hasil
 ## BERIKUTNYA (belum)
 - **Step 4** (komentar & analisis — note-taking deskriptif + kuantitatif di MAT PIV).
 - Menutup **config handoff gap** Step 0 → Step 2 (jembatan key RAW↔.mat).
-- Rename konvensi nama PAB_step_* → GRAIN* (bertahap, lihat `RENAME_PLAN.md`).
+- Rename konvensi nama PAB_step_* → PAB* (bertahap, lihat `RENAME_PLAN.md`).
 - Preset anchor/crop interaktif per baris.

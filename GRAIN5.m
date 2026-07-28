@@ -23,7 +23,7 @@ function figOut = GRAIN5(rootDir, varargin)
 %GRAIN5  Step 4 — varian FAULT-FIRST (plan B GRAIN4): mulai dari SESAR (F#), bukan
 %   dari Hanging Wall. Duplikat penuh GRAIN4 (back-end SAMA: 1 dataset, 1 garis
 %   PSG, kurva POT teruji) + TAB ① "Sesar (F#)". Tab lain digeser +1.
-%   (Rombak "slot spreadsheet" masuk dari salinan kerja GRAIN5_temp; kini = GRAIN5.)
+%   (Rombak "slot spreadsheet" masuk dari salinan kerja sementara; kini = GRAIN5.)
 %
 %   GRAIN5                        % pilih folder ROOT (dialog)
 %   GRAIN5(rootDir)              % langsung ke folder

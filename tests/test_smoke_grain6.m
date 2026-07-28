@@ -15,7 +15,7 @@ grain_setup();
 ov = get(0,'DefaultFigureVisible'); set(0,'DefaultFigureVisible','off');   % SENYAP
 restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
 if nargin < 1 || isempty(rootDir)
-    rootDir = '/Users/terryfurqan/MACTERR_shared/EXP_coll/M-CON-4cm-F/MATPIV';
+    rootDir = fullfile(grain_fixture_root(),'EXP_coll','M-CON-4cm-F','MATPIV');
 end
 if ~isfolder(rootDir)
     fprintf('[SKIP] folder uji tak ada: %s\n', rootDir);

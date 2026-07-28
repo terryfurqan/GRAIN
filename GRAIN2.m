@@ -106,83 +106,83 @@ RX  = 536;  RW  = 850;          % sisi kanan (tabel) → ujung kanan x=1386
 TOP = 771;                      % baris paling atas kolom kiri (srcPanel top)
 
 uilabel(fig, 'Position', [LX 775 RX+RW-LX 22], ...
-	'Text', 'Automasi PIV Lab — Step 2  (.mat PIVPrep → PIV → GS + EXIF + geometri + Quick PIV)', ...
+	'Text', 'PIV Lab automation — Step 2  (.mat PIVPrep → PIV → GS + EXIF + geometry + Quick PIV)', ...
 	'FontSize', 16, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
 
 %% ===================== KOLOM KIRI: kontrol setup =====================
 
 %% --------------------------------------- sumber: folder root berisi .mat
-srcPanel = uipanel(fig, 'Position', [LX 651 LW 120], 'Title', 'Sumber: folder root berisi .mat');
-uilabel(srcPanel, 'Position', [12 70 88 22], 'Text', 'Folder root:');
+srcPanel = uipanel(fig, 'Position', [LX 651 LW 120], 'Title', 'Source: root folder holding .mat files');
+uilabel(srcPanel, 'Position', [12 70 88 22], 'Text', 'Root folder:');
 parentField = uieditfield(srcPanel, 'text', 'Position', [104 70 296 26], ...
-	'Placeholder', 'Folder root .mat hasil Step 1 (pivprep_single_v1)...', ...
+	'Placeholder', 'Root folder of Step 1 .mat files (pivprep_single_v1)...', ...
 	'ValueChangedFcn', @(~,~) onParentTyped());
-parentBrowse = uibutton(srcPanel, 'Position', [406 69 92 28], 'Text', 'Pilih...', ...
+parentBrowse = uibutton(srcPanel, 'Position', [406 69 92 28], 'Text', 'Browse...', ...
 	'ButtonPushedFcn', @(~,~) onBrowseParent());
-scanBtn = uibutton(srcPanel, 'Position', [104 38 296 28], 'Text', 'Pindai .mat & Tambah ke Daftar', ...
+scanBtn = uibutton(srcPanel, 'Position', [104 38 296 28], 'Text', 'Scan .mat & add to list', ...
 	'ButtonPushedFcn', @(~,~) onScan());
-recursiveCb = uicheckbox(srcPanel, 'Position', [406 40 92 24], 'Text', 'Rekursif', 'Value', true);
+recursiveCb = uicheckbox(srcPanel, 'Position', [406 40 92 24], 'Text', 'Recursive', 'Value', true);
 
-uilabel(srcPanel, 'Position', [12 8 56 22], 'Text', 'Pasangan:');
+uilabel(srcPanel, 'Position', [12 8 56 22], 'Text', 'Pairing:');
 seqDropdown = uidropdown(srcPanel, 'Position', [72 7 200 26], ...
 	'Items',     {'Overlapping: 1-2, 2-3, ... (N→N-1)', 'Non-overlapping: 1-2, 3-4, ... (N→N/2)'}, ...
 	'ItemsData', {'consecutive', 'pairs'}, 'Value', 'consecutive', ...
-	'Tooltip', ['Overlapping (overlap): tiap citra berurutan dipasangkan -> N citra ' ...
-	'jadi N-1 vektor PIV. Non-overlapping: pasangan terpisah -> N/2 vektor. ' ...
-	'.mat dgn metadata sequencing sendiri tetap dipakai.'], ...
+	'Tooltip', ['Overlapping: every consecutive image is paired -> N images ' ...
+	'give N-1 PIV vector fields. Non-overlapping: disjoint pairs -> N/2 fields. ' ...
+	'A .mat carrying its own sequencing metadata still wins.'], ...
 	'ValueChangedFcn', @(~,~) refreshTable());
 uilabel(srcPanel, 'Position', [276 8 30 22], 'Text', 'Skip:');
 skipField = uieditfield(srcPanel, 'numeric', 'Position', [306 7 34 26], ...
 	'Value', 0, 'Limits', [0 Inf], 'RoundFractionalValues', 'on', 'ValueDisplayFormat', '%d', ...
-	'Tooltip', '0 = semua foto; 1 = tiap foto ke-2; 2 = tiap ke-3.', ...
+	'Tooltip', '0 = every photo; 1 = every 2nd photo; 2 = every 3rd.', ...
 	'ValueChangedFcn', @(~,~) refreshTable());
-uilabel(srcPanel, 'Position', [344 8 48 22], 'Text', 'Worker:', 'HorizontalAlignment', 'right');
+uilabel(srcPanel, 'Position', [344 8 48 22], 'Text', 'Workers:', 'HorizontalAlignment', 'right');
 workersField = uieditfield(srcPanel, 'numeric', 'Position', [394 7 38 26], ...
 	'Value', 8, 'Limits', [1 256], 'RoundFractionalValues', 'on', 'ValueDisplayFormat', '%d');
 uilabel(srcPanel, 'Position', [436 8 28 22], 'Text', 'Min:', 'HorizontalAlignment', 'right', ...
-	'Tooltip', 'Min. frame');
+	'Tooltip', 'Min. frames');
 minField = uieditfield(srcPanel, 'numeric', 'Position', [466 7 38 26], ...
 	'Value', 2, 'Limits', [2 Inf], 'RoundFractionalValues', 'on', 'ValueDisplayFormat', '%d', ...
-	'Tooltip', 'Min. frame');
+	'Tooltip', 'Min. frames');
 
 %% --------------------------------------- kelola daftar
-mgmtPanel = uipanel(fig, 'Position', [LX 545 LW 102], 'Title', 'Kelola daftar');
-addBtn = uibutton(mgmtPanel, 'Position', [12 48 165 28], 'Text', 'Tambah .mat Tunggal...', ...
+mgmtPanel = uipanel(fig, 'Position', [LX 545 LW 102], 'Title', 'Manage list');
+addBtn = uibutton(mgmtPanel, 'Position', [12 48 165 28], 'Text', 'Add single .mat...', ...
 	'ButtonPushedFcn', @(~,~) onAddSingle());
-addMultiBtn = uibutton(mgmtPanel, 'Position', [185 48 180 28], 'Text', 'Tambah Beberapa .mat...', ...
+addMultiBtn = uibutton(mgmtPanel, 'Position', [185 48 180 28], 'Text', 'Add several .mat...', ...
 	'ButtonPushedFcn', @(~,~) onAddMulti());
-removeBtn = uibutton(mgmtPanel, 'Position', [373 48 125 28], 'Text', 'Hapus Terpilih', ...
+removeBtn = uibutton(mgmtPanel, 'Position', [373 48 125 28], 'Text', 'Remove selected', ...
 	'ButtonPushedFcn', @(~,~) onRemove());
-clearBtn = uibutton(mgmtPanel, 'Position', [12 12 165 28], 'Text', 'Kosongkan Daftar', ...
+clearBtn = uibutton(mgmtPanel, 'Position', [12 12 165 28], 'Text', 'Clear list', ...
 	'ButtonPushedFcn', @(~,~) onClear());
-saveProgBtn = uibutton(mgmtPanel, 'Position', [185 12 155 28], 'Text', '💾 Simpan Progres', ...
+saveProgBtn = uibutton(mgmtPanel, 'Position', [185 12 155 28], 'Text', '💾 Save progress', ...
 	'FontWeight', 'bold', 'BackgroundColor', [0.86 0.93 0.99], 'Enable', 'off', ...
-	'Tooltip', ['Simpan SEMUA progres ke satu .mat: daftar berkas, geometri X0/X1/L_pos, ' ...
-	'setting IW/GS/EXIF/skip, dan koleksi QPIV (config + frame mati). Default nama: ' ...
+	'Tooltip', ['Save ALL progress into one .mat: the file list, X0/X1/L_pos geometry, ' ...
+	'the IW/GS/EXIF/skip settings, and the QPIV collection (config + dead frames). Default name: ' ...
 	'PABSA2_progress_<namafolder root>.'], ...
 	'ButtonPushedFcn', @(~,~) onSaveProgress());
-loadProgBtn = uibutton(mgmtPanel, 'Position', [348 12 150 28], 'Text', '📂 Muat Progres', ...
+loadProgBtn = uibutton(mgmtPanel, 'Position', [348 12 150 28], 'Text', '📂 Load progress', ...
 	'FontWeight', 'bold', 'BackgroundColor', [0.90 0.93 0.86], ...
-	'Tooltip', 'Muat berkas progres GRAINSA2 yang disimpan sebelumnya (pulihkan daftar + setting + QPIV).', ...
+	'Tooltip', 'Load a previously saved GRAINSA2 progress file (restores list + settings + QPIV).', ...
 	'ButtonPushedFcn', @(~,~) onLoadProgress());
 
 %% --------------------------------------- opsi GS & EXIF
-gsPanel = uipanel(fig, 'Position', [LX 439 LW 102], 'Title', 'Opsi GS (latar) & EXIF (waktu)');
-uilabel(gsPanel, 'Position', [12 58 130 22], 'Text', 'Kualitas JPEG GS:');
+gsPanel = uipanel(fig, 'Position', [LX 439 LW 102], 'Title', 'GS (background) & EXIF (timing) options');
+uilabel(gsPanel, 'Position', [12 58 130 22], 'Text', 'GS JPEG quality:');
 gsQualField = uieditfield(gsPanel, 'numeric', 'Position', [142 59 56 24], ...
 	'Value', 92, 'Limits', [1 100], 'RoundFractionalValues', 'on', 'ValueDisplayFormat', '%d');
 dropFirstCb = uicheckbox(gsPanel, 'Position', [210 59 288 24], ...
-	'Text', 'Abaikan citra GS pertama (PIVlab)', 'Value', true);
+	'Text', 'Ignore the first GS image (PIVlab)', 'Value', true);
 reencodeCb = uicheckbox(gsPanel, 'Position', [12 32 360 24], ...
-	'Text', 'Encode ulang GS .jpg (default: apa adanya)', 'Value', false);
+	'Text', 'Re-encode GS .jpg (default: as-is)', 'Value', false);
 embedTimeCb = uicheckbox(gsPanel, 'Position', [12 6 238 24], ...
-	'Text', 'Sematkan dt waktu dari EXIF', 'Value', true);
+	'Text', 'Embed dt timing from EXIF', 'Value', true);
 embedTableCb = uicheckbox(gsPanel, 'Position', [256 6 242 24], ...
-	'Text', 'Sematkan tabel EXIF lengkap', 'Value', true);
+	'Text', 'Embed the full EXIF table', 'Value', true);
 
 %% --------------------------------------- PIV lanjutan (IW) & Quick PIV
 pivPanel = uipanel(fig, 'Position', [LX 317 LW 118], ...
-	'Title', 'PIV lanjutan (Interrogation Window) & Quick PIV');
+	'Title', 'Advanced PIV (interrogation window) & Quick PIV');
 uilabel(pivPanel, 'Position', [12 72 120 22], 'Text', 'IW pass 1–4 (px):');
 iwF = gobjects(1,4);
 defIW = [64 32 25 16];
@@ -190,41 +190,41 @@ for j = 1:4
 	iwF(j) = uieditfield(pivPanel, 'numeric', 'Position', [134 + (j-1)*52 73 46 24], ...
 		'Value', defIW(j), 'Limits', [8 512], 'RoundFractionalValues', 'on', ...
 		'ValueDisplayFormat', '%d', ...
-		'Tooltip', sprintf('Ukuran interrogation window pass %d (px).', j));
+		'Tooltip', sprintf('Interrogation window size for pass %d (px).', j));
 end
 uilabel(pivPanel, 'Position', [350 72 56 22], 'Text', '# pass:');
 npassDd = uidropdown(pivPanel, 'Position', [406 73 50 24], 'Items', {'1','2','3','4'}, 'Value', '3');
 uilabel(pivPanel, 'Position', [12 48 486 20], 'FontAngle', 'italic', 'FontColor', [0.35 0.35 0.35], ...
-	'Text', 'IW dipakai PIV penuh & default Quick PIV. Strip = 2× IW terakhir.');
+	'Text', 'IW is used by the full PIV and as the Quick PIV default. Strip = 2× the last IW.');
 
-uilabel(pivPanel, 'Position', [12 12 76 22], 'Text', 'Garis scan:');
+uilabel(pivPanel, 'Position', [12 12 76 22], 'Text', 'Scan line:');
 scanOrientDd = uidropdown(pivPanel, 'Position', [90 13 96 24], ...
 	'Items', {'Horizontal', 'Vertical'}, 'Value', 'Horizontal');
-uilabel(pivPanel, 'Position', [192 12 48 22], 'Text', 'Posisi %:');
+uilabel(pivPanel, 'Position', [192 12 48 22], 'Text', 'Position %:');
 scanPosField = uieditfield(pivPanel, 'numeric', 'Position', [242 13 42 24], 'Value', 50, ...
 	'Limits', [0 100], 'ValueDisplayFormat', '%g', ...
-	'Tooltip', '0% = kiri/atas, 100% = kanan/bawah.');
-quickBtn = uibutton(pivPanel, 'Position', [294 11 204 28], 'Text', 'Quick PIV (baris terpilih)...', ...
+	'Tooltip', '0% = left/top, 100% = right/bottom.');
+quickBtn = uibutton(pivPanel, 'Position', [294 11 204 28], 'Text', 'Quick PIV (selected row)...', ...
 	'FontWeight', 'bold', 'BackgroundColor', [0.86 0.93 0.99], ...
-	'Tooltip', ['Bongkar .mat terpilih lalu buka jendela Quick PIV: POT + PSG ' ...
-	'kymograph + tabel frame, untuk menandai frame berdisplacement ~nol.'], ...
+	'Tooltip', ['Unpack the selected .mat then open the Quick PIV window: POT + PSG ' ...
+	'kymograph + frame table, to flag frames with ~zero displacement.'], ...
 	'ButtonPushedFcn', @(~,~) onQuickPIV());
 
 %% --------------------------------------- folder output (PIV_<tgl> di root)
-outPanel = uipanel(fig, 'Position', [LX 249 LW 64], 'Title', 'Folder output');
+outPanel = uipanel(fig, 'Position', [LX 249 LW 64], 'Title', 'Output folder');
 outField = uieditfield(outPanel, 'text', 'Position', [12 8 294 26], ...
-	'Placeholder', 'Kosong = PIV_<tgl> di dalam folder root .mat', ...
+	'Placeholder', 'Empty = PIV_<date> inside the .mat root folder', ...
 	'ValueChangedFcn', @(~,~) refreshTable());
-outBrowse = uibutton(outPanel, 'Position', [312 7 88 28], 'Text', 'Pilih...', ...
+outBrowse = uibutton(outPanel, 'Position', [312 7 88 28], 'Text', 'Browse...', ...
 	'ButtonPushedFcn', @(~,~) onBrowseOut());
-outClearBtn = uibutton(outPanel, 'Position', [406 7 92 28], 'Text', 'Kosongkan', ...
+outClearBtn = uibutton(outPanel, 'Position', [406 7 92 28], 'Text', 'Clear', ...
 	'ButtonPushedFcn', @(~,~) onClearOut());
 
 %% --------------------------------------- geometri eksperimen
-geomPanel = uipanel(fig, 'Position', [LX 139 LW 106], 'Title', 'Geometri eksperimen (cm)');
+geomPanel = uipanel(fig, 'Position', [LX 139 LW 106], 'Title', 'Experiment geometry (cm)');
 uilabel(geomPanel, 'Position', [12 62 486 20], 'FontAngle', 'italic', 'FontColor', [0.35 0.35 0.35], ...
-	'Text', ['Klik sel X0/X1/L_pos di tabel (sel MERAH = belum diisi). ' ...
-	'Strain%: + memanjang, − memendek.']);
+	'Text', ['Click an X0/X1/L_pos cell in the table (RED cell = not filled in yet). ' ...
+	'Strain%: + lengthening, − shortening.']);
 uilabel(geomPanel, 'Position', [12 34 26 22], 'Text', 'X0:');
 x0Field = uieditfield(geomPanel, 'text', 'Position', [40 35 64 24], 'Placeholder', 'cm');
 uilabel(geomPanel, 'Position', [114 34 26 22], 'Text', 'X1:');
@@ -232,36 +232,36 @@ x1Field = uieditfield(geomPanel, 'text', 'Position', [142 35 64 24], 'Placeholde
 uilabel(geomPanel, 'Position', [216 34 46 22], 'Text', 'L_pos:');
 lposField = uieditfield(geomPanel, 'text', 'Position', [264 35 60 24], 'Placeholder', 'cm');
 previewBtn = uibutton(geomPanel, 'Position', [330 34 168 26], ...
-	'Text', 'Lihat Foto Awal/Akhir', 'FontWeight', 'bold', ...
+	'Text', 'View first/last photo', 'FontWeight', 'bold', ...
 	'BackgroundColor', [0.90 0.93 0.86], 'ButtonPushedFcn', @(~,~) onPreview());
 applySelBtn = uibutton(geomPanel, 'Position', [12 6 310 26], ...
-	'Text', 'Terapkan X0/X1/L_pos ke baris terpilih', ...
+	'Text', 'Apply X0/X1/L_pos to the selected rows', ...
 	'ButtonPushedFcn', @(~,~) onApplySel());
 applyLposAllBtn = uibutton(geomPanel, 'Position', [330 6 168 26], ...
-	'Text', 'Terapkan L_pos ke SEMUA', 'FontWeight', 'bold', ...
+	'Text', 'Apply L_pos to ALL', 'FontWeight', 'bold', ...
 	'BackgroundColor', [0.84 0.91 0.97], 'ButtonPushedFcn', @(~,~) onApplyLposAll());
 
 %% ===================== SISI KANAN: TABEL VERTIKAL =====================
 scanSummary = uilabel(fig, 'Position', [RX 748 RW-160 24], ...
-	'Text', 'Daftar kosong. Pindai folder root .mat atau tambah satu berkas .mat.', ...
+	'Text', 'List is empty. Scan a .mat root folder or add a single .mat file.', ...
 	'FontAngle', 'italic');
-uibutton(fig, 'Position', [RX + RW - 150, 746, 150, 26], 'Text', '✕ Tutup GRAIN2', ...
+uibutton(fig, 'Position', [RX + RW - 150, 746, 150, 26], 'Text', '✕ Close GRAIN2', ...
 	'FontWeight', 'bold', 'BackgroundColor', [0.90 0.55 0.50], 'FontColor', [1 1 1], ...
-	'Tooltip', 'Tutup jendela GRAIN2 (ditanya simpan progres dulu).', ...
+	'Tooltip', 'Close the GRAIN2 window (you are asked to save progress first).', ...
 	'ButtonPushedFcn', @(~,~) onClose());
 % Tombol mulai eksperimen baru: simpan progres (opsional) → tutup GRAIN2 →
 % buka GRAIN0 KOSONG untuk QPIV/preprocessing eksperimen berikut (daftar
 % bersih, tak ada sisa root/pemindaian eksperimen sebelumnya).
-uibutton(fig, 'Position', [RX + RW - 310, 746, 154, 26], 'Text', '↩ Eksperimen baru → GRAIN0', ...
+uibutton(fig, 'Position', [RX + RW - 310, 746, 154, 26], 'Text', '↩ New experiment → GRAIN0', ...
 	'FontWeight', 'bold', 'BackgroundColor', [0.62 0.78 0.62], 'FontColor', [1 1 1], ...
-	'Tooltip', 'Mulai eksperimen lain: kembali ke GRAIN0 (ditanya simpan progres dulu).', ...
+	'Tooltip', 'Start another experiment: back to GRAIN0 (you are asked to save progress first).', ...
 	'ButtonPushedFcn', @(~,~) onBackToGRAIN0());
 % TABEL diperpendek: top tetap di y=746, bawah dinaikkan ke y=300 supaya
 % strip aksi (CSV / batch / progress / status / log) muat di bawahnya — semua
 % berada di SISI KANAN, tidak lagi melintang penuh ke bawah jendela.
 folderTable = uitable(fig, 'Position', [RX 300 RW 446], ...
-	'ColumnName', {'No', 'Eksperimen (.mat)', '#RAW', '#pair', 'X0', 'X1', 'L_pos', ...
-	'Strain%', 'strain/#pair', 'cm/#pair', 'Mode', 'Nama Output'}, ...
+	'ColumnName', {'No', 'Experiment (.mat)', '#RAW', '#pair', 'X0', 'X1', 'L_pos', ...
+	'Strain%', 'strain/#pair', 'cm/#pair', 'Mode', 'Output name'}, ...
 	'ColumnWidth', {30, 150, 44, 44, 46, 46, 50, 50, 78, 72, 76, 128}, 'RowName', {}, ...
 	'ColumnEditable', [false false false false true true true false false false false true], ...
 	'CellSelectionCallback', @(~, ev) onSelect(ev), ...
@@ -273,16 +273,16 @@ folderTable = uitable(fig, 'Position', [RX 300 RW 446], ...
 % Tombol CSV geometri (X0/X1/L_pos)
 csvExportBtn = uibutton(fig, 'Position', [RX 266 (RW-8)/2 28], ...
 	'Text', '⬇ Export X0/X1/L_pos (CSV)', ...
-	'Tooltip', 'Simpan X0/X1/L_pos semua eksperimen ke CSV untuk diedit di luar.', ...
+	'Tooltip', 'Save X0/X1/L_pos of every experiment to CSV for editing elsewhere.', ...
 	'BackgroundColor', [0.90 0.93 0.86], 'ButtonPushedFcn', @(~,~) onExportGeomCsv());
 csvImportBtn = uibutton(fig, 'Position', [RX + (RW-8)/2 + 8, 266, (RW-8)/2, 28], ...
 	'Text', '⬆ Import X0/X1/L_pos (CSV)', ...
-	'Tooltip', 'Muat X0/X1/L_pos dari CSV (cocokkan per nama eksperimen).', ...
+	'Tooltip', 'Load X0/X1/L_pos from CSV (matched by experiment name).', ...
 	'BackgroundColor', [0.84 0.91 0.97], 'ButtonPushedFcn', @(~,~) onImportGeomCsv());
 
 % Tombol aksi utama + Abort
 runBtn = uibutton(fig, 'Position', [RX 224 RW-140 36], ...
-	'Text', 'Mulai Batch Step 2 (.mat → PIV + GS + EXIF + geometri + buang frame mati)', ...
+	'Text', 'Start Step 2 batch (.mat → PIV + GS + EXIF + geometry + drop dead frames)', ...
 	'FontSize', 13, 'FontWeight', 'bold', 'Enable', 'off', 'ButtonPushedFcn', @(~,~) onRun());
 abortBtn = uibutton(fig, 'Position', [RX + RW - 130, 224, 130, 36], 'Text', 'Abort', ...
 	'FontSize', 13, 'FontWeight', 'bold', 'Enable', 'off', ...
@@ -296,7 +296,7 @@ pctLabel = uilabel(barBG, 'Position', [1 1 RW-4 18], 'Text', '0%', ...
 	'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'BackgroundColor', 'none');
 
 % Status
-statusLabel = uilabel(fig, 'Position', [RX 174 RW 20], 'Text', 'Siap.', ...
+statusLabel = uilabel(fig, 'Position', [RX 174 RW 20], 'Text', 'Ready.', ...
 	'HorizontalAlignment', 'left', 'FontAngle', 'italic');
 
 % Log
@@ -319,7 +319,7 @@ if nargin >= 1 && ~isempty(rootArg) && ischar(rootArg) && isfolder(rootArg)
 			i_saveProgressSilent();
 		end
 	catch ME
-		appendLog(sprintf('Pembukaan terprogram gagal: %s', ME.message));
+		appendLog(sprintf('Programmatic open failed: %s', ME.message));
 	end
 end
 
@@ -371,9 +371,9 @@ end
 		end
 		refreshTable();
 		if skipped > 0
-			appendLog(sprintf('Ditambahkan %d eksperimen; %d dilewati (sudah ada).', added, skipped));
+			appendLog(sprintf('Added %d experiments; %d skipped (already listed).', added, skipped));
 		elseif added > 0
-			appendLog(sprintf('Ditambahkan %d eksperimen .mat ke daftar.', added));
+			appendLog(sprintf('Added %d .mat experiments to the list.', added));
 		end
 	end
 
@@ -383,7 +383,7 @@ end
 		if n == 0
 			folderTable.Data = {};
 			runBtn.Enable = 'off';
-			scanSummary.Text = 'Daftar kosong. Pindai folder root .mat atau tambah satu berkas .mat.';
+			scanSummary.Text = 'List is empty. Scan a .mat root folder or add a single .mat file.';
 			return;
 		end
 		destRoot = i_outRoot();
@@ -441,8 +441,8 @@ end
 
 		totalFiles = sum([procList.count]);
 		totalPairs = sum([procList.npairs]);
-		scanSummary.Text = sprintf(['%d eksperimen | %d RAW | %d pasangan | ' ...
-			'geometri:%d/%d | output → %s'], ...
+		scanSummary.Text = sprintf(['%d experiments | %d RAW | %d pairs | ' ...
+			'geometry:%d/%d | output → %s'], ...
 			n, totalFiles, totalPairs, nGeom, n, destRoot);
 		runBtn.Enable = 'on';
 
@@ -466,10 +466,10 @@ end
 			start = i_safeDir(parentField.Value);
 			minFig();
 			try
-				sel = uigetdir(start, 'Pilih folder root berisi berkas .mat (Step 1)');
+				sel = uigetdir(start, 'Pick the root folder holding the .mat files (Step 1)');
 			catch
 				% R2025b kadang menolak startpath di uigetdir -> coba TANPA path.
-				sel = uigetdir('', 'Pilih folder root berisi berkas .mat (Step 1)');
+				sel = uigetdir('', 'Pick the root folder holding the .mat files (Step 1)');
 			end
 			restoreFig();
 			if ischar(sel) && ~isempty(sel)
@@ -478,7 +478,7 @@ end
 			end
 		catch ME
 			restoreFig();
-			uialert(fig, sprintf('Gagal memilih folder:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to pick the folder:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -524,7 +524,7 @@ end
 		% Bongkar satu .mat dgn progress bar (saat pertama kali dump isi ke folder).
 		% Cache hit -> dump dilewati, dialog hanya berkedip sebentar (100%).
 		if nargin < 2 || isempty(parentFig) || ~isvalid(parentFig); parentFig = fig; end
-		dlg = uiprogressdlg(parentFig, 'Title', 'Memuat .mat ke folder kerja', ...
+		dlg = uiprogressdlg(parentFig, 'Title', 'Loading .mat into the work folder', ...
 			'Message', sprintf('Membongkar %s ...', entry.name), ...
 			'Indeterminate', 'off', 'Value', 0, 'Cancelable', 'off');
 		cleaner = onCleanup(@() i_closeDlg(dlg)); %#ok<NASGU>
@@ -550,7 +550,7 @@ end
 		if isempty(parent); rootFolder = ''; i_updateRootGated(); return; end
 		if ~isfolder(parent)
 			i_updateRootGated();
-			uialert(fig, 'Folder root tidak valid.', 'Folder tidak valid', 'Icon', 'warning');
+			uialert(fig, 'Root folder is not valid.', 'Invalid folder', 'Icon', 'warning');
 			return;
 		end
 		setRoot(parent);
@@ -560,17 +560,17 @@ end
 	function onScan()
 		parent = strtrim(parentField.Value);
 		if isempty(parent) || ~isfolder(parent)
-			uialert(fig, 'Pilih folder root yang valid terlebih dahulu.', 'Folder tidak valid');
+			uialert(fig, 'Pick a valid root folder first.', 'Invalid folder');
 			return;
 		end
 		setRoot(parent);
-		scanSummary.Text = 'Memindai berkas .mat PIVPrep (pivprep_single_v1)...'; drawnow;
+		scanSummary.Text = 'Scanning PIVPrep .mat files (pivprep_single_v1)...'; drawnow;
 		% Pindai + susun tabel bisa lama (banyak .mat / berkas besar) → bilah tunggu
 		% modal supaya tidak terasa "hang". Ditutup otomatis di semua jalur keluar.
 		dlg = [];
 		try
-			dlg = uiprogressdlg(fig, 'Title', 'Memindai eksperimen', 'Indeterminate', 'on', ...
-				'Message', sprintf('Memindai berkas .mat & menyusun tabel eksperimen...\n\n%s', parent));
+			dlg = uiprogressdlg(fig, 'Title', 'Scanning experiments', 'Indeterminate', 'on', ...
+				'Message', sprintf('Scanning .mat files & building the experiment table...\n\n%s', parent));
 		catch; end
 		closer = onCleanup(@() i_closeDlg(dlg));   %#ok<NASGU>
 		drawnow;
@@ -578,17 +578,17 @@ end
 			sc = pivanalyzemat.core.scanMats(parent, 'Recursive', recursiveCb.Value, ...
 				'MinFrames', round(minField.Value), 'Sequencing', seqDropdown.Value);
 		catch ME
-			uialert(fig, sprintf('Gagal memindai:\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Scan failed:\n%s', ME.message), 'Error');
 			return;
 		end
 		if isempty(sc)
-			uialert(fig, sprintf('Tidak ditemukan berkas .mat pivprep_single_v1 di bawah:\n%s', parent), ...
-				'Tidak ada .mat', 'Icon', 'warning');
+			uialert(fig, sprintf('No pivprep_single_v1 .mat file found under:\n%s', parent), ...
+				'No .mat found', 'Icon', 'warning');
 			refreshTable();
 			return;
 		end
 		if ~isempty(dlg) && isvalid(dlg)
-			dlg.Message = sprintf('Menyusun %d eksperimen ke tabel...', numel(sc));
+			dlg.Message = sprintf('Building the table for %d experiments...', numel(sc));
 			drawnow;
 		end
 		addEntries(sc);
@@ -600,19 +600,19 @@ end
 			start = fullfile(i_safeDir(i_startDir()), '*.mat');   % dir DIJAMIN valid
 			minFig();
 			[fn, fp] = uigetfile({'*.mat', 'PIVPrep single (.mat)'}, ...
-				'Pilih satu berkas .mat (pivprep_single_v1)', start);
+				'Pick one .mat file (pivprep_single_v1)', start);
 			restoreFig();
 			if isequal(fn, 0); return; end
 			ent = i_resolveMat(fullfile(fp, fn));
 			if isempty(ent)
-				uialert(fig, sprintf('Berkas ini bukan pivprep_single_v1 valid:\n%s', fullfile(fp, fn)), ...
+				uialert(fig, sprintf('This file is not a valid pivprep_single_v1:\n%s', fullfile(fp, fn)), ...
 					'Bukan .mat valid', 'Icon', 'warning');
 				return;
 			end
 			addEntries(ent);
 		catch ME
 			restoreFig();
-			uialert(fig, sprintf('Gagal menambah .mat:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to add the .mat:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -622,7 +622,7 @@ end
 			start = fullfile(i_safeDir(i_startDir()), '*.mat');   % dir DIJAMIN valid
 			minFig();
 			[fns, fp] = uigetfile({'*.mat', 'PIVPrep single (.mat)'}, ...
-				'Pilih beberapa berkas .mat (Ctrl/Shift-klik)', start, 'MultiSelect', 'on');
+				'Pick several .mat files (Ctrl/Shift-click)', start, 'MultiSelect', 'on');
 			restoreFig();
 			if isequal(fns, 0); return; end
 			if ischar(fns); fns = {fns}; end
@@ -630,16 +630,16 @@ end
 			for i = 1:numel(fns)
 				ent = i_resolveMat(fullfile(fp, fns{i}));
 				if isempty(ent)
-					appendLog(sprintf('  (dilewati — bukan pivprep_single_v1) %s', fns{i}));
+					appendLog(sprintf('  (skipped — not pivprep_single_v1) %s', fns{i}));
 				else
 					addEntries(ent);
 				end
 			end
-			appendLog(sprintf('Selesai "Tambah Beberapa": %d eksperimen dari %d berkas dipilih.', ...
+			appendLog(sprintf('"Add several" done: %d experiments out of %d selected files.', ...
 				numel(procList) - before0, numel(fns)));
 		catch ME
 			restoreFig();
-			uialert(fig, sprintf('Gagal menambah .mat:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to add the .mat:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -664,16 +664,16 @@ end
 	function tf = i_requireRoot()
 		tf = i_haveRoot();
 		if ~tf
-			uialert(fig, ['Tentukan FOLDER ROOT (berisi berkas .mat) terlebih dahulu. ' ...
-				'Tombol "Tambah .mat" hanya aktif setelah folder root dipilih — ' ...
-				'unpack & output selalu relatif ke folder root tsb.'], ...
-				'Folder root belum ditentukan', 'Icon', 'warning');
+			uialert(fig, ['Set the ROOT FOLDER (holding the .mat files) first. ' ...
+				'The "Add .mat" buttons only light up once a root folder is picked — ' ...
+				'unpacking & output are always relative to that root folder.'], ...
+				'No root folder set', 'Icon', 'warning');
 		end
 	end
 
 	function onRemove()
 		if isempty(selectedRows)
-			uialert(fig, 'Klik dulu baris eksperimen yang ingin dihapus di tabel.', 'Belum ada pilihan');
+			uialert(fig, 'Click the experiment rows you want to remove in the table first.', 'Nothing selected');
 			return;
 		end
 		keep = true(1, numel(procList));
@@ -692,7 +692,7 @@ end
 	function onSaveProgress()
 		if ~i_requireRoot(); return; end
 		if isempty(procList)
-			uialert(fig, 'Daftar kosong — tak ada progres untuk disimpan.', 'Kosong', 'Icon', 'warning');
+			uialert(fig, 'List is empty — there is no progress to save.', 'Empty', 'Icon', 'warning');
 			return;
 		end
 		% Lokasi DIPAKSA di folder root terpilih (tanpa dialog navigasi); nama
@@ -701,19 +701,19 @@ end
 		destPath = fullfile(rootFolder, defName);
 		try
 			if isfile(destPath)
-				sel = uiconfirm(fig, sprintf(['Berkas progres sudah ada di folder root:\n\n%s\n\n' ...
-					'Timpa?'], destPath), 'Timpa progres?', ...
-					'Options', {'Timpa', 'Batal'}, 'DefaultOption', 1, ...
+				sel = uiconfirm(fig, sprintf(['A progress file already exists in the root folder:\n\n%s\n\n' ...
+					'Overwrite?'], destPath), 'Overwrite progress?', ...
+					'Options', {'Overwrite', 'Cancel'}, 'DefaultOption', 1, ...
 					'CancelOption', 2, 'Icon', 'warning');
-				if ~strcmp(sel, 'Timpa'); return; end
+				if ~strcmp(sel, 'Overwrite'); return; end
 			end
 			prog = i_buildSnapshot(); %#ok<NASGU>
 			save(destPath, 'prog', '-v7');
-			appendLog(sprintf('Progres disimpan: %s  (%d eksperimen, %d ber-QPIV).', ...
+			appendLog(sprintf('Progress saved: %s  (%d experiments, %d with QPIV).', ...
 				destPath, numel(prog.entries), nnz(i_qpivDoneMask())));
-			statusLabel.Text = sprintf('Progres tersimpan → %s', defName);
+			statusLabel.Text = sprintf('Progress saved → %s', defName);
 		catch ME
-			uialert(fig, sprintf('Gagal menyimpan progres:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to save the progress:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -727,11 +727,11 @@ end
 		try
 			prog = i_buildSnapshot(); %#ok<NASGU>
 			save(destPath, 'prog', '-v7');
-			appendLog(sprintf('Progres awal disimpan otomatis: %s  (%d eksperimen).', ...
+			appendLog(sprintf('Initial progress saved automatically: %s  (%d experiments).', ...
 				destPath, numel(prog.entries)));
-			statusLabel.Text = sprintf('Progres tersimpan otomatis → %s', defName);
+			statusLabel.Text = sprintf('Progress saved automatically → %s', defName);
 		catch ME
-			appendLog(sprintf('Gagal simpan progres otomatis: %s', ME.message));
+			appendLog(sprintf('Automatic progress save failed: %s', ME.message));
 		end
 	end
 
@@ -740,24 +740,24 @@ end
 			% dir DIJAMIN valid (rootFolder -> home -> pwd); + pola berkas.
 			startSpec = fullfile(i_safeDir(rootFolder), '*.mat');
 			minFig();
-			[fn, fp] = uigetfile({'*.mat', 'Progres GRAINSA2 (.mat)'}, ...
-				'Muat progres GRAINSA2', startSpec);
+			[fn, fp] = uigetfile({'*.mat', 'GRAINSA2 progress (.mat)'}, ...
+				'Load GRAINSA2 progress', startSpec);
 			restoreFig();
 			if isequal(fn, 0); return; end
 			L = load(fullfile(fp, fn));
 			if ~isfield(L, 'prog') || ~isfield(L.prog, 'format') || ...
 					~strcmp(L.prog.format, 'pabsa2_progress_v1')
-				uialert(fig, sprintf('Berkas ini bukan progres GRAINSA2 yang valid:\n%s', ...
-					fullfile(fp, fn)), 'Bukan progres GRAINSA2', 'Icon', 'warning');
+				uialert(fig, sprintf('This file is not a valid GRAINSA2 progress:\n%s', ...
+					fullfile(fp, fn)), 'Not a GRAINSA2 progress', 'Icon', 'warning');
 				return;
 			end
 			i_applySnapshot(L.prog);
-			appendLog(sprintf('Progres dimuat: %s  (%d eksperimen).', ...
+			appendLog(sprintf('Progress loaded: %s  (%d experiments).', ...
 				fullfile(fp, fn), numel(procList)));
-			statusLabel.Text = sprintf('Progres dimuat ← %s', fn);
+			statusLabel.Text = sprintf('Progress loaded ← %s', fn);
 		catch ME
 			restoreFig();
-			uialert(fig, sprintf('Gagal memuat progres:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to load the progress:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -833,7 +833,7 @@ end
 			setRoot(prog.root);
 		elseif isfield(prog, 'root') && ~isempty(prog.root)
 			parentField.Value = prog.root; rootFolder = prog.root; i_updateRootGated();
-			appendLog(sprintf('[!] Folder root tersimpan tak ditemukan: %s', prog.root));
+			appendLog(sprintf('[!] Saved root folder not found: %s', prog.root));
 		end
 		if isfield(prog, 'out_field'); outField.Value = char(prog.out_field); end
 		% 3) koleksi QPIV -> tulis ke berkas progres lintas-sesi (upsert per entry)
@@ -871,15 +871,15 @@ end
 			start = i_safeDir(outField.Value);
 			minFig();
 			try
-				sel = uigetdir(start, 'Pilih folder output .mat hasil PIV');
+				sel = uigetdir(start, 'Pick the output folder for the PIV .mat results');
 			catch
-				sel = uigetdir('', 'Pilih folder output .mat hasil PIV');
+				sel = uigetdir('', 'Pick the output folder for the PIV .mat results');
 			end
 			restoreFig();
 			if ischar(sel) && ~isempty(sel); outField.Value = sel; refreshTable(); end
 		catch ME
 			restoreFig();
-			uialert(fig, sprintf('Gagal memilih folder:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to pick the folder:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -889,11 +889,11 @@ end
 
 	function onApplySel()
 		if isempty(selectedRows)
-			uialert(fig, 'Pilih dulu baris di tabel, lalu klik tombol ini.', 'Belum ada pilihan'); return;
+			uialert(fig, 'Select a row in the table first, then click this button.', 'Nothing selected'); return;
 		end
 		v0 = parseField(x0Field.Value); v1 = parseField(x1Field.Value); vL = parseField(lposField.Value);
 		if isnan(v0) && isnan(v1) && isnan(vL)
-			uialert(fig, 'Isi minimal satu dari X0 / X1 / L_pos.', 'Kosong'); return;
+			uialert(fig, 'Fill in at least one of X0 / X1 / L_pos.', 'Empty'); return;
 		end
 		sr = selectedRows(selectedRows >= 1 & selectedRows <= numel(procList));
 		for r = sr(:)'
@@ -902,16 +902,16 @@ end
 			if ~isnan(vL); procList(r).Lpos = vL; end
 		end
 		refreshTable();
-		appendLog(sprintf('Geometri diterapkan ke %d baris terpilih.', numel(sr)));
+		appendLog(sprintf('Geometry applied to %d selected rows.', numel(sr)));
 	end
 
 	function onApplyLposAll()
 		vL = parseField(lposField.Value);
-		if isnan(vL); uialert(fig, 'Isi nilai L_pos (cm) dahulu.', 'L_pos kosong'); return; end
-		if isempty(procList); uialert(fig, 'Daftar masih kosong.', 'Kosong'); return; end
+		if isnan(vL); uialert(fig, 'Fill in the L_pos value (cm) first.', 'L_pos empty'); return; end
+		if isempty(procList); uialert(fig, 'The list is still empty.', 'Empty'); return; end
 		for r = 1:numel(procList); procList(r).Lpos = vL; end
 		refreshTable();
-		appendLog(sprintf('L_pos = %.4g cm diterapkan ke SEMUA %d eksperimen.', vL, numel(procList)));
+		appendLog(sprintf('L_pos = %.4g cm applied to ALL %d experiments.', vL, numel(procList)));
 	end
 
 	function onSelect(ev)
@@ -921,12 +921,12 @@ end
 	% ------------------- CSV geometri (X0/X1/L_pos) -----------------------
 	function onExportGeomCsv()
 		if isempty(procList)
-			uialert(fig, 'Daftar masih kosong. Pindai/tambah .mat dulu.', 'Kosong'); return;
+			uialert(fig, 'The list is still empty. Scan/add a .mat first.', 'Empty'); return;
 		end
 		def = 'geometri_X0X1Lpos.csv';
 		minFig();
-		[fn, fp] = uiputfile({'*.csv', 'CSV geometri (*.csv)'}, ...
-			'Simpan X0/X1/L_pos ke CSV', fullfile(i_startDir(), def));
+		[fn, fp] = uiputfile({'*.csv', 'Geometry CSV (*.csv)'}, ...
+			'Save X0/X1/L_pos to CSV', fullfile(i_startDir(), def));
 		restoreFig();
 		if isequal(fn, 0); return; end
 		dest = fullfile(fp, fn);
@@ -944,33 +944,33 @@ end
 		try
 			writetable(T, dest);
 		catch err
-			uialert(fig, sprintf('Gagal menulis CSV:\n%s', err.message), 'Error'); return;
+			uialert(fig, sprintf('Failed to write the CSV:\n%s', err.message), 'Error'); return;
 		end
-		appendLog(sprintf('Export geometri %d eksperimen → %s', n, dest));
-		statusLabel.Text = sprintf('CSV geometri tersimpan: %s', fn);
+		appendLog(sprintf('Exported geometry of %d experiments → %s', n, dest));
+		statusLabel.Text = sprintf('Geometry CSV saved: %s', fn);
 	end
 
 	function onImportGeomCsv()
 		if isempty(procList)
-			uialert(fig, 'Daftar masih kosong. Pindai/tambah .mat dulu sebelum impor.', 'Kosong'); return;
+			uialert(fig, 'The list is still empty. Scan/add a .mat before importing.', 'Empty'); return;
 		end
 		minFig();
-		[fn, fp] = uigetfile({'*.csv', 'CSV geometri (*.csv)'}, ...
-			'Muat X0/X1/L_pos dari CSV', i_startDir());
+		[fn, fp] = uigetfile({'*.csv', 'Geometry CSV (*.csv)'}, ...
+			'Load X0/X1/L_pos from CSV', i_startDir());
 		restoreFig();
 		if isequal(fn, 0); return; end
 		src = fullfile(fp, fn);
 		try
 			T = readtable(src, 'TextType', 'string');
 		catch err
-			uialert(fig, sprintf('Gagal membaca CSV:\n%s', err.message), 'Error'); return;
+			uialert(fig, sprintf('Failed to read the CSV:\n%s', err.message), 'Error'); return;
 		end
 		need = {'Eksperimen', 'X0', 'X1', 'L_pos'};
 		vn = string(T.Properties.VariableNames);
 		if ~all(ismember(need, vn))
-			uialert(fig, sprintf(['Kolom CSV harus: %s\nDitemukan: %s\n\n' ...
-				'Gunakan tombol Export dulu untuk membuat format yang dikenali.'], ...
-				strjoin(need, ', '), strjoin(cellstr(vn), ', ')), 'Format tak dikenali'); return;
+			uialert(fig, sprintf(['CSV columns must be: %s\nFound: %s\n\n' ...
+				'Use the Export button first to produce a recognised format.'], ...
+				strjoin(need, ', '), strjoin(cellstr(vn), ', ')), 'Unrecognised format'); return;
 		end
 		keyCsv = i_normName(string(T.Eksperimen));
 		nMatch = 0; nMiss = 0; missList = strings(0, 1);
@@ -984,12 +984,12 @@ end
 			nMatch = nMatch + 1;
 		end
 		refreshTable();
-		appendLog(sprintf('Import geometri dari %s: %d cocok, %d tak ada di CSV.', fn, nMatch, nMiss));
+		appendLog(sprintf('Geometry import from %s: %d matched, %d missing from the CSV.', fn, nMatch, nMiss));
 		if nMiss > 0
-			uialert(fig, sprintf(['%d baris diperbarui. %d eksperimen tak ada di CSV (dilewati):\n%s'], ...
-				nMatch, nMiss, strjoin(cellstr(missList), ', ')), 'Sebagian dilewati', 'Icon', 'warning');
+			uialert(fig, sprintf(['%d rows updated. %d experiments are missing from the CSV (skipped):\n%s'], ...
+				nMatch, nMiss, strjoin(cellstr(missList), ', ')), 'Partly skipped', 'Icon', 'warning');
 		else
-			statusLabel.Text = sprintf('Import geometri selesai: %d baris diperbarui.', nMatch);
+			statusLabel.Text = sprintf('Geometry import done: %d rows updated.', nMatch);
 		end
 	end
 
@@ -1009,7 +1009,7 @@ end
 	function onQuickPIV()
 		sr = selectedRows(selectedRows >= 1 & selectedRows <= numel(procList));
 		if isempty(sr)
-			uialert(fig, 'Pilih dulu satu baris eksperimen di tabel, lalu klik Quick PIV.', ...
+			uialert(fig, 'Select one experiment row in the table first, then click Quick PIV.', ...
 				'Belum ada pilihan'); return;
 		end
 		[job, key] = i_buildQpivJob(sr(1));
@@ -1020,7 +1020,7 @@ end
 			PIVlab_automasi_qpiv_GUI_V2(job, key, @refreshTable, @i_qpivNav);
 		catch ME
 			i_qpivCleanupTmp();
-			uialert(fig, sprintf('Gagal membuka Quick PIV:\n\n%s', ME.message), 'Error');
+			uialert(fig, sprintf('Failed to open Quick PIV:\n\n%s', ME.message), 'Error');
 		end
 	end
 
@@ -1034,7 +1034,7 @@ end
 			rmdir(d, 's');
 			appendLog(sprintf('Bongkaran QPIV (temporer) dihapus: %s', d));
 		catch ME
-			appendLog(sprintf('[!] Gagal menghapus bongkaran QPIV: %s', ME.message));
+			appendLog(sprintf('[!] Failed to delete the QPIV unpack folder: %s', ME.message));
 		end
 		% lupakan path RAW yang kini tak ada (biar refresh/preview tak salah baca)
 		for i = 1:numel(procList)
@@ -1052,19 +1052,19 @@ end
 		job = []; key = '';
 		if r < 1 || r > numel(procList); return; end
 		i_qpivCleanupTmp();   % hapus bongkaran exp QPIV sebelumnya (bila ada)
-		statusLabel.Text = sprintf('Membongkar %s untuk Quick PIV...', procList(r).name); drawnow;
+		statusLabel.Text = sprintf('Unpacking %s for Quick PIV...', procList(r).name); drawnow;
 		try
 			e = i_unpackWithProgress(procList(r));
 		catch ME
-			statusLabel.Text = 'Siap.';
-			uialert(fig, sprintf('Gagal membongkar .mat:\n\n%s', ME.message), 'Error'); return;
+			statusLabel.Text = 'Ready.';
+			uialert(fig, sprintf('Failed to unpack the .mat:\n\n%s', ME.message), 'Error'); return;
 		end
 		procList(r).unpacked = e.unpacked;
 		procList(r).path     = e.path;
 		procList(r).gsdir    = e.gsdir;
 		procList(r).exifdir  = e.exifdir;
 		qpivTmpDir = e.unpacked;   % tandai utk dihapus saat pindah/tutup QPIV
-		statusLabel.Text = 'Siap.';
+		statusLabel.Text = 'Ready.';
 
 		key   = PIVlab_automasi_progress('key', procList(r).expdir);   % key = .mat (stabil)
 		saved = PIVlab_automasi_progress('get', key, procList(r).pab_src);  % fallback: folder RAW Step 0
@@ -1159,7 +1159,7 @@ end
 
 	function onRun()
 		if isempty(procList)
-			uialert(fig, 'Daftar eksperimen kosong.', 'Daftar kosong'); return;
+			uialert(fig, 'The experiment list is empty.', 'Empty list'); return;
 		end
 		% QPIV = diagnostik MURNI: hanya menyumbang daftar frame mati (ignore_frames).
 		% SEMUA param produksi (IW/#pass/skip/overlap) diambil dari main GUI ini,
@@ -1173,17 +1173,17 @@ end
 		if ~isfolder(outRoot)
 			[ok, msg] = mkdir(outRoot);
 			if ~ok
-				uialert(fig, sprintf('Folder output gagal dibuat:\n%s\n%s', outRoot, msg), 'Error'); return;
+				uialert(fig, sprintf('Could not create the output folder:\n%s\n%s', outRoot, msg), 'Error'); return;
 			end
 		end
 
 		nIncomplete = sum(arrayfun(@(e) isnan(e.X0)||isnan(e.X1)||isnan(e.Lpos), procList));
 		if nIncomplete > 0
-			sel = uiconfirm(fig, sprintf(['%d dari %d eksperimen BELUM lengkap X0/X1/L_pos ' ...
-				'(disimpan NaN).\n\nLanjutkan batch?'], nIncomplete, numel(procList)), ...
-				'Geometri belum lengkap', 'Options', {'Lanjutkan', 'Batal'}, ...
+			sel = uiconfirm(fig, sprintf(['%d of %d experiments do NOT have complete X0/X1/L_pos ' ...
+				'(stored as NaN).\n\nContinue the batch?'], nIncomplete, numel(procList)), ...
+				'Incomplete geometry', 'Options', {'Continue', 'Cancel'}, ...
 				'DefaultOption', 1, 'CancelOption', 2, 'Icon', 'warning');
-			if ~strcmp(sel, 'Lanjutkan'); return; end
+			if ~strcmp(sel, 'Continue'); return; end
 		end
 
 		abortReq = false;
@@ -1191,7 +1191,7 @@ end
 		abortBtn.Enable = 'on';
 		logLines = {}; logArea.Value = {''};
 		resetProgress();
-		statusLabel.Text = 'Memulai batch Step 2...';
+		statusLabel.Text = 'Starting the Step 2 batch...';
 		drawnow;
 
 		nTotal = numel(procList);
@@ -1224,7 +1224,7 @@ end
 			batchList = i_decorateNames(procList, seq, skipGlobal, numPasses, intAreas);
 			[res, wasAborted] = pivanalyzemat.core.processBatchMat(batchList, cfg);
 			if isempty(res)
-				statusLabel.Text = 'Selesai (tak ada hasil).';
+				statusLabel.Text = 'Done (no results).';
 			else
 				nOK = sum(~strcmp({res.status}, 'GAGAL'));
 				nGS = sum([res.n_gs_embedded]);
@@ -1232,29 +1232,29 @@ end
 				nGeomOK = sum([res.geom_valid]);
 				nDrop = sum([res.n_dropped]);
 				if wasAborted
-					statusLabel.Text = sprintf('Dibatalkan: %d/%d eksperimen diproses.', numel(res), nTotal);
-					uialert(fig, sprintf('Batch DIBATALKAN.\n\n%d dari %d selesai (%d berhasil).', ...
-						numel(res), nTotal, nOK), 'Dibatalkan', 'Icon', 'warning');
+					statusLabel.Text = sprintf('Cancelled: %d/%d experiments processed.', numel(res), nTotal);
+					uialert(fig, sprintf('Batch CANCELLED.\n\n%d of %d finished (%d succeeded).', ...
+						numel(res), nTotal, nOK), 'Cancelled', 'Icon', 'warning');
 				else
-					updateProgress(1, 'Selesai.');
-					uialert(fig, sprintf(['Batch Step 2 selesai.\n\nBerhasil %d dari %d eksperimen.\n' ...
-						'• %d frame berlatar GS\n• %d frame ber-dt waktu (EXIF)\n' ...
-						'• %d eksperimen bergeometri lengkap\n• %d frame mati dibuang total\n\n' ...
+					updateProgress(1, 'Done.');
+					uialert(fig, sprintf(['Step 2 batch finished.\n\n%d of %d experiments succeeded.\n' ...
+						'• %d frames with a GS background\n• %d frames with dt timing (EXIF)\n' ...
+						'• %d experiments with complete geometry\n• %d dead frames dropped in total\n\n' ...
 						'Output → %s'], ...
-						nOK, numel(res), nGS, nDt, nGeomOK, nDrop, outRoot), 'Selesai', 'Icon', 'success');
+						nOK, numel(res), nGS, nDt, nGeomOK, nDrop, outRoot), 'Done', 'Icon', 'success');
 				end
 			end
 			refreshTable();
 		catch ME
-			statusLabel.Text = 'Gagal.';
-			uialert(fig, sprintf('Terjadi kesalahan:\n\n%s', ME.message), 'Error');
+			statusLabel.Text = 'Failed.';
+			uialert(fig, sprintf('An error occurred:\n\n%s', ME.message), 'Error');
 		end
 	end
 
 	function onAbort()
 		abortReq = true;
 		abortBtn.Enable = 'off';
-		statusLabel.Text = 'Membatalkan... eksperimen yang berjalan diselesaikan dulu.';
+		statusLabel.Text = 'Cancelling... the running experiment is finished first.';
 		drawnow;
 	end
 
@@ -1314,7 +1314,7 @@ end
 	% --------------------- pratinjau foto awal/akhir ----------------------
 	function onPreview()
 		if isempty(procList)
-			uialert(fig, 'Daftar masih kosong. Pindai/tambah .mat dahulu.', 'Belum ada eksperimen'); return;
+			uialert(fig, 'The list is still empty. Scan/add a .mat first.', 'No experiment yet'); return;
 		end
 		startIdx = 1;
 		sr = selectedRows(selectedRows >= 1 & selectedRows <= numel(procList));
@@ -1338,14 +1338,14 @@ end
 			'FontWeight', 'bold', 'HorizontalAlignment', 'center', 'Text', '');
 		% Tombol tutup (kanan-atas) — tak perlu menekan silang paksa di pojok window.
 		pv.closeSaveBtn = uibutton(pv.fig, 'Position', [566 818 160 30], ...
-			'Text', '✔ Simpan & tutup', 'FontWeight', 'bold', ...
+			'Text', '✔ Save & close', 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.82 0.93 0.82], ...
-			'Tooltip', 'Simpan X0/X1/L_pos baris ini ke tabel utama, lalu tutup pratinjau.', ...
+			'Tooltip', 'Write this row''s X0/X1/L_pos to the main table, then close the preview.', ...
 			'ButtonPushedFcn', @(~,~) pvCloseSave());
 		pv.closeNoSaveBtn = uibutton(pv.fig, 'Position', [730 818 150 30], ...
-			'Text', '✕ Tutup tanpa simpan', 'FontWeight', 'bold', ...
+			'Text', '✕ Close without saving', 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.95 0.86 0.86], ...
-			'Tooltip', 'Tutup pratinjau TANPA menyimpan editan baris yang belum tersimpan.', ...
+			'Tooltip', 'Close the preview WITHOUT saving the row edits that are not committed yet.', ...
 			'ButtonPushedFcn', @(~,~) pvCloseNoSave());
 		pv.ax = uiaxes(pv.fig, 'Position', [20 300 860 510]);
 		pv.ax.XTick = []; pv.ax.YTick = []; pv.ax.Box = 'on'; title(pv.ax, '');
@@ -1356,79 +1356,79 @@ end
 
 		% --- Baris alat tampilan: zoom area / pan / reset + garis kosmetik ---
 		uibutton(pv.fig, 'Position', [20 262 92 32], 'Text', '🔍 Zoom', ...
-			'Tooltip', 'Seret kotak di gambar untuk perbesar area tertentu.', ...
+			'Tooltip', 'Drag a box on the image to magnify a specific area.', ...
 			'ButtonPushedFcn', @(~,~) pvZoomMode());
 		uibutton(pv.fig, 'Position', [116 262 84 32], 'Text', '✋ Pan', ...
-			'Tooltip', 'Seret gambar untuk menggeser saat ter-zoom.', ...
+			'Tooltip', 'Drag the image to move around while zoomed in.', ...
 			'ButtonPushedFcn', @(~,~) pvPanMode());
-		uibutton(pv.fig, 'Position', [204 262 116 32], 'Text', '↺ Zoom semula', ...
-			'Tooltip', 'Kembalikan ke tampilan penuh (reset zoom/pan).', ...
+		uibutton(pv.fig, 'Position', [204 262 116 32], 'Text', '↺ Reset zoom', ...
+			'Tooltip', 'Back to the full view (reset zoom/pan).', ...
 			'ButtonPushedFcn', @(~,~) pvResetView());
-		uibutton(pv.fig, 'Position', [324 262 120 32], 'Text', '✏️ Garis 2–3 titik', ...
-			'Tooltip', ['Tarik garis bantu observasi — klik 2–3 titik (bisa bentuk L), ' ...
-			'klik-ganda/Enter untuk selesai. Kosmetik saja (BUKAN input X0/X1/L_pos). ' ...
-			'Bertahan saat toggle awal/akhir DAN saat pindah eksperimen.'], ...
+		uibutton(pv.fig, 'Position', [324 262 120 32], 'Text', '✏️ 2–3 point line', ...
+			'Tooltip', ['Draw a guide line for observation — click 2–3 points (an L shape works), ' ...
+			'double-click/Enter to finish. Cosmetic only (NOT an X0/X1/L_pos input). ' ...
+			'It survives the first/last toggle AND switching experiments.'], ...
 			'BackgroundColor', [0.96 0.93 0.86], 'ButtonPushedFcn', @(~,~) pvDrawLine());
-		uibutton(pv.fig, 'Position', [448 262 118 32], 'Text', '⌐ Garis L', ...
-			'Tooltip', ['Munculkan garis L siap-pakai (3 titik) di tengah tampilan ' ...
-			'sekarang — lalu seret titik-titiknya sesuai kebutuhan.'], ...
+		uibutton(pv.fig, 'Position', [448 262 118 32], 'Text', '⌐ L line', ...
+			'Tooltip', ['Drop a ready-made L line (3 points) in the middle of the current view ' ...
+			'— then drag its points wherever you need them.'], ...
 			'BackgroundColor', [0.96 0.93 0.86], 'ButtonPushedFcn', @(~,~) pvSpawnL());
-		uibutton(pv.fig, 'Position', [570 262 130 32], 'Text', '🧹 Hapus semua', ...
-			'Tooltip', 'Hapus SEMUA garis bantu.', ...
+		uibutton(pv.fig, 'Position', [570 262 130 32], 'Text', '🧹 Clear all', ...
+			'Tooltip', 'Delete ALL guide lines.', ...
 			'ButtonPushedFcn', @(~,~) pvClearLines());
 		% Geser SELURUH garis L (kalau seret dgn mouse sulit). Nudge 10 px.
 		uibutton(pv.fig, 'Position', [706 262 40 32], 'Text', '◄', ...
-			'Tooltip', 'Geser garis L 10 px ke kiri', 'ButtonPushedFcn', @(~,~) pvNudgeL(-10, 0));
+			'Tooltip', 'Nudge the L line 10 px left', 'ButtonPushedFcn', @(~,~) pvNudgeL(-10, 0));
 		uibutton(pv.fig, 'Position', [748 262 40 32], 'Text', '▲', ...
-			'Tooltip', 'Geser garis L 10 px ke atas', 'ButtonPushedFcn', @(~,~) pvNudgeL(0, -10));
+			'Tooltip', 'Nudge the L line 10 px up', 'ButtonPushedFcn', @(~,~) pvNudgeL(0, -10));
 		uibutton(pv.fig, 'Position', [790 262 40 32], 'Text', '▼', ...
-			'Tooltip', 'Geser garis L 10 px ke bawah', 'ButtonPushedFcn', @(~,~) pvNudgeL(0, +10));
+			'Tooltip', 'Nudge the L line 10 px down', 'ButtonPushedFcn', @(~,~) pvNudgeL(0, +10));
 		uibutton(pv.fig, 'Position', [832 262 40 32], 'Text', '►', ...
-			'Tooltip', 'Geser garis L 10 px ke kanan', 'ButtonPushedFcn', @(~,~) pvNudgeL(+10, 0));
+			'Tooltip', 'Nudge the L line 10 px right', 'ButtonPushedFcn', @(~,~) pvNudgeL(+10, 0));
 
 		pv.frLbl = uilabel(pv.fig, 'Position', [20 232 520 22], ...
 			'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'FontSize', 13, 'Text', '');
 		pv.lockBtn = uibutton(pv.fig, 'Position', [548 230 152 26], ...
-			'Text', '🔓 Kunci zoom', 'FontWeight', 'bold', ...
+			'Text', '🔓 Lock zoom', 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.92 0.92 0.86], ...
-			'Tooltip', ['Kunci batas zoom sekarang → tetap sama walau toggle awal/akhir, ' ...
-			'ganti exp, atau ganti GS/RAW. Klik lagi untuk buka kunci.'], ...
+			'Tooltip', ['Lock the current zoom limits → they stay put across the first/last toggle, ' ...
+			'switching experiment, or switching GS/RAW. Click again to unlock.'], ...
 			'ButtonPushedFcn', @(~,~) pvToggleZoomLock());
 		pv.gsBtn = uibutton(pv.fig, 'Position', [708 230 172 26], ...
-			'Text', '🌗 Tampilan: GS', 'FontWeight', 'bold', ...
+			'Text', '🌗 View: GS', 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.88 0.90 0.95], ...
-			'Tooltip', ['Tukar latar: GS (grayscale CLAHE, ringan) ⇄ RAW (foto penuh). ' ...
-			'Kalau GS jelek, balik ke RAW.'], 'ButtonPushedFcn', @(~,~) pvToggleGS());
+			'Tooltip', ['Swap the background: GS (grayscale CLAHE, light) ⇄ RAW (full photo). ' ...
+			'If GS looks bad, go back to RAW.'], 'ButtonPushedFcn', @(~,~) pvToggleGS());
 		pv.geomLbl = uilabel(pv.fig, 'Position', [20 206 860 24], ...
 			'HorizontalAlignment', 'center', 'FontColor', [0.25 0.25 0.25], 'FontWeight', 'bold', 'Text', '');
 		uilabel(pv.fig, 'Position', [20 182 860 20], 'FontAngle', 'italic', ...
 			'FontColor', [0.35 0.35 0.35], 'HorizontalAlignment', 'center', ...
-			'Text', 'Isi nilai (cm) lalu tekan Enter — atau pakai tombol ∓0,05. Langsung tersimpan ke daftar utama.');
+			'Text', 'Type a value (cm) then press Enter — or use the ∓0.05 buttons. Saved straight into the main list.');
 
 		% --- Baris geometri: X0 / X1 (dgn ∓0,05) + L_pos ---
 		uilabel(pv.fig, 'Position', [20 148 28 22], 'Text', 'X0:', 'FontWeight', 'bold');
 		pv.x0Field = uieditfield(pv.fig, 'text', 'Position', [50 146 76 28], ...
 			'Placeholder', 'cm', 'ValueChangedFcn', @(~,~) pvApplyFields());
 		uibutton(pv.fig, 'Position', [128 146 48 28], 'Text', '−0,05', ...
-			'Tooltip', 'X0 − 0,05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', -0.05));
+			'Tooltip', 'X0 − 0.05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', -0.05));
 		uibutton(pv.fig, 'Position', [178 146 48 28], 'Text', '+0,05', ...
-			'Tooltip', 'X0 + 0,05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', +0.05));
+			'Tooltip', 'X0 + 0.05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', +0.05));
 		uibutton(pv.fig, 'Position', [128 112 48 28], 'Text', '−0,1', ...
-			'Tooltip', 'X0 − 0,1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', -0.1));
+			'Tooltip', 'X0 − 0.1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', -0.1));
 		uibutton(pv.fig, 'Position', [178 112 48 28], 'Text', '+0,1', ...
-			'Tooltip', 'X0 + 0,1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', +0.1));
+			'Tooltip', 'X0 + 0.1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X0', +0.1));
 
 		uilabel(pv.fig, 'Position', [246 148 28 22], 'Text', 'X1:', 'FontWeight', 'bold');
 		pv.x1Field = uieditfield(pv.fig, 'text', 'Position', [276 146 76 28], ...
 			'Placeholder', 'cm', 'ValueChangedFcn', @(~,~) pvApplyFields());
 		uibutton(pv.fig, 'Position', [354 146 48 28], 'Text', '−0,05', ...
-			'Tooltip', 'X1 − 0,05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', -0.05));
+			'Tooltip', 'X1 − 0.05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', -0.05));
 		uibutton(pv.fig, 'Position', [404 146 48 28], 'Text', '+0,05', ...
-			'Tooltip', 'X1 + 0,05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', +0.05));
+			'Tooltip', 'X1 + 0.05 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', +0.05));
 		uibutton(pv.fig, 'Position', [354 112 48 28], 'Text', '−0,1', ...
-			'Tooltip', 'X1 − 0,1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', -0.1));
+			'Tooltip', 'X1 − 0.1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', -0.1));
 		uibutton(pv.fig, 'Position', [404 112 48 28], 'Text', '+0,1', ...
-			'Tooltip', 'X1 + 0,1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', +0.1));
+			'Tooltip', 'X1 + 0.1 cm', 'ButtonPushedFcn', @(~,~) pvBumpX('X1', +0.1));
 
 		uilabel(pv.fig, 'Position', [472 148 46 22], 'Text', 'L_pos:', 'FontWeight', 'bold');
 		pv.lposField = uieditfield(pv.fig, 'text', 'Position', [520 146 76 28], ...
@@ -1436,62 +1436,62 @@ end
 		% Tombol GABUNGAN (X0+X1+L_pos sekaligus → semua exp) menggantikan tombol
 		% "L_pos → SEMUA" lama, di samping "Simpan ke tabel".
 		uibutton(pv.fig, 'Position', [604 145 124 30], ...
-			'Text', '📋 Ketiganya → SEMUA', 'FontWeight', 'bold', ...
+			'Text', '📋 All three → ALL', 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.90 0.93 0.86], ...
-			'Tooltip', ['Salin X0, X1, DAN L_pos baris ini ke SEMUA eksperimen. ' ...
-			'Nilai kosong dilewati. Setelah itu sesuaikan tiap exp dgn tombol ∓.'], ...
+			'Tooltip', ['Copy this row''s X0, X1 AND L_pos to EVERY experiment. ' ...
+			'Empty values are skipped. Fine-tune each exp afterwards with the ∓ buttons.'], ...
 			'ButtonPushedFcn', @(~,~) pvAllGeom());
-		uibutton(pv.fig, 'Position', [736 145 144 30], 'Text', '💾 Simpan ke tabel', ...
+		uibutton(pv.fig, 'Position', [736 145 144 30], 'Text', '💾 Save to table', ...
 			'FontWeight', 'bold', 'BackgroundColor', [0.82 0.91 0.97], ...
-			'Tooltip', 'Tulis X0/X1/L_pos baris ini ke tabel utama sekarang.', ...
+			'Tooltip', 'Write this row''s X0/X1/L_pos into the main table now.', ...
 			'ButtonPushedFcn', @(~,~) pvSave());
 
 		% --- Tombol "→ semua exp" PER-FIELD, tepat di bawah tiap kotak input ---
-		uibutton(pv.fig, 'Position', [20 112 104 28], 'Text', 'X0 → semua exp', ...
+		uibutton(pv.fig, 'Position', [20 112 104 28], 'Text', 'X0 → all exps', ...
 			'BackgroundColor', [0.90 0.93 0.86], ...
-			'Tooltip', 'Salin nilai X0 baris ini ke SEMUA eksperimen.', ...
+			'Tooltip', 'Copy this row''s X0 value to EVERY experiment.', ...
 			'ButtonPushedFcn', @(~,~) pvFieldAll('X0'));
-		uibutton(pv.fig, 'Position', [246 112 104 28], 'Text', 'X1 → semua exp', ...
+		uibutton(pv.fig, 'Position', [246 112 104 28], 'Text', 'X1 → all exps', ...
 			'BackgroundColor', [0.90 0.93 0.86], ...
-			'Tooltip', 'Salin nilai X1 baris ini ke SEMUA eksperimen.', ...
+			'Tooltip', 'Copy this row''s X1 value to EVERY experiment.', ...
 			'ButtonPushedFcn', @(~,~) pvFieldAll('X1'));
 		pv.lposAllBtn = uibutton(pv.fig, 'Position', [472 112 124 28], ...
-			'Text', 'L_pos → semua exp', 'BackgroundColor', [0.90 0.93 0.86], ...
-			'Tooltip', 'Salin nilai L_pos baris ini ke SEMUA eksperimen.', ...
+			'Text', 'L_pos → all exps', 'BackgroundColor', [0.90 0.93 0.86], ...
+			'Tooltip', 'Copy this row''s L_pos value to EVERY experiment.', ...
 			'ButtonPushedFcn', @(~,~) pvLposAll());
 
 		% --- Parameter Garis L (A-B-C): panjang A-B & sudut tumpul di B ---
-		uilabel(pv.fig, 'Position', [20 74 52 22], 'Text', 'Garis L:', 'FontWeight', 'bold');
+		uilabel(pv.fig, 'Position', [20 74 52 22], 'Text', 'L line:', 'FontWeight', 'bold');
 		uilabel(pv.fig, 'Position', [74 74 48 22], 'Text', 'A-B px:');
 		pv.lenField = uieditfield(pv.fig, 'numeric', 'Position', [122 72 50 26], ...
 			'Value', 300, 'Limits', [1 Inf], 'RoundFractionalValues', 'off', ...
-			'Tooltip', 'Panjang A→B (px). B = 180° (lurus ke bawah) dari A.', ...
+			'Tooltip', 'Length A→B (px). B is 180° (straight down) from A.', ...
 			'ValueChangedFcn', @(~,~) pvUpdateL());
 		uibutton(pv.fig, 'Position', [174 72 40 26], 'Text', '−10', ...
 			'Tooltip', 'A-B − 10 px', 'ButtonPushedFcn', @(~,~) pvBumpLen(-10));
 		uibutton(pv.fig, 'Position', [216 72 40 26], 'Text', '+10', ...
 			'Tooltip', 'A-B + 10 px', 'ButtonPushedFcn', @(~,~) pvBumpLen(+10));
-		uilabel(pv.fig, 'Position', [264 74 46 22], 'Text', 'Sudut°:');
+		uilabel(pv.fig, 'Position', [264 74 46 22], 'Text', 'Angle°:');
 		pv.angField = uieditfield(pv.fig, 'numeric', 'Position', [312 72 50 26], ...
 			'Value', 220, ...
-			'Tooltip', ['Sudut A-B-C di titik B (derajat), A & B tetap → C berputar. ' ...
-			'Rentang 1–359; >359 dipangkas ke 359, <1 ke 1.'], ...
+			'Tooltip', ['Angle A-B-C at point B (degrees); A & B stay put → C rotates. ' ...
+			'Range 1–359; >359 is clamped to 359, <1 to 1.'], ...
 			'ValueChangedFcn', @(~,~) pvSetAngle(pv.angField.Value));
 		uibutton(pv.fig, 'Position', [364 72 40 26], 'Text', '−1°', ...
-			'Tooltip', 'Sudut − 1°', 'ButtonPushedFcn', @(~,~) pvBumpAngle(-1));
+			'Tooltip', 'Angle − 1°', 'ButtonPushedFcn', @(~,~) pvBumpAngle(-1));
 		uibutton(pv.fig, 'Position', [406 72 40 26], 'Text', '+1°', ...
-			'Tooltip', 'Sudut + 1°', 'ButtonPushedFcn', @(~,~) pvBumpAngle(+1));
+			'Tooltip', 'Angle + 1°', 'ButtonPushedFcn', @(~,~) pvBumpAngle(+1));
 		uilabel(pv.fig, 'Position', [454 74 432 22], 'FontAngle', 'italic', ...
 			'FontColor', [0.4 0.4 0.4], ...
-			'Text', 'Tombol "⌐ Garis L" memunculkan garis dari parameter ini.');
+			'Text', 'The "⌐ L line" button spawns a line from these parameters.');
 
 		pv.prevBtn = uibutton(pv.fig, 'Position', [20 24 200 40], ...
-			'Text', '‹ Eksperimen Sebelumnya', 'ButtonPushedFcn', @(~,~) pvStep(-1));
+			'Text', '‹ Previous experiment', 'ButtonPushedFcn', @(~,~) pvStep(-1));
 		pv.toggleBtn = uibutton(pv.fig, 'Position', [232 24 436 40], ...
-			'Text', 'Lihat FRAME AKHIR  ⇄', 'FontSize', 15, 'FontWeight', 'bold', ...
+			'Text', 'View LAST FRAME  ⇄', 'FontSize', 15, 'FontWeight', 'bold', ...
 			'BackgroundColor', [0.84 0.91 0.97], 'ButtonPushedFcn', @(~,~) pvToggle());
 		pv.nextBtn = uibutton(pv.fig, 'Position', [680 24 200 40], ...
-			'Text', 'Eksperimen Berikutnya ›', 'ButtonPushedFcn', @(~,~) pvStep(1));
+			'Text', 'Next experiment ›', 'ButtonPushedFcn', @(~,~) pvStep(1));
 
 		% Baris kontrol diankur di BAWAH (posisi tetap); hanya gambar + judul atas
 		% yang melar mengisi ruang → enak saat jendela di-maximize.
@@ -1542,12 +1542,12 @@ end
 		pv.firstPath = ''; pv.lastPath = ''; pv.nframes = 0;
 		if n == 0; return; end
 		if pv.idx < 1; pv.idx = 1; elseif pv.idx > n; pv.idx = n; end
-		if ~isempty(pv.frLbl) && isvalid(pv.frLbl); pv.frLbl.Text = 'Memuat frame awal/akhir dari .mat...'; drawnow; end
+		if ~isempty(pv.frLbl) && isvalid(pv.frLbl); pv.frLbl.Text = 'Loading the first/last frame from the .mat...'; drawnow; end
 		% .mat besar bisa lama dibaca → tampilkan bilah tunggu modal supaya tidak
 		% terasa "hang". Ditutup otomatis (onCleanup) walau terjadi error.
 		dlg = [];
 		try
-			dlg = uiprogressdlg(pv.fig, 'Title', 'Memuat pratinjau', 'Indeterminate', 'on', ...
+			dlg = uiprogressdlg(pv.fig, 'Title', 'Loading preview', 'Indeterminate', 'on', ...
 				'Message', sprintf('Membaca frame awal & akhir dari .mat (bisa lama untuk berkas besar)...\n\n%s', ...
 				procList(pv.idx).relpath));
 		catch; end
@@ -1560,7 +1560,7 @@ end
 				pivanalyzemat.core.readMatFramePair(procList(pv.idx));
 			pv.firstPath = nm1; pv.lastPath = nm2; pv.nframes = nF;
 		catch ME
-			pv.frLbl.Text = sprintf('Gagal memuat frame: %s', ME.message); return;
+			pv.frLbl.Text = sprintf('Failed to load the frame: %s', ME.message); return;
 		end
 	end
 
@@ -1607,12 +1607,12 @@ end
 				pv.lockXLim = pv.ax.XLim; pv.lockYLim = pv.ax.YLim;
 			end
 			if ~isempty(pv.lockBtn) && isvalid(pv.lockBtn)
-				pv.lockBtn.Text = '🔒 Zoom terkunci';
+				pv.lockBtn.Text = '🔒 Zoom locked';
 				pv.lockBtn.BackgroundColor = [0.86 0.93 0.82];
 			end
 		else
 			if ~isempty(pv.lockBtn) && isvalid(pv.lockBtn)
-				pv.lockBtn.Text = '🔓 Kunci zoom';
+				pv.lockBtn.Text = '🔓 Lock zoom';
 				pv.lockBtn.BackgroundColor = [0.92 0.92 0.86];
 			end
 		end
@@ -1621,8 +1621,8 @@ end
 	function pvToggleGS()
 		pv.showGS = ~pv.showGS;
 		if ~isempty(pv.gsBtn) && isvalid(pv.gsBtn)
-			if pv.showGS; pv.gsBtn.Text = '🌗 Tampilan: GS';
-			else;         pv.gsBtn.Text = '🌗 Tampilan: RAW'; end
+			if pv.showGS; pv.gsBtn.Text = '🌗 View: GS';
+			else;         pv.gsBtn.Text = '🌗 View: RAW'; end
 		end
 		pvRender();   % zoom & garis dipertahankan (CData diswap)
 	end
@@ -1661,8 +1661,8 @@ end
 		try pan(pv.ax, 'off'); catch; end
 		try zoom(pv.ax, 'on');
 		catch
-			uialert(pv.fig, ['Mode zoom-kotak interaktif tak tersedia. Gunakan ikon ' ...
-				'kaca pembesar di toolbar pojok kanan-atas gambar, atau scroll mouse.'], ...
+			uialert(pv.fig, ['Interactive box-zoom mode is unavailable. Use the ' ...
+				'magnifier icon in the toolbar at the top-right of the image, or scroll.'], ...
 				'Zoom');
 		end
 	end
@@ -1671,8 +1671,8 @@ end
 		try zoom(pv.ax, 'off'); catch; end
 		try pan(pv.ax, 'on');
 		catch
-			uialert(pv.fig, ['Mode pan tak tersedia. Gunakan ikon tangan di toolbar ' ...
-				'pojok kanan-atas gambar.'], 'Pan');
+			uialert(pv.fig, ['Pan mode is unavailable. Use the hand icon in the toolbar ' ...
+				'at the top-right of the image.'], 'Pan');
 		end
 	end
 
@@ -1691,7 +1691,7 @@ end
 
 	function pvDrawLine()
 		if isempty(pv.imh) || ~isvalid(pv.imh)
-			uialert(pv.fig, 'Belum ada gambar untuk diberi garis.', 'Tidak ada gambar'); return;
+			uialert(pv.fig, 'There is no image to draw on yet.', 'No image'); return;
 		end
 		try zoom(pv.ax, 'off'); catch; end
 		try pan(pv.ax, 'off'); catch; end
@@ -1704,7 +1704,7 @@ end
 			if size(h.Position, 1) < 2; delete(h); return; end   % garis perlu >=2 titik
 			pv.lines{end+1} = h;
 		catch ME
-			uialert(pv.fig, sprintf('Gagal menarik garis: %s', ME.message), 'Garis');
+			uialert(pv.fig, sprintf('Failed to draw the line: %s', ME.message), 'Line');
 		end
 	end
 
@@ -1727,7 +1727,7 @@ end
 		% Munculkan garis L parametrik (A-B-C) di TENGAH tampilan sekarang.
 		% Titik A diletakkan agak ke atas agar L (turun lalu menyudut) muat di layar.
 		if isempty(pv.imh) || ~isvalid(pv.imh)
-			uialert(pv.fig, 'Belum ada gambar untuk diberi garis.', 'Tidak ada gambar'); return;
+			uialert(pv.fig, 'There is no image to draw on yet.', 'No image'); return;
 		end
 		try zoom(pv.ax, 'off'); catch; end
 		try pan(pv.ax, 'off'); catch; end
@@ -1740,7 +1740,7 @@ end
 			pv.lShape = roi;          % L "aktif" → param berikutnya mengubah ini
 			pv.lines{end+1} = roi;    % ikut terhapus oleh "Hapus semua"
 		catch ME
-			uialert(pv.fig, sprintf('Gagal membuat garis L: %s', ME.message), 'Garis L');
+			uialert(pv.fig, sprintf('Failed to create the L line: %s', ME.message), 'L line');
 		end
 	end
 
@@ -1779,7 +1779,7 @@ end
 		% Geser SELURUH garis L aktif sebesar (dx,dy) px (koordinat gambar:
 		% x→kanan, y→bawah). Berguna bila menyeret dgn mouse terasa sulit.
 		if isempty(pv.lShape) || ~isvalid(pv.lShape)
-			uialert(pv.fig, 'Belum ada garis L. Tekan "⌐ Garis L" dulu.', 'Garis L'); return;
+			uialert(pv.fig, 'There is no L line yet. Press "⌐ L line" first.', 'L line'); return;
 		end
 		P = pv.lShape.Position;
 		if isempty(P); return; end
@@ -1811,18 +1811,18 @@ end
 		if isempty(pv.fig) || ~isvalid(pv.fig); return; end
 		n = numel(procList);
 		if n == 0
-			pv.expLbl.Text = '(daftar kosong)'; pv.frLbl.Text = ''; pv.geomLbl.Text = '';
+			pv.expLbl.Text = '(list is empty)'; pv.frLbl.Text = ''; pv.geomLbl.Text = '';
 			pv.x0Field.Value = ''; pv.x1Field.Value = ''; pv.lposField.Value = ''; return;
 		end
 		if pv.idx < 1; pv.idx = 1; elseif pv.idx > n; pv.idx = n; end
 		e = procList(pv.idx);
-		pv.expLbl.Text = sprintf('Eksperimen %d / %d   —   %s', pv.idx, n, e.relpath);
+		pv.expLbl.Text = sprintf('Experiment %d / %d   —   %s', pv.idx, n, e.relpath);
 		if pv.last
-			pv.frLbl.Text = sprintf('FRAME AKHIR  (#%d):   %s', pv.nframes, pv_leaf(pv.lastPath));
-			pv.toggleBtn.Text = '⇄  Kembali ke FRAME AWAL (1)';
+			pv.frLbl.Text = sprintf('LAST FRAME  (#%d):   %s', pv.nframes, pv_leaf(pv.lastPath));
+			pv.toggleBtn.Text = '⇄  Back to FIRST FRAME (1)';
 		else
-			pv.frLbl.Text = sprintf('FRAME AWAL  (#1):   %s', pv_leaf(pv.firstPath));
-			pv.toggleBtn.Text = 'Lihat FRAME AKHIR  ⇄';
+			pv.frLbl.Text = sprintf('FIRST FRAME  (#1):   %s', pv_leaf(pv.firstPath));
+			pv.toggleBtn.Text = 'View LAST FRAME  ⇄';
 		end
 		pv.x0Field.Value   = num2disp(e.X0);
 		pv.x1Field.Value   = num2disp(e.X1);
@@ -1855,7 +1855,7 @@ end
 		% Tulis X0/X1/L_pos yang sedang tampil ke tabel utama + beri konfirmasi.
 		n = numel(procList);
 		if n == 0 || pv.idx < 1 || pv.idx > n
-			uialert(pv.fig, 'Tidak ada eksperimen aktif untuk disimpan.', 'Kosong'); return;
+			uialert(pv.fig, 'There is no active experiment to save.', 'Empty'); return;
 		end
 		pvApplyFields();          % transfer ke procList + refreshTable
 		pvRefreshInfo();          % rapikan tampilan field & strain
@@ -1887,22 +1887,22 @@ end
 			otherwise; return;
 		end
 		if isnan(v)
-			uialert(pv.fig, sprintf('Isi nilai %s (cm) dahulu.', field), [field ' kosong']); return;
+			uialert(pv.fig, sprintf('Fill in the %s value (cm) first.', field), [field ' empty']); return;
 		end
 		if isempty(procList); return; end
 		for r = 1:numel(procList); procList(r).(field) = v; end
 		refreshTable(); pvRefreshInfo();
-		appendLog(sprintf('%s = %.4g cm diterapkan ke SEMUA %d eksperimen (dari pratinjau).', ...
+		appendLog(sprintf('%s = %.4g cm applied to ALL %d experiments (from the preview).', ...
 			field, v, numel(procList)));
 	end
 
 	function pvLposAll()
 		vL = parseField(pv.lposField.Value);
-		if isnan(vL); uialert(pv.fig, 'Isi nilai L_pos (cm) dahulu.', 'L_pos kosong'); return; end
+		if isnan(vL); uialert(pv.fig, 'Fill in the L_pos value (cm) first.', 'L_pos empty'); return; end
 		if isempty(procList); return; end
 		for r = 1:numel(procList); procList(r).Lpos = vL; end
 		refreshTable();
-		appendLog(sprintf('L_pos = %.4g cm diterapkan ke SEMUA %d eksperimen (dari pratinjau).', ...
+		appendLog(sprintf('L_pos = %.4g cm applied to ALL %d experiments (from the preview).', ...
 			vL, numel(procList)));
 	end
 
@@ -1914,7 +1914,7 @@ end
 		v1 = parseField(pv.x1Field.Value);
 		vL = parseField(pv.lposField.Value);
 		if isnan(v0) && isnan(v1) && isnan(vL)
-			uialert(pv.fig, 'Isi minimal satu dari X0 / X1 / L_pos dahulu.', 'Kosong'); return;
+			uialert(pv.fig, 'Fill in at least one of X0 / X1 / L_pos first.', 'Empty'); return;
 		end
 		for r = 1:numel(procList)
 			if ~isnan(v0); procList(r).X0   = v0; end
@@ -1922,8 +1922,8 @@ end
 			if ~isnan(vL); procList(r).Lpos = vL; end
 		end
 		refreshTable(); pvRefreshInfo();
-		appendLog(sprintf(['X0/X1/L_pos = [%s / %s / %s] cm disalin ke SEMUA %d ' ...
-			'eksperimen (dari pratinjau).'], num2disp(v0), num2disp(v1), num2disp(vL), ...
+		appendLog(sprintf(['X0/X1/L_pos = [%s / %s / %s] cm copied to ALL %d ' ...
+			'experiments (from the preview).'], num2disp(v0), num2disp(v1), num2disp(vL), ...
 			numel(procList)));
 	end
 
@@ -1934,14 +1934,14 @@ end
 	function pvCloseSave()
 		% Commit X0/X1/L_pos baris ini ke tabel utama, lalu tutup jendela pratinjau.
 		pvApplyFields();
-		appendLog('Pratinjau ditutup (perubahan disimpan ke tabel).');
+		appendLog('Preview closed (changes saved to the table).');
 		i_closePvFig();
 	end
 
 	function pvCloseNoSave()
 		% Tutup TANPA commit editan baris yang belum tersimpan (yang sudah ter-Enter
 		% / pindah exp tetap di tabel — itu memang sudah tersimpan sebelumnya).
-		appendLog('Pratinjau ditutup tanpa menyimpan editan baris terakhir.');
+		appendLog('Preview closed without saving the last row edits.');
 		i_closePvFig();
 	end
 
@@ -1969,12 +1969,12 @@ end
 		% Tanya simpan dulu (bila ada yg bisa disimpan). Ya → simpan + tutup;
 		% Tidak → tutup segera; Batal → jangan tutup.
 		if i_haveRoot() && ~isempty(procList)
-			sel = uiconfirm(fig, 'Simpan progres sebelum menutup GRAIN2?', 'Tutup GRAIN2', ...
-				'Options', {'Simpan & tutup', 'Tutup tanpa simpan', 'Batal'}, ...
+			sel = uiconfirm(fig, 'Save the progress before closing GRAIN2?', 'Close GRAIN2', ...
+				'Options', {'Save & close', 'Close without saving', 'Cancel'}, ...
 				'DefaultOption', 1, 'CancelOption', 3, 'Icon', 'question');
 			switch sel
-				case 'Simpan & tutup';      i_saveProgressSilent();
-				case 'Tutup tanpa simpan'   % langsung tutup
+				case 'Save & close';        i_saveProgressSilent();
+				case 'Close without saving' % langsung tutup
 				otherwise;                  return;   % Batal → batalkan penutupan
 			end
 		end
@@ -1985,13 +1985,13 @@ end
 		% "Eksperimen baru": tawarkan simpan progres dulu (seperti onClose),
 		% lalu tutup GRAIN2 dan buka GRAIN0 dgn root saat ini sbg titik awal.
 		if i_haveRoot() && ~isempty(procList)
-			sel = uiconfirm(fig, ['Simpan progres GRAIN2 sebelum mulai ', ...
-				'eksperimen baru (kembali ke GRAIN0)?'], 'Eksperimen baru → GRAIN0', ...
-				'Options', {'Simpan & lanjut', 'Lanjut tanpa simpan', 'Batal'}, ...
+			sel = uiconfirm(fig, ['Save the GRAIN2 progress before starting a ', ...
+				'new experiment (back to GRAIN0)?'], 'New experiment → GRAIN0', ...
+				'Options', {'Save & continue', 'Continue without saving', 'Cancel'}, ...
 				'DefaultOption', 1, 'CancelOption', 3, 'Icon', 'question');
 			switch sel
-				case 'Simpan & lanjut';      i_saveProgressSilent();
-				case 'Lanjut tanpa simpan'   % langsung lanjut
+				case 'Save & continue';      i_saveProgressSilent();
+				case 'Continue without saving' % langsung lanjut
 				otherwise;                   return;   % Batal
 			end
 		end
@@ -2002,7 +2002,7 @@ end
 			GRAIN0();
 		catch ME
 			uialert(uifigure('Name', 'GRAIN0'), ...
-				sprintf('Gagal membuka GRAIN0:\n%s', ME.message), 'Error');
+				sprintf('Failed to open GRAIN0:\n%s', ME.message), 'Error');
 		end
 	end
 

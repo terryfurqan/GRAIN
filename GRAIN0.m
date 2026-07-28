@@ -36,9 +36,9 @@ function GRAIN0(rootDir)
 %   bisa tipis). dt EXIF dibaca langsung dari JPG (pivprepRawExifDt). Saran
 %   exclusion: pivprepFrameExclusion. Disimpan ke PIVlab_automasi_progress.
 %
-%   CATATAN RENAME: file ini = "true GRAIN0" (Step 0 · QPIV exclusion). GRAIN0
-%   lama (ROI jitter) kini GRAIN1.m ("Step 1"); BatchPIVPrep2 -> PAB1_old. GRAIN0b =
-%   forwarder ke GRAIN0.
+%   CATATAN NAMA: file ini = Step 0 (QPIV exclusion). Alat ROI jitter yang dulu
+%   memakai nomor ini kini GRAIN1.m ("Step 1"); GUI BatchPIVPrep2 turun jadi
+%   PAB1_old (_compat). Alias lama PAB0.m meneruskan ke sini.
 %
 %   Jalankan grain_setup sekali per sesi. SELALU MATLAB R2025b. Tema TERANG.
 

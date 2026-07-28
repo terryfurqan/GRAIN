@@ -84,8 +84,8 @@ function test_smoke_grain4interp()
     fprintf('==== C. Integrasi GUI (interpolasi ALWAYS-ON -> overlay + _faultinterp.json) ====\n');
     ov = get(0,'DefaultFigureVisible'); set(0,'DefaultFigureVisible','off');
     restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
-    rootDir = ''; cand = {'/Users/terryfurqan/MACTERR_shared/EXP_coll/EXP Q1/P-CON-4cm-F', ...
-                          '/Users/terryfurqan/MACTERR_shared/EXP_coll/P-CON-4cm-F'};
+    rootDir = ''; cand = {fullfile(grain_fixture_root(),'EXP_coll','EXP Q1','P-CON-4cm-F'), ...
+                          fullfile(grain_fixture_root(),'EXP_coll','P-CON-4cm-F')};
     for i=1:numel(cand)
         if isfolder(cand{i}) && ~isempty(local_findMat(cand{i})), rootDir=cand{i}; break; end
     end

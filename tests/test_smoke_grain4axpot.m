@@ -3,7 +3,7 @@ function test_smoke_grain4axpot()
     ov = get(0,'DefaultFigureVisible'); set(0,'DefaultFigureVisible','off');
     restoreVis = onCleanup(@() set(0,'DefaultFigureVisible',ov)); %#ok<NASGU>
 
-    expDir = fullfile('/Users/terryfurqan/MACTERR_shared/EXP_coll/EXP Q1/P-HF-4cm-F');
+    expDir = fullfile(fullfile(grain_fixture_root(),'EXP_coll','EXP Q1','P-HF-4cm-F'));
     if ~isfolder(expDir)
         fprintf('[SKIP] folder uji absen: %s\n', expDir); return;
     end

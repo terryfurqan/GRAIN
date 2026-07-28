@@ -7,7 +7,7 @@ here   = fileparts(mfilename('fullpath'));
 grainDir = fileparts(here);
 imgDir = fullfile(grainDir,'docs','img');
 
-matPiv = '/Users/terryfurqan/MACTERR_shared/EXP_coll/P-CON-4cm-F/P-CON-4cm-F-1-OVL-S0-349to348-3p25px.mat';
+matPiv = fullfile(grain_fixture_root(),'EXP_coll','P-CON-4cm-F','P-CON-4cm-F-1-OVL-S0-349to348-3p25px.mat');
 fprintf('Memuat %s ...\n', matPiv);
 S = load(matPiv);
 data = pivcore.data.buildDataset(S);
